@@ -31,6 +31,7 @@ function main() {
 
     # Ignore errors because some clusters might not have prometheus operator
     echo "Deploying with image:"
+    sed -i -e "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml
     cat ${MANIFESTS_OUT_DIR}/deployment.yaml | grep "image:"
 
     kubectl apply -f ${MANIFESTS_OUT_DIR} || true
