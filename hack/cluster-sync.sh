@@ -44,7 +44,8 @@ function main() {
     if ! wait $CLEAN_PID; then
         echo "cluster-clean failed"
     fi
-
+    sleep 60
+    docker images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
     ./hack/cluster-deploy.sh
 }
 

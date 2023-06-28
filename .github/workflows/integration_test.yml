@@ -7,7 +7,7 @@ on:
 
 jobs:
   integration_test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         kube_provider: [microshift]
@@ -33,7 +33,10 @@ jobs:
             IMAGE_TAG: "devel"
             CTR_CMD: docker
             CI_ONLY: "true"
-
+      - uses: actions/checkout@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+            
       - name: test if kepler is still alive
         run: |
           sleep 60

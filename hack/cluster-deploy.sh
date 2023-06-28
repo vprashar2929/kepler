@@ -39,7 +39,7 @@ function main() {
     # round for 3 times and each for 60s
     # check if the rollout status is running
     deploy_status=1
-    sleep 120
+    sleep 60
     kubectl get pods -n kepler
     kubectl get pods -A
     kubectl get pods -n kepler -o yaml
@@ -61,8 +61,8 @@ function main() {
     then
         echo "Check the status of the kepler-exporter"
         kubectl -n kepler describe daemonset.apps/kepler-exporter
-        echo "Check the logs of the kepler-exporter"
-        kubectl -n kepler logs daemonset.apps/kepler-exporter
+        # echo "Check the logs of the kepler-exporter"
+        # kubectl -n kepler logs daemonset.apps/kepler-exporter
     fi
 }
 
