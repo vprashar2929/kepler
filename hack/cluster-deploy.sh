@@ -39,21 +39,24 @@ function main() {
     # round for 3 times and each for 60s
     # check if the rollout status is running
     deploy_status=1
-    sleep 60
+    sleep 120
+    kubectl get pods -n kepler
+    kubectl get pods -A
     kubectl get pods -n kepler -o yaml
-    for i in 1 2 3
-    do
-        echo "check deployment status for round $i"
-        kubectl rollout status daemonset kepler-exporter -n kepler --timeout 60s
-        #check rollout status
-        if [ $? -eq 0 ]
-        then
-            # deploy_status=0
-            break
-        fi
-        kubectl get pods -n kepler -o yaml
-    done 
+    # for i in 1 2 3
+    # do
+    #     echo "check deployment status for round $i"
+    #     kubectl rollout status daemonset kepler-exporter -n kepler --timeout 60s
+    #     #check rollout status
+    #     if [ $? -eq 0 ]
+    #     then
+    #         # deploy_status=0
+    #         break
+    #     fi
+    #     kubectl get pods -n kepler -o yaml
+    # done 
     # if deployment in error
+    kubectl get pvc -n kepler
     if test $[deploy_status] -eq 1
     then
         echo "Check the status of the kepler-exporter"
