@@ -39,6 +39,8 @@ function main() {
     # round for 3 times and each for 60s
     # check if the rollout status is running
     deploy_status=1
+    sleep 60
+    kubectl get pods -n kepler -o yaml
     for i in 1 2 3
     do
         echo "check deployment status for round $i"
@@ -46,9 +48,10 @@ function main() {
         #check rollout status
         if [ $? -eq 0 ]
         then
-            deploy_status=0
+            # deploy_status=0
             break
         fi
+        kubectl get pods -n kepler -o yaml
     done 
     # if deployment in error
     if test $[deploy_status] -eq 1
