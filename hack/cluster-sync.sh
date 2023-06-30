@@ -27,9 +27,10 @@ export IMAGE_REPO=${IMAGE_REPO:-quay.io/sustainable_computing_io}
 
 # we do not use `make cluster-clean` and `make cluster-deploy` because they trigger other actions
 function main() {
-    if [ "$CI_ONLY" = true ] 
+    if [ "$CI_ONLY" == "true" ] 
     then
-        make build-manifest OPTS="CI_DEPLOY"
+        echo "For Openshift"
+        make build-manifest OPTS="CI_DEPLOY OPENSHIFT_DEPLOY"
     else
         make build-manifest
     fi
@@ -44,6 +45,11 @@ function main() {
     if ! wait $CLEAN_PID; then
         echo "cluster-clean failed"
     fi
+    
+    docker images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
+    docker builder prune -af || true
+    docker restart microshift
+    sleep 120
 
     ./hack/cluster-deploy.sh
 }

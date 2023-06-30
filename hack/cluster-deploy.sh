@@ -30,13 +30,16 @@ function main() {
     echo "Deploying manifests..."
 
     # Ignore errors because some clusters might not have prometheus operator
+    sed -i -e "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml
     echo "Deploying with image:"
     cat ${MANIFESTS_OUT_DIR}/deployment.yaml | grep "image:"
-
+    kubectl label node --all sustainable-computing.io/kepler=''
+    sleep 30
     kubectl apply -f ${MANIFESTS_OUT_DIR} || true
     
     # round for 3 times and each for 60s
     # check if the rollout status is running
+    sleep 60
     deploy_status=1
     for i in 1 2 3
     do
