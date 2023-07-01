@@ -66,6 +66,7 @@ function intergration_test() {
     kubectl port-forward --address localhost $(kubectl -n kepler get pods -o name) 9102:9102 -n kepler -v7 &
     kubectl logs -n kepler daemonset/kepler-exporter
     kubectl get pods -n kepler -o yaml
+    curl http://localhost:9102/metrics
     go test ./e2e/... --tags bcc -v --race --bench=. -cover --count=1 --vet=all
 }
 
