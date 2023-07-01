@@ -28,17 +28,14 @@ function check_deployment_status() {
     # round for 3 times and each for 60s
     # check if the rollout status is running
     deploy_status=1
-    for i in 1 2 3
-    do
-        echo "check deployment status for round $i"
-        kubectl rollout status daemonset kepler-exporter -n kepler --timeout 5m
-        #check rollout status
-        if [ $? -eq 0 ]
-        then
-            deploy_status=0
-            break
-        fi
-    done 
+    echo "check deployment status for round $i"
+    kubectl rollout status daemonset kepler-exporter -n kepler --timeout 5m
+    #check rollout status
+    if [ $? -eq 0 ]
+    then
+        deploy_status=0
+        break
+    fi
     # if deployment in error
     if test $[deploy_status] -eq 1
     then
@@ -66,6 +63,7 @@ function intergration_test() {
     kubectl port-forward --address localhost $(kubectl -n kepler get pods -o name) 9102:9102 -n kepler -v7 &
     kubectl logs -n kepler daemonset/kepler-exporter
     kubectl get pods -n kepler -o yaml
+    sleep 30
     curl http://localhost:9102/metrics
     go test ./e2e/... --tags bcc -v --race --bench=. -cover --count=1 --vet=all
 }

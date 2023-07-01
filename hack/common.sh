@@ -71,8 +71,7 @@ function _get_pods() {
 
 function _wait_containers_ready {
      echo "Waiting for all containers to become ready ..."
-     namespace=$1
-     kubectl wait --for=condition=Ready pod --all -n "$namespace" --timeout 12m
+     kubectl wait --for=condition=Ready pod --all --all-namespaces --timeout 12m
 }
 
 function stop_microshift_container() {
@@ -101,5 +100,5 @@ function wait_microshift_up {
         _get_pods | >&2 grep -v Running || true
         sleep 10
     done
-     _wait_containers_ready kube-system
+     _wait_containers_ready
  }
