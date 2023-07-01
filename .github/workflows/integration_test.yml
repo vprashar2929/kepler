@@ -40,4 +40,5 @@ jobs:
       - name: run integration_test
         run: make integration-test
         env:
+            CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
             kepler_address: localhost:9102

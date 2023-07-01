@@ -17,7 +17,9 @@
 # Copyright 2022 The Kepler Contributors
 #
 
-set -ex pipefail
+set -e
+set -o pipefail
+set -x
 
 source ./hack/common.sh
 
@@ -34,7 +36,6 @@ function check_deployment_status() {
     if [ $? -eq 0 ]
     then
         deploy_status=0
-        break
     fi
     # if deployment in error
     if test $[deploy_status] -eq 1
