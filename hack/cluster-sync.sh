@@ -46,10 +46,10 @@ function main() {
         echo "cluster-clean failed"
     fi
     
-    docker images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
-    docker builder prune -af || true
-    docker restart microshift
-    sleep 120
+    # docker images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
+    # docker builder prune -af || true
+    # docker restart microshift
+    # sleep 120
 
     ./hack/cluster-deploy.sh
 }
