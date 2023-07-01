@@ -31,7 +31,7 @@ function main() {
     then
         if [ "$CLUSTER_PROVIDER" == "microshift" ]
         then
-            make build-manifest OPTS="CI_DEPLOY OPENSHIFT_DEPLOY"
+            make build-manifest OPTS="CI_DEPLOY OPENSHIFT_DEPLOY" && $CTR_CMD stop microshift
         else
             make build-manifest OPTS="CI_DEPLOY"
         fi
