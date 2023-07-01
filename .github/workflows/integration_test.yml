@@ -35,23 +35,8 @@ jobs:
       
       # - uses: actions/checkout@v3
       # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-
-      - name: test if kepler is still alive
-        run: |
-          sleep 60
-          kubectl logs $(kubectl -n kepler get pods -o name) -n kepler
-          kubectl get all -n kepler
-      
+      #   uses: mxschmitt/action-tmate@v3      
       - name: run integration_test
-        run: |
-          docker ps -a
-          mkdir -p /tmp/.kube
-          # kind get kubeconfig --name=kind > /tmp/.kube/config
-          docker exec -i microshift cat /var/lib/microshift/resources/kubeadmin/kubeconfig > /tmp/.kube/config
-          kubectl port-forward --address localhost $(kubectl -n kepler get pods -o name) 9102:9102 -n kepler -v7 &
-          kubectl logs -n kepler daemonset/kepler-exporter
-          kubectl get pods -n kepler -o yaml
-          go test ./e2e/... --tags bcc -v --race --bench=. -cover --count=1 --vet=all
+        run: make integration-test
         env:
             kepler_address: localhost:9102

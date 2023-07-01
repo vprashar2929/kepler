@@ -24,42 +24,32 @@ source ./hack/common.sh
 CLUSTER_PROVIDER=${CLUSTER_PROVIDER:-kubernetes}
 MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 
-function main() {
+function main() {  
+    if [ "$CI_ONLY" == "true" ] && [ "$CLUSTER_PROVIDER" == "microshift" ]
+    then
+        $CTR_CMD images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
+        $CTR_CMD restart microshift
+        wait_microshift_up
+        
+    fi
+
     [ ! -d "${MANIFESTS_OUT_DIR}" ] && echo "Directory ${MANIFESTS_OUT_DIR} DOES NOT exists. Run make generate first."
     
+    if [ "$CLUSTER_PROVIDER" == "microshift" ]
+    then
+        kubectl label node --all sustainable-computing.io/kepler=''
+        kubectl apply -f https://raw.githubusercontent.com/openshift/machine-config-operator/master/install/0000_80_machine-config-operator_01_machineconfig.crd.yaml
+        kubectl apply -f https://raw.githubusercontent.com/openshift/machine-config-operator/master/install/0000_80_machine-config-operator_01_machineconfigpool.crd.yaml
+        sed "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml > ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp && \
+            mv ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp ${MANIFESTS_OUT_DIR}/deployment.yaml
+    fi
     echo "Deploying manifests..."
-
     # Ignore errors because some clusters might not have prometheus operator
-    sed -i -e "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml
     echo "Deploying with image:"
     cat ${MANIFESTS_OUT_DIR}/deployment.yaml | grep "image:"
-    kubectl label node --all sustainable-computing.io/kepler=''
-    sleep 30
     kubectl apply -f ${MANIFESTS_OUT_DIR} || true
     
-    # round for 3 times and each for 60s
-    # check if the rollout status is running
-    sleep 60
-    deploy_status=1
-    for i in 1 2 3
-    do
-        echo "check deployment status for round $i"
-        kubectl rollout status daemonset kepler-exporter -n kepler --timeout 60s
-        #check rollout status
-        if [ $? -eq 0 ]
-        then
-            deploy_status=0
-            break
-        fi
-    done 
-    # if deployment in error
-    if test $[deploy_status] -eq 1
-    then
-        echo "Check the status of the kepler-exporter"
-        kubectl -n kepler describe daemonset.apps/kepler-exporter
-        echo "Check the logs of the kepler-exporter"
-        kubectl -n kepler logs daemonset.apps/kepler-exporter
-    fi
+    ./hack/verify.sh kepler
 }
 
 main "$@"
