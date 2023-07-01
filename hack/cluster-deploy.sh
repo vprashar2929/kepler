@@ -27,7 +27,7 @@ MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 function main() {  
     if [ "$CI_ONLY" == "true" ] && [ "$CLUSTER_PROVIDER" == "microshift" ]
     then
-        $CTR_CMD images | awk '{print $3}' | grep -v 'IMAGE' | xargs docker rmi -f || true
+        $CTR_CMD image prune -a -f || true
         $CTR_CMD restart microshift
         wait_microshift_up
         

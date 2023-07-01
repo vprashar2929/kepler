@@ -92,10 +92,10 @@ function wait_microshift_up {
         sleep 30
     done
 
-    while [ -n "$(_get_pods | grep -v Running)" ]; do
-        echo "Waiting for all pods to enter the Running state ..."
-        _get_pods | >&2 grep -v Running || true
-        sleep 30
-    done
+    # while [ -n "$(_get_pods | grep -v Running)" ]; do
+    #     echo "Waiting for all pods to enter the Running state ..."
+    #     _get_pods | >&2 grep -v Running || true
+    #     sleep 30
+    # done
      _wait_containers_ready kube-system
  }
