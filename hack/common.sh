@@ -71,7 +71,7 @@ function _get_pods() {
 
 function _wait_containers_ready {
      echo "Waiting for all containers to become ready ..."
-     kubectl wait --for=condition=Ready pod --all --all-namespaces --timeout 12m
+     kubectl wait --for=condition=Ready pod --all --all-namespaces --timeout 5m
 }
 
 function stop_microshift_container() {
@@ -92,13 +92,13 @@ function wait_microshift_up {
         kubectl --kubeconfig=/var/lib/microshift/resources/kubeadmin/kubeconfig \
         get nodes -o=jsonpath='{.items..status.conditions[-1:].status}' | grep True)" ]; do
         echo "Waiting for microshift cluster to be ready ..."
-        sleep 10
+        sleep 5
     done
 
     while [ -n "$(_get_pods | grep -v Running)" ]; do
         echo "Waiting for all pods to enter the Running state ..."
         _get_pods | >&2 grep -v Running || true
-        sleep 10
+        sleep 5
     done
      _wait_containers_ready
  }

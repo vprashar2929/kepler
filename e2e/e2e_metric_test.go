@@ -34,7 +34,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 
-	"fmt"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
@@ -105,9 +104,6 @@ var _ = Describe("metrics check should pass", Ordered, func() {
 	var _ = DescribeTable("Check node level metrics for details",
 		func(metrics string) {
 			v, ok := kMetric[metrics]
-			fmt.Printf("Node level Metric name: %v\n", kMetric)
-			fmt.Printf("Value: %v\n", v)
-			fmt.Printf("Okay: %v\n", ok)
 			Expect(ok).To(BeTrue())
 			// TODO: check value in details base on cgroup and gpu etc...
 			// so far just base check as compare with zero by default
@@ -133,9 +129,6 @@ var _ = Describe("metrics check should pass", Ordered, func() {
 		func(metrics string) {
 			for _, podname := range podlists {
 				v, ok := kMetric[metrics+podname]
-				fmt.Printf("Pod level Metric name: %v\n", kMetric[metrics+podname])
-				fmt.Printf("Value pod: %v\n", v)
-				fmt.Printf("Okay pod: %v\n", ok)
 				Expect(ok).To(BeTrue())
 				// TODO: check value in details base on cgroup and gpu etc...
 				// so far just base check as compare with zero by default

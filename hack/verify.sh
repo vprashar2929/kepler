@@ -45,7 +45,7 @@ function check_deployment_status() {
         echo "check the logs of the kepler-exporter"
         kubectl -n kepler logs daemonset.apps/kepler-exporter
     else
-        sleep 60
+        _wait_containers_ready
         echo "check if kepler is still alive"
         kubectl logs $(kubectl -n kepler get pods -o name) -n kepler
         kubectl get all -n kepler
@@ -64,8 +64,6 @@ function intergration_test() {
     kubectl port-forward --address localhost $(kubectl -n kepler get pods -o name) 9102:9102 -n kepler -v7 &
     kubectl logs -n kepler daemonset/kepler-exporter
     kubectl get pods -n kepler -o yaml
-    sleep 30
-    curl http://localhost:9102/metrics
     go test ./e2e/... --tags bcc -v --race --bench=. -cover --count=1 --vet=all
 }
 

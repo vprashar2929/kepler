@@ -37,9 +37,6 @@ function main() {
     if [ "$CLUSTER_PROVIDER" == "microshift" ]
     then
         kubectl label node --all sustainable-computing.io/kepler=''
-        kubectl apply -f https://raw.githubusercontent.com/openshift/machine-config-operator/master/install/0000_80_machine-config-operator_01_machineconfig.crd.yaml
-        kubectl apply -f https://raw.githubusercontent.com/openshift/machine-config-operator/master/install/0000_80_machine-config-operator_01_machineconfigpool.crd.yaml
-        kubectl apply -f ${MANIFESTS_OUT_DIR}/cluster-prereqs || true
         sed "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml > ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp && \
             mv ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp ${MANIFESTS_OUT_DIR}/deployment.yaml
     fi
