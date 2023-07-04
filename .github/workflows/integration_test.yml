@@ -49,6 +49,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
+      - name: Use Kepler Action to deploy cluster
+        uses: sustainable-computing-io/kepler-action@main
+        with:
+          runningBranch: ${{matrix.cluster_provider}}
+          local_dev_cluster_version: main
+          cluster_provider: ${{matrix.cluster_provider}}
+
       - name: Download Kepler Image artifact
         uses: actions/download-artifact@v3
         with:
@@ -65,13 +72,6 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-
-      - name: Use Kepler Action to deploy cluster
-        uses: sustainable-computing-io/kepler-action@main
-        with:
-          runningBranch: ${{matrix.cluster_provider}}
-          local_dev_cluster_version: main
-          cluster_provider: ${{matrix.cluster_provider}}
 
       - name: Push Kepler Image to Load Registry
         run: make push-image
