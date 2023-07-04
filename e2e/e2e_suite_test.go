@@ -41,6 +41,7 @@ func TestE2eTest(t *testing.T) {
 
 var _ = BeforeSuite(func() {
 	address, ok = os.LookupEnv("kepler_address")
+	fmt.Printf("Address: %v", address)
 	if !ok {
 		tmpDir, err = os.MkdirTemp("", "test-kepler")
 		Expect(err).NotTo(HaveOccurred())

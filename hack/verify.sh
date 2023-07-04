@@ -27,8 +27,6 @@ CLUSTER_PROVIDER=${CLUSTER_PROVIDER:-kubernetes}
 MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 
 function check_deployment_status() {
-    # round for 3 times and each for 60s
-    # check if the rollout status is running
     deploy_status=1
     echo "check deployment status for round $i"
     kubectl rollout status daemonset kepler-exporter -n kepler --timeout 5m
@@ -45,7 +43,6 @@ function check_deployment_status() {
         echo "check the logs of the kepler-exporter"
         kubectl -n kepler logs daemonset.apps/kepler-exporter
     else
-        sleep 60
         wait_containers_ready
         echo "check if kepler is still alive"
         kubectl logs $(kubectl -n kepler get pods -o name) -n kepler
@@ -54,6 +51,7 @@ function check_deployment_status() {
 }
 
 function intergration_test() {
+    sleep 180
     $CTR_CMD ps -a
     mkdir -p /tmp/.kube
     if [ "$CLUSTER_PROVIDER" == "microshift" ]
