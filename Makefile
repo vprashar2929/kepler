@@ -124,6 +124,15 @@ build_containerized: genbpfassets tidy-vendor format
 
 .PHONY: build_containerized
 
+save-image:
+	$(CTR_CMD) save -o $(OUTPUT_DIR)/kepler.tar  $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
+.PHONY: save-image
+
+load-image:
+	$(CTR_CMD) load -i kepler.tar
+	$(CTR_CMD) inspect $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
+.PHONY: load-image
+
 push-image:
 	$(CTR_CMD) push $(CTR_CMD_PUSH_OPTIONS) $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
 .PHONY: push-image
@@ -256,7 +265,7 @@ cluster-clean: build-manifest
 .PHONY: cluster-clean
 
 cluster-deploy: cluster-clean
-	BARE_METAL_NODE_ONLY=false ./hack/cluster-deploy.sh
+	./hack/cluster-deploy.sh
 .PHONY: cluster-deploy
 
 cluster-sync:
@@ -267,9 +276,9 @@ cluster-up:
 	./hack/cluster-up.sh
 .PHONY: cluster-up
 
-integration-test:
+e2e:
 	./hack/verify.sh test
-.PHONY: integration-test
+.PHONY: e2e
 
 check: tidy-vendor set_govulncheck govulncheck format golint test
 .PHONY: check

@@ -25,17 +25,12 @@ CLUSTER_PROVIDER=${CLUSTER_PROVIDER:-kubernetes}
 MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 
 function main() {
-    if [ "$CI_ONLY" == "true" ] && [ "$CLUSTER_PROVIDER" == "microshift" ]
-    then
-        $CTR_CMD image prune -a -f || true && $CTR_CMD restart microshift
-        wait_microshift_up
-    fi
 
     [ ! -d "${MANIFESTS_OUT_DIR}" ] && echo "Directory ${MANIFESTS_OUT_DIR} DOES NOT exists. Run make generate first."
     
     if [ "$CLUSTER_PROVIDER" == "microshift" ]
     then
-        kubectl label node --all sustainable-computing.io/kepler=''
+        # kubectl label node --all sustainable-computing.io/kepler=''
         sed "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml > ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp && \
             mv ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp ${MANIFESTS_OUT_DIR}/deployment.yaml
     fi
