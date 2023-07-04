@@ -45,6 +45,7 @@ function check_deployment_status() {
         echo "check the logs of the kepler-exporter"
         kubectl -n kepler logs daemonset.apps/kepler-exporter
     else
+        sleep 60
         wait_containers_ready
         echo "check if kepler is still alive"
         kubectl logs $(kubectl -n kepler get pods -o name) -n kepler
