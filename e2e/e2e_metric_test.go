@@ -24,7 +24,6 @@ import (
 	"context"
 	"errors"
 	"flag"
-	"fmt"
 	"github.com/prometheus/prometheus/model/labels"
 	"github.com/prometheus/prometheus/model/textparse"
 	"io"
@@ -128,9 +127,6 @@ var _ = Describe("metrics check should pass", Ordered, func() {
 	var _ = DescribeTable("Check pod level metrics for details",
 		func(metrics string) {
 			for _, podname := range podlists {
-				fmt.Printf("Full map: %v\n", kMetric)
-				fmt.Printf("Key: %v\n", metrics+podname)
-				fmt.Printf("Value: %v\n", kMetric[metrics+podname])
 				v, ok := kMetric[metrics+podname]
 				Expect(ok).To(BeTrue())
 				// TODO: check value in details base on cgroup and gpu etc...
