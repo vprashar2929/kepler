@@ -267,7 +267,7 @@ cluster-clean: build-manifest
 	./hack/cluster-clean.sh
 .PHONY: cluster-clean
 
-cluster-deploy: cluster-clean
+cluster-deploy:
 	./hack/cluster-deploy.sh
 .PHONY: cluster-deploy
 

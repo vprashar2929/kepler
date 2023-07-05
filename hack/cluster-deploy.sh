@@ -38,8 +38,7 @@ function main() {
     echo "Deploying with image:"
     cat ${MANIFESTS_OUT_DIR}/deployment.yaml | grep "image:"
     kubectl apply -f ${MANIFESTS_OUT_DIR} || true
-    
-    sleep 60
+
     ./hack/verify.sh kepler
 }
 

@@ -89,7 +89,7 @@ jobs:
             docker images
 
       - name: Deploy Kepler on cluster
-        run: ./hack/cluster-deploy.sh
+        run: make cluster-deploy
         env:
           CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
           IMAGE_REPO: "localhost:5001"

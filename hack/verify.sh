@@ -27,9 +27,6 @@ CLUSTER_PROVIDER=${CLUSTER_PROVIDER:-kubernetes}
 MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 
 function check_deployment_status() {
-    kubectl get pods -A
-    kubectl get pods -n kepler -o yaml
-    wait_containers_ready
     deploy_status=1
     echo "check deployment status for round $i"
     kubectl rollout status daemonset kepler-exporter -n kepler --timeout 5m
