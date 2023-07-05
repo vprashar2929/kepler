@@ -125,16 +125,16 @@ build_containerized: genbpfassets tidy-vendor format
 .PHONY: build_containerized
 
 save-image:
-	$(CTR_CMD) save -o $(OUTPUT_DIR)/kepler.tar  $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
+	$(CTR_CMD) save $(IMAGE_REPO)/kepler:$(IMAGE_TAG) | gzip > $(OUTPUT_DIR)/kepler.tar.gz
 .PHONY: save-image
 
 load-image:
-	$(CTR_CMD) load -i kepler.tar
+	$(CTR_CMD) load -i kepler.tar.gz
 .PHONY: load-image
 
 push-image:
 	$(CTR_CMD) push $(CTR_CMD_PUSH_OPTIONS) $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
-	$(CTR_CMD) image prune -a -f || true
+	# $(CTR_CMD) image prune -a -f || true
 .PHONY: push-image
 
 clean-cross-build:

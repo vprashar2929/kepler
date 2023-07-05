@@ -6,7 +6,7 @@ on:
       - test-add-microshift
 env:
   GO_VERSION: "1.18"
-  IMAGE_OUTPUT_PATH: "_output/kepler.tar"
+  IMAGE_OUTPUT_PATH: "_output/kepler.tar.gz"
 
 
 jobs:
@@ -63,7 +63,13 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-
+      
+      - name: Test artifact download
+        run: |
+            df -kh
+            docker system df
+            docker images
+  
       - name: Use Kepler Action to deploy cluster
         uses: sustainable-computing-io/kepler-action@main
         with:
@@ -77,12 +83,6 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-
-      - name: Test artifact download
-        run: |
-            df -kh
-            docker system df
-            docker images
 
       - name: Deploy Kepler
         run: ./hack/cluster-deploy.sh
