@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        cluster_provider: [microshift]
+        cluster_provider: [kind,microshift]
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
