@@ -43,6 +43,7 @@ function check_deployment_status() {
         echo "check the logs of the kepler-exporter"
         kubectl -n kepler logs daemonset.apps/kepler-exporter
     else
+        sleep 60
         wait_containers_ready
         echo "check if kepler is still alive"
         kubectl logs $(kubectl -n kepler get pods -o name) -n kepler
@@ -51,7 +52,6 @@ function check_deployment_status() {
 }
 
 function intergration_test() {
-    sleep 180
     $CTR_CMD ps -a
     mkdir -p /tmp/.kube
     if [ "$CLUSTER_PROVIDER" == "microshift" ]
@@ -60,7 +60,7 @@ function intergration_test() {
     else
         kind get kubeconfig --name=kind > /tmp/.kube/config
     fi
-    kubectl port-forward --address localhost $(kubectl -n kepler get pods -o name) 9102:9102 -n kepler -v7 &
+    while true; do kubectl port-forward --address localhost -n kepler service/kepler-exporter 9102:9102; done &
     kubectl logs -n kepler daemonset/kepler-exporter
     kubectl get pods -n kepler -o yaml
     sleep 30

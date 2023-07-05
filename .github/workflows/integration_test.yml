@@ -11,7 +11,7 @@ env:
 
 jobs:
   build-kepler:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -41,7 +41,7 @@ jobs:
 
   integration-tests:
     needs: [build-kepler]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         cluster_provider: [kind,microshift]
