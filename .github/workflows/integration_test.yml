@@ -6,8 +6,8 @@ on:
       - test-add-microshift
 env:
   GO_VERSION: "1.18"
-  IMAGE_OUTPUT_PATH: "_output/kepler.tar.gz"
-
+  OUTPUT_DIR: "_output/"
+  FILE_NAME: "kepler.tar.gz"
 
 jobs:
   build-kepler:
@@ -32,12 +32,13 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
+          IMAGE_OUTPUT_PATH: ${{env.OUTPUT_DIR}}${{env.FILE_NAME}}
 
       - name: Save Kepler Image as artifact
         uses: actions/upload-artifact@v3
         with:
           name: kepler
-          path: ${{env.IMAGE_OUTPUT_PATH}}
+          path: ${{env.OUTPUT_DIR}}${{env.FILE_NAME}}
 
   integration-tests:
     needs: [build-kepler]
@@ -48,9 +49,6 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
-
-      - name: Build manifest
-        run: make build-manifest OPTS="CI_DEPLOY"
 
       - name: Download Kepler Image artifact
         uses: actions/download-artifact@v3
@@ -63,12 +61,7 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-      
-      - name: Test artifact download
-        run: |
-            df -kh
-            docker system df
-            docker images
+          INPUT_PATH: ${{env.FILE_NAME}}
   
       - name: Use Kepler Action to deploy cluster
         uses: sustainable-computing-io/kepler-action@main
@@ -78,14 +71,22 @@ jobs:
           cluster_provider: ${{matrix.cluster_provider}}
 
       - name: Push Kepler Image to Load Registry
-        run: make push-image
+        run: |
+          make push-image
+          make image-prune
         env:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
+    
+      - name: Test artifact download
+        run: |
+            df -kh
+            docker system df
+            docker images
 
-      - name: Deploy Kepler
-        run: ./hack/cluster-deploy.sh
+      - name: Deploy Kepler on cluster
+        run: make cluster-deploy OPTS="CI_DEPLOY"
         env:
           CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
           IMAGE_REPO: "localhost:5001"

@@ -32,7 +32,6 @@ CLUSTER_NAME=${KIND_CLUSTER_NAME:-kind}
 REGISTRY_NAME=${REGISTRY_NAME:-kind-registry}
 REGISTRY_PORT=${REGISTRY_PORT:-5001}
 KIND_DEFAULT_NETWORK="kind"
-MICROSHIFT_CONTAINER_NAME="microshift"
 
 IMAGE_REPO=${IMAGE_REPO:-localhost:5001}
 ESTIMATOR_REPO=${ESTIMATOR_REPO:-quay.io/sustainable_computing_io}
@@ -69,8 +68,3 @@ function wait_containers_ready {
      echo "waiting for all containers to become ready ..."
      kubectl wait --for=condition=Ready pod --all --all-namespaces --timeout 5m
 }
-
-function stop_microshift_container() {
-    $CTR_CMD stop "${MICROSHIFT_CONTAINER_NAME}"
-}
-
