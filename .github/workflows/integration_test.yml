@@ -49,15 +49,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
+      - name: Build manifest
+        run: make build-manifest OPTS="CI_DEPLOY"
+
       - name: Download Kepler Image artifact
         uses: actions/download-artifact@v3
         with:
           name: kepler
-
-      - name: Test artifact download
-        run: |
-            ls -R
-            pwd
 
       - name: Import Kepler Image
         run: make load-image
@@ -80,20 +78,27 @@ jobs:
           IMAGE_TAG: "devel"
           CTR_CMD: docker
 
+      - name: Test artifact download
+        run: |
+            df -kh
+            docker system df
+            docker images
+
       - name: Deploy Kepler
-        run: make cluster-deploy OPTS="CI_DEPLOY"
+        run: ./hack/cluster-deploy.sh
         env:
           CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-      
-      # - uses: actions/checkout@v3
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3 
 
       - name: Run e2e tests
         run: make e2e
         env:
-          CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
-          kepler_address: localhost:9102
+            CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
+            kepler_address: localhost:9102
+      
+      - uses: actions/checkout@v3
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3 

@@ -130,11 +130,11 @@ save-image:
 
 load-image:
 	$(CTR_CMD) load -i kepler.tar
-	$(CTR_CMD) inspect $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
 .PHONY: load-image
 
 push-image:
 	$(CTR_CMD) push $(CTR_CMD_PUSH_OPTIONS) $(IMAGE_REPO)/kepler:$(IMAGE_TAG)
+	$(CTR_CMD) image prune -a -f || true
 .PHONY: push-image
 
 clean-cross-build:
