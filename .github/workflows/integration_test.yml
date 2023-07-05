@@ -79,12 +79,9 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
-      
-      - name: Build manifest
-        run: make build-manifest OPTS="CI_DEPLOY"
 
       - name: Deploy Kepler
-        run: make cluster-deploy
+        run: make cluster-deploy OPTS="CI_DEPLOY"
         env:
           CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
           IMAGE_REPO: "localhost:5001"
