@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{env.GO_VERSION}}
-
+    
       - name: Build manifest
         run: make build-manifest OPTS="CI_DEPLOY"
 
@@ -79,6 +79,9 @@ jobs:
           IMAGE_REPO: "localhost:5001"
           IMAGE_TAG: "devel"
           CTR_CMD: docker
+      
+      - name: Build manifest
+        run: make build-manifest OPTS="CI_DEPLOY"
 
       - name: Deploy Kepler
         run: make cluster-deploy
