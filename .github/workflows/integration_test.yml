@@ -55,6 +55,9 @@ jobs:
         with:
           name: kepler
 
+      - name: Build manifest
+        run: make build-manifest OPTS="CI_DEPLOY"
+
       - name: Import Kepler Image
         run: make load-image
         env:
@@ -86,7 +89,7 @@ jobs:
             docker images
 
       - name: Deploy Kepler on cluster
-        run: make cluster-deploy OPTS="CI_DEPLOY"
+        run: ./hack/cluster-deploy.sh
         env:
           CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
           IMAGE_REPO: "localhost:5001"
