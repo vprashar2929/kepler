@@ -1,11 +1,9 @@
 name: Integration test
 
 on:
-  pull_request:
-    paths-ignore:
-      - 'doc/**'
-      - 'enhancements/**'
-      - '*.md'
+  push:
+    branches:
+      - test
 
 env:
   GO_VERSION: "1.18"
@@ -26,6 +24,10 @@ jobs:
 
       - name: build manifest
         run: make build-manifest OPTS="CI_DEPLOY"
+        env:
+          IMAGE_REPO: "localhost:5001"
+          IMAGE_TAG: "devel"
+          CTR_CMD: docker
 
       - name: build and export Kepler image
         run: |
@@ -63,6 +65,10 @@ jobs:
 
       - name: build manifest
         run: make build-manifest OPTS="CI_DEPLOY"
+        env:
+          IMAGE_REPO: "localhost:5001"
+          IMAGE_TAG: "devel"
+          CTR_CMD: docker
 
       - name: import Kepler image
         run: make load-image
