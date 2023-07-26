@@ -28,12 +28,16 @@ MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 ARTIFACT_DIR="${ARTIFACT_DIR:-/tmp/artifacts}"
 
 function must_gather() {
+    mkdir -p $ARTIFACT_DIR
     kubectl describe nodes > "$ARTIFACT_DIR/nodes"
     kubectl get pods --all-namespaces > "$ARTIFACT_DIR/pods"
     kubectl get deployment --all-namespaces > "$ARTIFACT_DIR/deployments"
     kubectl get statefulset --all-namespaces > "$ARTIFACT_DIR/statefulsets"
     kubectl get services --all-namespaces > "$ARTIFACT_DIR/services"
     kubectl get endpoints --all-namespaces > "$ARTIFACT_DIR/endpoints"
+    kubectl describe daemonset kepler-exporter -n kepler > "$ARTIFACT_DIR/kepler-daemonset-describe"
+    kubectl get pods -n kepler -o yaml > "$ARTIFACT_DIR/kepler-pod-yaml"
+    kubectl logs $(kubectl -n kepler get pods -o name) -n kepler > "$ARTIFACT_DIR/kepler-pod-logs"
 }
 
 function check_deployment_status() {

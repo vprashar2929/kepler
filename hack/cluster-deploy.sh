@@ -27,11 +27,11 @@ MANIFESTS_OUT_DIR=${MANIFESTS_OUT_DIR:-"_output/generated-manifest"}
 function main() {
     [ ! -d "${MANIFESTS_OUT_DIR}" ] && echo "Directory ${MANIFESTS_OUT_DIR} DOES NOT exists. Run make generate first."
     
-    if [ "$CLUSTER_PROVIDER" == "microshift" ]
-    then
-        sed "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml > ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp && \
-            mv ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp ${MANIFESTS_OUT_DIR}/deployment.yaml
-    fi
+    # if [ "$CLUSTER_PROVIDER" == "microshift" ]
+    # then
+    #     sed "s/localhost:5001/registry:5000/g" ${MANIFESTS_OUT_DIR}/deployment.yaml > ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp && \
+    #         mv ${MANIFESTS_OUT_DIR}/deployment.yaml.tmp ${MANIFESTS_OUT_DIR}/deployment.yaml
+    # fi
     echo "Deploying manifests..."
     # Ignore errors because some clusters might not have prometheus operator
     echo "Deploying with image:"
