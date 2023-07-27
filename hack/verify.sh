@@ -32,7 +32,7 @@ function must_gather() {
     kubectl describe nodes > "$ARTIFACT_DIR/nodes"
     kubectl get pods --all-namespaces > "$ARTIFACT_DIR/pods"
     kubectl get deployment --all-namespaces > "$ARTIFACT_DIR/deployments"
-    kubectl get statefulset --all-namespaces > "$ARTIFACT_DIR/statefulsets"
+    kubectl get daemonsets --all-namespaces > "$ARTIFACT_DIR/daemonsets"
     kubectl get services --all-namespaces > "$ARTIFACT_DIR/services"
     kubectl get endpoints --all-namespaces > "$ARTIFACT_DIR/endpoints"
     kubectl describe daemonset kepler-exporter -n kepler > "$ARTIFACT_DIR/kepler-daemonset-describe"
