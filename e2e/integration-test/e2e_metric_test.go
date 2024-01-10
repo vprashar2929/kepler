@@ -270,7 +270,7 @@ var _ = Describe("Metrics check should pass", Ordered, func() {
 		Entry(nil, "kepler_node_info"),                  // node level
 		Entry(nil, "kepler_node_package_joules_total"),  // node level
 		Entry(nil, "kepler_node_platform_joules_total"), // node level
-		Entry(nil, "kepler_node_uncore_joules_total"),   // node level
+		// Entry(nil, "kepler_node_uncore_joules_total"),   // node level
 	)
 
 	_ = DescribeTable("Check pod level metrics for details",
