@@ -26,6 +26,7 @@ import (
 	"github.com/sustainable-computing-io/kepler/pkg/bpfassets/attacher"
 	collector_metric "github.com/sustainable-computing-io/kepler/pkg/collector/metric"
 	"github.com/sustainable-computing-io/kepler/pkg/config"
+	"github.com/sustainable-computing-io/kepler/pkg/power/components"
 	"github.com/sustainable-computing-io/kepler/pkg/power/platform"
 )
 
@@ -218,7 +219,7 @@ func (p *PrometheusCollector) newNodeMetrics() {
 	nodeInfo := prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, "node", "info"),
 		"Labeled node information",
-		[]string{"cpu_architecture"}, nil,
+		[]string{"cpu_architecture", "components_power_source", "platform_power_source"}, nil,
 	)
 	// Energy (counter)
 	// TODO: separate the energy consumption per CPU, including the label cpu
@@ -478,6 +479,8 @@ func (p *PrometheusCollector) updateNodeMetrics(wg *sync.WaitGroup, ch chan<- pr
 			prometheus.CounterValue,
 			1,
 			collector_metric.NodeCPUArchitecture,
+			components.GetSourceName(),
+			platform.GetSourceName(),
 		)
 		// Node metrics in joules (counter)
 		for pkgID := range p.NodeMetrics.AbsEnergyInCore.Stat {
@@ -552,7 +555,7 @@ func (p *PrometheusCollector) updateNodeMetrics(wg *sync.WaitGroup, ch chan<- pr
 			dynPower,
 			collector_metric.NodeName, "dynamic",
 		)
-		powerSource := platform.GetPowerSource()
+		powerSource := platform.GetSourceName()
 		dynPower = (float64(p.NodeMetrics.GetSumAggrDynEnergyFromAllSources(collector_metric.PLATFORM)) / miliJouleToJoule)
 		ch <- prometheus.MustNewConstMetric(
 			p.nodeDesc.nodePlatformJoulesTotal,
