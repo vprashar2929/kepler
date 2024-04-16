@@ -1,12 +1,14 @@
 name: image
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       imageTag:
+        description: "tag"
         default: 'latest'
         type: string
       pushImage:
+        description: "push image flag"
         default: true
         type: boolean
     secrets:
@@ -54,7 +56,7 @@ jobs:
       if: ${{ inputs.pushImage }}
       uses: docker/login-action@v3
       with:
-        registry: quay.io/sustainable_computing_io
+        registry: quay.io/rh_ee_vprashar
         username: ${{ secrets.username }}
         password: ${{ secrets.password }}
 
@@ -65,14 +67,14 @@ jobs:
           platforms: ${{matrix.PLATFORMS}}
           push: ${{ inputs.pushImage }}
           build-args: ${{matrix.BUILD_ARGS}}
-          tags: quay.io/sustainable_computing_io/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
+          tags: quay.io/rh_ee_vprashar/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
           labels: ${{matrix.LABEL}}
           file: ${{matrix.IMAGE_FILE}}
 
     - name: Generate SBOM
       uses: anchore/sbom-action@v0.15.10
       with:
-        image: quay.io/sustainable_computing_io/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
+        image: quay.io/rh_ee_vprashar/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
         artifact-name: sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.json
         output-file: ./sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
 
