@@ -1,38 +1,124 @@
-name: imagePRlevel
+name: image
 
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
     inputs:
-      commitSHA:
-        description: "pr commit SHA"
+      imageTag:
+        description: dummy
+        default: 'latest'
+        type: string
+      pushImage:
+        description: dummy
+        default: true
+        type: boolean
+    secrets:
+      username:
+        required: true
+      password:
         required: true
 
 jobs:
-  image_build_for_specific_commit:
+  kepler_build:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.1
+
+    - uses: actions/setup-go@main
       with:
-        ref: ${{ github.event.inputs.commitSHA }}
+            go-version-file: go.mod
+            cache: true
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      with:
+        image: tonistiigi/binfmt:qemu-v8.1.5
+
+    - env:
+        DOCKER_CLI_EXPERIMENTAL: enabled
+      uses: crazy-max/ghaction-setup-docker@v2
+      with:
+        version: v24.0.6
+        daemon-config: |
+          {
+            "features": {
+              "containerd-snapshotter": true
+            }
+          }
+
     - name: Login to Quay
+      if: ${{ inputs.pushImage }}
       uses: docker/login-action@v3
       with:
-        registry: quay.io/sustainable_computing_io
-        username: ${{ secrets.BOT_NAME }}
-        password: ${{ secrets.BOT_TOKEN }}
+        registry: quay.io/rh_ee_vprashar
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: quay.io/sustainable_computing_io/kepler
-          labels: ${{ github.event.inputs.commitSHA }}
-          file: build/Dockerfile.libbpf.kepler
+    - name: Build Kepler
+      run: make build_image
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler
+        CTR_CMD: docker
+        PLATFORM: linux/amd64,linux/arm64
+        VERSION: ${{ inputs.imageTag }}
+        IMAGE_TAG: ${{ inputs.imageTag }}
+
+    - name: Build Kepler with dcgm
+      run: make build_image_dcgm
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler
+        CTR_CMD: docker
+        PLATFORM: linux/amd64
+        VERSION: ${{ inputs.imageTag }}
+        IMAGE_TAG: ${{ inputs.imageTag }}
+
+    - name: Build Kepler Validator
+      run: make build-validation-container
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler-validator
+        CTR_CMD: docker
+        PLATFORM: linux/amd64
+        VERSION: ${{ inputs.imageTag }}
+        IMAGE_TAG: ${{ inputs.imageTag }}
+
+    - name: Push Kepler
+      run: make push-image
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler
+        CTR_CMD: docker
+        IMAGE_TAG: ${{ inputs.imageTag }}
+
+    - name: Push Kepler with dcgm
+      run: make push-image
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler
+        CTR_CMD: docker
+        IMAGE_TAG: ${{ inputs.imageTag }}-dcgm
+
+    - name: Push Kepler Validator
+      run: make push-image
+      env:
+        IMAGE_REPO: quay.io/rh_ee_vprashar
+        IMAGE_NAME: kepler-validator
+        CTR_CMD: docker
+        IMAGE_TAG: ${{ inputs.imageTag }}
+
+    # - name: Generate SBOM
+    #   uses: anchore/sbom-action@v0.15.10
+    #   with:
+    #     image: quay.io/rh_ee_vprashar/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
+    #     artifact-name: sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.json
+    #     output-file: ./sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+    #
+    # - name: save Kepler image SBOM as artifact
+    #   if: ${{ inputs.pushImage }}
+    #   uses: actions/upload-artifact@v4.3.0
+    #   with:
+    #       name: sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+    #       path: ./sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+    #       retention-days: 1

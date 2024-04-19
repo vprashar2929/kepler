@@ -63,6 +63,8 @@ GOOS := $(shell go env GOOS)
 GOARCH := $(shell go env GOARCH)
 GOENV := GOOS=$(GOOS) GOARCH=$(GOARCH)
 
+PLATFORM ?=linux/$(GOARCH)
+
 LIBBPF_HEADERS := /usr/include/bpf
 KEPLER_OBJ_SRC := $(SRC_ROOT)/bpfassets/libbpf/bpf.o/$(GOARCH)_kepler.bpf.o
 LIBBPF_OBJ ?= /usr/lib64/libbpf.a
@@ -111,17 +113,17 @@ build_image: image_builder_check ## Build image without DCGM.
 		-f $(DOCKERFILE) \
 		--build-arg INSTALL_DCGM=false \
 		--build-arg VERSION=$(VERSION) \
-		--platform="linux/$(GOARCH)" \
+		--platform=$(PLATFORM) \
 		.
 	$(CTR_CMD) tag $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_BUILD_TAG) $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
 .PHONY: build_image
 
 build_image_dcgm:  image_builder_check ## Build image with DCGM.
 	# build kepler with dcgm
-	$(CTR_CMD) build -t $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_BUILD_TAG)-"dcgm" \
+	$(CTR_CMD) build -t $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_BUILD_TAG)-dcgm \
 		-f $(DOCKERFILE) \
 		--build-arg INSTALL_DCGM=true \
-		--build-arg VERSION=$(VERSION) \
+		--build-arg VERSION=$(VERSION)-dcgm \
 		--platform="linux/$(GOARCH)" \
 		.
 	$(CTR_CMD) tag $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_BUILD_TAG)-dcgm $(IMAGE_REPO)/$(IMAGE_NAME):$(IMAGE_TAG)-dcgm
