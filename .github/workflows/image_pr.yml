@@ -1,38 +1,88 @@
-name: imagePRlevel
+name: image
 
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
     inputs:
-      commitSHA:
-        description: "pr commit SHA"
+      imageTag:
+        description: 'abcd'
+        default: 'latest'
+        type: string
+      pushImage:
+        description: 'abcd'
+        default: true
+        type: boolean
+    secrets:
+      username:
+        required: true
+      password:
         required: true
 
 jobs:
-  image_build_for_specific_commit:
+  image_build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - IMAGE_NAME: kepler
+          IMAGE_FILE: build/Dockerfile
+          PLATFORMS:  linux/amd64,linux/arm64
+          BUILD_ARGS: |
+                INSTALL_DCGM=false
+                VERSION=${{ inputs.imageTag }}
+          LABEL:      ${{ inputs.imageTag }}
+        - IMAGE_NAME: kepler
+          IMAGE_FILE: build/Dockerfile
+          PLATFORMS:  linux/amd64
+          BUILD_ARGS: |
+                INSTALL_DCGM=true
+                VERSION=${{ inputs.imageTag }}-dcgm
+          LABEL:      ${{ inputs.imageTag }}-dcgm
+        - IMAGE_NAME: kepler-validator
+          IMAGE_FILE: build/Dockerfile.kepler-validator
+          BUILD_ARGS: ""
+          PLATFORMS:  linux/amd64
+          LABEL:      ${{ inputs.imageTag }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.1
-      with:
-        ref: ${{ github.event.inputs.commitSHA }}
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
+      with:
+        image: tonistiigi/binfmt:qemu-v8.1.5
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Login to Quay
+      if: ${{ inputs.pushImage }}
       uses: docker/login-action@v3
       with:
-        registry: quay.io/sustainable_computing_io
-        username: ${{ secrets.BOT_NAME }}
-        password: ${{ secrets.BOT_TOKEN }}
+        registry: quay.io/rh_ee_vprashar
+        username: ${{ secrets.username }}
+        password: ${{ secrets.password }}
 
-    - name: Build and push
+    - name: Build and push image
       uses: docker/build-push-action@v5
       with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: quay.io/sustainable_computing_io/kepler
-          labels: ${{ github.event.inputs.commitSHA }}
-          file: build/Dockerfile.libbpf.kepler
+          platforms: ${{matrix.PLATFORMS}}
+          push: ${{ inputs.pushImage }}
+          build-args: ${{matrix.BUILD_ARGS}}
+          tags: quay.io/rh_ee_vprashar/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
+          labels: ${{matrix.LABEL}}
+          file: ${{matrix.IMAGE_FILE}}
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0.15.10
+      with:
+        image: quay.io/rh_ee_vprashar/${{matrix.IMAGE_NAME}}:${{matrix.LABEL}}
+        artifact-name: sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.json
+        output-file: ./sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+
+    - name: save Kepler image SBOM as artifact
+      if: ${{ inputs.pushImage }}
+      uses: actions/upload-artifact@v4.3.0
+      with:
+          name: sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+          path: ./sbom-${{matrix.IMAGE_NAME}}-${{matrix.LABEL}}.spdx.json
+          retention-days: 1
+
