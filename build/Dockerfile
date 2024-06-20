@@ -1,19 +1,17 @@
 FROM quay.io/sustainable_computing_io/kepler_builder:ubi-9-libbpf-1.3.0 as builder
-ARG VERSION
 ARG INSTALL_HABANA=false
 WORKDIR /workspace
 
 COPY . .
 
-RUN make tidy-vendor
-RUN make format
+RUN make tidy-vendor format
 RUN if [[ "$INSTALL_HABANA" == "true" ]]; then \
 		rpm -Uvh https://vault.habana.ai/artifactory/rhel/9/9.2/habanalabs-firmware-tools-1.15.1-15.el9.x86_64.rpm --nodeps; \
 		echo /usr/lib/habanalabs > /etc/ld.so.conf.d/habanalabs.conf; \
 		ldconfig; \
 	fi
 
-RUN make build VERSION=${VERSION}
+RUN make build
 
 FROM registry.access.redhat.com/ubi9:latest
 # NOTE: use bash instead of sh
