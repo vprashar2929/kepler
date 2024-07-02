@@ -1,0 +1,23 @@
+name: Docker compose test
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches: [ test-dk-ci ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - name: run make compose target
+        run: |
+          cd ./manifests/compose/mock-acpi/
+          docker compose up -d
+      - name: check the status of Kepler
+        run: |
+          sleep 60
+          curl -G 'http://localhost:9090/api/v1/query' --data-urlencode 'query=kepler_exporter_build_info' | jq
+          curl -G 'http://localhost:9090/api/v1/query' --data-urlencode 'query=kepler_node_info' | jq
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+
