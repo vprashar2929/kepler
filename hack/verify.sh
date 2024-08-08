@@ -64,7 +64,7 @@ log_kepler() {
 }
 
 exec_kepler() {
-	run kubectl exec -ti -n kepler daemonset/kepler-exporter curl "localhost:9102/metrics" |grep ^kepler_
+	run kubectl exec -ti -n "$KEPLER_NS" daemonset/"$EXPORTER" curl "localhost:9102/metrics" |grep ^kepler_
 }
 watch_service() {
 	local port="$1"
