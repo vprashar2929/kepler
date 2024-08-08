@@ -1,0 +1,126 @@
+name: Integration test
+
+on: # yamllint disable-line rule:truthy
+  issue_comment:
+    types: [created]
+
+env:
+  OUTPUT_DIR: _output/
+  FILE_NAME: kepler_libbpf.tar.gz
+  ARTIFACT_DIR: /tmp/artifacts
+
+jobs:
+  build-kepler:
+    if : contains(github.event.comment.body, 'custom-test')
+    runs-on: ubuntu-latest
+    env:
+      CTR_CMD: docker
+    steps:
+      # checkout source code
+      - name: checkout source
+        uses: actions/checkout@v4.1.1
+      # set up golang
+      - name: install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      # build kepler image
+      - name: build and export Kepler image
+        run: |
+          make build_image
+          make save-image
+        env:
+          IMAGE_REPO: localhost:5001
+          IMAGE_NAME: kepler
+          IMAGE_TAG: devel
+          IMAGE_OUTPUT_PATH: ${{env.OUTPUT_DIR}}${{env.FILE_NAME}}
+      # save kepler image
+      - name: save Kepler image as artifact
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: keplerlibbpf
+          path: ${{env.OUTPUT_DIR}}${{env.FILE_NAME}}
+          retention-days: 1
+          # ref https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+          # as PR or Push event, we don't keep artifact in 90 days hence use 1 day here to save resources.
+
+  integration_test_with_libbpf:
+    needs: [build-kepler]
+    if : contains(github.event.comment.body, 'custom-test')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cluster_provider: [kind]
+    env:
+      CTR_CMD: docker
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v4.1.1
+
+      - name: download Kepler image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: keplerlibbpf
+
+      - name: Install all tools
+        uses: ./.github/tools-cache
+
+      - name: build manifest
+        run: make build-manifest OPTS="CI_DEPLOY DEBUG_DEPLOY"
+        env:
+          CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
+          IMAGE_REPO: localhost:5001
+          IMAGE_TAG: devel
+
+      - name: import Kepler image
+        run: make load-image
+        env:
+          IMAGE_REPO: localhost:5001
+          IMAGE_NAME: kepler
+          IMAGE_TAG: devel
+          INPUT_PATH: ${{env.FILE_NAME}}
+      # set up k8s cluster with ebpf
+      - name: use Kepler action to deploy cluster
+        uses: sustainable-computing-io/kepler-action@v0.0.7
+        with:
+          ebpfprovider: libbpf
+          cluster_provider: ${{matrix.cluster_provider}}
+          local_dev_cluster_version: v0.0.5
+
+      - name: push Kepler image to local registry
+        run: |
+          make push-image
+          make image-prune
+        env:
+          IMAGE_REPO: localhost:5001
+          IMAGE_NAME: kepler
+          IMAGE_TAG: devel
+
+      - name: deploy Kepler on cluster
+        run: make cluster-deploy
+        env:
+          CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
+          NO_BUILDS: true
+          KUBECONFIG: /tmp/kubeconfig
+
+      - name: Save artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4.3.4
+        with:
+          name: artifacts
+          path: ${{env.ARTIFACT_DIR}}
+          retention-days: 10
+
+      - name: run e2e tests
+        run: make e2e
+        env:
+          CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
+          KUBECONFIG: /tmp/kubeconfig
+
+      - name: undeploy Kepler and cleanup the cluster
+        run: |
+          make cluster-clean
+          make cluster-down
+        env:
+          CLUSTER_PROVIDER: ${{matrix.cluster_provider}}
