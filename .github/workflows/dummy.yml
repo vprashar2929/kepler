@@ -1,0 +1,15 @@
+name: dummy
+
+on:
+  workflow_call:
+    inputs:
+      pr:
+        type: string
+        description: PR number
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print PR number
+        run: echo ${{ inputs.pr }}
