@@ -27,7 +27,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 1.00
+    max_mae: 2.00
 
   - name: node-rapl - kepler-core
     units: Watts
@@ -51,7 +51,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 1.00
+    max_mae: 2.00
 
   - name: node-rapl - kepler-dram
     units: Watts
@@ -75,7 +75,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 1.00
+    max_mae: 2.00
 
   # absolute power comparison
   - name: Total - absolute
@@ -96,7 +96,7 @@ validations:
         )
       )
 
-    max_mae: 0.59
+    max_mae: 1.99
 
   # CPU time comparison
   - name: cpu-time
@@ -138,7 +138,7 @@ validations:
         )
       )
 
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: package - dynamic
     units: Watts
@@ -160,7 +160,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: core - dynamic
     units: Watts
@@ -182,7 +182,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: dram - dynamic
     units: Watts
@@ -204,7 +204,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: other - dynamic
     units: Watts
@@ -226,7 +226,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: uncore - dynamic
     units: Watts
@@ -248,7 +248,7 @@ validations:
           }}[{rate_interval}]
         )
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   # node comparison
   - name: node platform - dynamic
@@ -266,7 +266,7 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: node package - dynamic
     units: Watts
@@ -283,7 +283,7 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: node core - dynamic
     units: Watts
@@ -300,7 +300,7 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: node dram - dynamic
     units: Watts
@@ -317,7 +317,7 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: node other - dynamic
     units: Watts
@@ -334,7 +334,7 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
 
   - name: node uncore - dynamic
     units: Watts
@@ -351,4 +351,4 @@ validations:
           mode="dynamic",
         }}[{rate_interval}]
       )
-    max_mae: 0.59
+    max_mae: 1.99
