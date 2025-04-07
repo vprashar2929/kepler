@@ -47,9 +47,13 @@ jobs:
 
       - name: Build image
         run: make image
+        env:
+          IMG_BASE: quay.io/rh_ee_vprashar
 
       - name: Push image
         run: make push
+        env:
+          IMG_BASE: quay.io/rh_ee_vprashar
 
       - name: Push release branch with tag
         run: |
