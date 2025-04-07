@@ -34,8 +34,8 @@ jobs:
 
       - name: Set Git user
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "$USERNAME"
+          git config --global user.email "$USERNAME-[bot]@users.noreply.github.com"
 
       - name: Create release branch
         run: |
@@ -44,6 +44,11 @@ jobs:
       - name: Tag release branch
         run: |
           git tag -a ${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
+
+      - name: Push release branch with tag
+        run: |
+          git push origin release-${{ github.event.inputs.tag }}
+          git push origin ${{ github.event.inputs.tag }}
 
       - name: Build image
         run: make image
@@ -54,11 +59,6 @@ jobs:
         run: make push
         env:
           IMG_BASE: quay.io/rh_ee_vprashar
-
-      - name: Push release branch with tag
-        run: |
-          git push origin release-${{ github.event.inputs.tag }}
-          git push origin ${{ github.event.inputs.tag }}
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
