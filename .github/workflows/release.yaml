@@ -48,6 +48,7 @@ jobs:
       - name: Tag release branch
         run: |
             git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
+            git push origin v${{ github.event.inputs.tag }}
 
       - name: Get previous tag
         id: prev_tag
@@ -60,7 +61,7 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
-          mode: COMMIT
+          mode: PR
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}",
