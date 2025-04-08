@@ -45,16 +45,16 @@ jobs:
         run: |
           git checkout -b release-${{ github.event.inputs.tag }}
 
+      - name: Tag release branch
+        run: |
+            git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
+
       - name: Get previous tag
         id: prev_tag
         run: |
           git fetch --tags
           PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
           echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
-
-      - name: Tag release branch
-        run: |
-            git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
 
       - name: Generate changelog
         id: changelog
