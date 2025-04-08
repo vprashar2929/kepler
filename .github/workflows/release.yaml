@@ -58,7 +58,7 @@ jobs:
         with:
           fromTag: ${{ steps.prev_tag.outputs.tag }}
           toTag: ${{ github.event.inputs.tag }}
-          mode: PR
+          mode: COMMIT
           configurationJson: |
               {
                 "template": "#{{CHANGELOG}}",
