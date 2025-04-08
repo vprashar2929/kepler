@@ -39,7 +39,7 @@ services:
   kepler-latest:
     image: quay.io/sustainable_computing_io/kepler:latest
     privileged: true
-    pid: host
+    # pid: host
     networks:
       - kepler-network
     cap_add:
