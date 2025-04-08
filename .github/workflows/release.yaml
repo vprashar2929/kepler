@@ -47,12 +47,50 @@ jobs:
 
       - name: Tag release branch
         run: |
-          git tag -a ${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
+          git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
 
-      - name: Push release branch with tag
+      - name: Get previous tag
+        id: prev_tag
         run: |
-          git push origin release-${{ github.event.inputs.tag }}
-          git push origin ${{ github.event.inputs.tag }}
+          git fetch --tags
+          PREV_TAG=$(git tag --sort=-v:refname | sed -n '1p')
+          echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: ${{ steps.prev_tag.outputs.tag }}
+          toTag: ${{ github.event.inputs.tag }}
+          mode: PR
+          configurationJson: |
+              {
+                "template": "#{{CHANGELOG}}",
+                "categories": [
+                  {
+                    "title": "## Features",
+                    "labels": ["feat"]
+                  },
+                  {
+                    "title": "## Fixes",
+                    "labels": ["fix"]
+                  },
+                ],
+                "label_extractor": [
+                  {
+                    "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|compose){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+                    "on_property": "title",
+                    "target": "$1"
+                  }
+                ],
+                "pr_template": "#{{NUMBER}} {{TITLE}}"
+              }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print changelog
+        run: |
+          echo "changelog=${{ steps.changelog.outputs.changelog }}" >> $GITHUB_OUTPUT
 
       - name: Build image
         run: make image
@@ -64,27 +102,19 @@ jobs:
         env:
           IMG_BASE: quay.io/rh_ee_vprashar
 
+      - name: Push release branch with tag
+        run: |
+          git push origin release-${{ github.event.inputs.tag }}
+          git push origin v${{ github.event.inputs.tag }}
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.event.inputs.tag }}
-          name: Release ${{ github.event.inputs.tag }}
+          name: release-${{ github.event.inputs.tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: false
           generate_release_notes: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create PR to main branch
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Release ${{ github.event.inputs.tag }}
-          title: Release ${{ github.event.inputs.tag }}
-          body: |
-            This PR adds release ${{ github.event.inputs.tag }}.
-          branch: release-${{ github.event.inputs.tag }}
-          base: reboot
-          draft: false
-          # assignees:
-          # reviewers:
