@@ -60,8 +60,6 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
-          fromTag: ${{ steps.prev_tag.outputs.tag }}
-          toTag: v${{ github.event.inputs.tag }}
           mode: COMMIT
           configurationJson: |
             {
