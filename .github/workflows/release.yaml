@@ -49,38 +49,42 @@ jobs:
         id: prev_tag
         run: |
           git fetch --tags
-          PREV_TAG=$(git tag --sort=-v:refname | sed -n '1p')
+          PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
           echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Tag release branch
+        run: |
+            git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
 
       - name: Generate changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
           fromTag: ${{ steps.prev_tag.outputs.tag }}
-          toTag: ${{ github.event.inputs.tag }}
+          toTag: v${{ github.event.inputs.tag }}
           mode: COMMIT
           configurationJson: |
-              {
-                "template": "#{{CHANGELOG}}",
-                "categories": [
-                  {
-                    "title": "## Features",
-                    "labels": ["feat"]
-                  },
-                  {
-                    "title": "## Fixes",
-                    "labels": ["fix"]
-                  },
-                ],
-                "label_extractor": [
-                  {
-                    "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|compose){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
-                    "on_property": "title",
-                    "target": "$1"
-                  }
-                ],
-                "pr_template": "#{{NUMBER}} {{TITLE}}"
-              }
+            {
+              "template": "#{{CHANGELOG}}",
+              "categories": [
+                {
+                  "title": "## Features",
+                  "labels": ["feat"]
+                },
+                {
+                  "title": "## Fixes",
+                  "labels": ["fix"]
+                },
+              ],
+              "label_extractor": [
+                {
+                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|compose){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+                  "on_property": "title",
+                  "target": "$1"
+                }
+              ],
+              "pr_template": "#{{NUMBER}} {{TITLE}}"
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -97,10 +101,6 @@ jobs:
         run: make push
         env:
           IMG_BASE: quay.io/rh_ee_vprashar
-
-      - name: Tag release branch
-        run: |
-          git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
 
       - name: Push release branch with tag
         run: |
