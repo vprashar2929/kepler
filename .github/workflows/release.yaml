@@ -82,7 +82,7 @@ jobs:
                   "target": "$1"
                 }
               ],
-              "pr_template": "- #{{TITLE}}\n   - PR: ##{{NUMBER}}",
+              "pr_template": "#{{NUMBER}} {{TITLE}}"
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -93,9 +93,9 @@ jobs:
           echo "${{ steps.changelog.outputs.changelog }}"
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v1 # Update action version if needed
+        uses: actions/create-release@v1
         with:
-          name: release-${{ steps.version.outputs.version }}
+          release_name: release-${{ steps.version.outputs.version }}
           body: ${{ steps.changelog.outputs.changelog_output }} # Use the output from the previous step
           draft: false
           prerelease: false
