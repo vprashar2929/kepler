@@ -50,18 +50,27 @@ jobs:
             git tag -a v${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
             git push origin v${{ github.event.inputs.tag }}
 
-      - name: Get previous tag
-        id: prev_tag
+      - name: Build image
+        run: make image
+        env:
+          IMG_BASE: quay.io/rh_ee_vprashar
+
+      - name: Push image
+        run: make push
+        env:
+          IMG_BASE: quay.io/rh_ee_vprashar
+
+      - name: Push release branch with tag
         run: |
-          git fetch --tags
-          PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
-          echo "tag=$PREV_TAG" >> $GITHUB_OUTPUT
+           git push origin release-${{ github.event.inputs.tag }}
+           git push origin v${{ github.event.inputs.tag }}
 
       - name: Generate changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
           mode: PR
+          toTag: v${{ github.event.inputs.tag }}
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}",
@@ -91,25 +100,11 @@ jobs:
         run: |
           echo "changelog=${{ steps.changelog.outputs.changelog }}" >> $GITHUB_OUTPUT
 
-      - name: Build image
-        run: make image
-        env:
-          IMG_BASE: quay.io/rh_ee_vprashar
-
-      - name: Push image
-        run: make push
-        env:
-          IMG_BASE: quay.io/rh_ee_vprashar
-
-      - name: Push release branch with tag
-        run: |
-          git push origin release-${{ github.event.inputs.tag }}
-          git push origin v${{ github.event.inputs.tag }}
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.inputs.tag }}
+          tag_name: v${{ github.event.inputs.tag }}
           name: release-${{ github.event.inputs.tag }}
           body: ${{ steps.changelog.outputs.changelog }}
           draft: false
