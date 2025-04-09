@@ -67,7 +67,7 @@ jobs:
         id: changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
-          mode: COMMIT
+          # mode: COMMIT
           configurationJson: |
             {
               "template": "#{{CHANGELOG}}",
