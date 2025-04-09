@@ -87,6 +87,7 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2 # Update action version if needed
         with:
+          name: ${{ 'release-' + replace(replace(github.ref_name, 'v', ''), '-reboot', '') }}
           body: ${{ steps.changelog.outputs.changelog_output }} # Use the output from the previous step
           draft: false
           prerelease: false
