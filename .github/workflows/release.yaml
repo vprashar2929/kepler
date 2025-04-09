@@ -93,7 +93,7 @@ jobs:
           echo "${{ steps.changelog.outputs.changelog }}"
 
       - name: Create GitHub release
-        uses: softprops/action-gh-release@v2 # Update action version if needed
+        uses: softprops/action-gh-release@v1 # Update action version if needed
         with:
           name: release-${{ steps.version.outputs.version }}
           body: ${{ steps.changelog.outputs.changelog_output }} # Use the output from the previous step
