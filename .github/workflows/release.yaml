@@ -82,7 +82,7 @@ jobs:
                   "target": "$1"
                 }
               ],
-              "pr_template": "#{{NUMBER}} {{TITLE}}"
+              "pr_template": "- #{{TITLE}}\n   - PR: ##{{NUMBER}}",
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
