@@ -59,6 +59,7 @@ func main() {
 		os.Exit(1)
 	}
 	logger.Info("Graceful shutdown completed")
+	logger.Info("Graceful shutdown completed!!!!!!!!!!!!!!")
 }
 
 func logVersionInfo(logger *slog.Logger) {
