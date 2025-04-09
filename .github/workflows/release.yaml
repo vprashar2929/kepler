@@ -45,7 +45,7 @@ jobs:
         run: |
           make image
         env:
-          IMG_BASE: ${{ inputs.registry }}
+          IMG_BASE: quay.io/rh_ee_vprashar
 
       - name: Push Image
         shell: bash
@@ -53,7 +53,7 @@ jobs:
         run: |
           make push
         env:
-          IMG_BASE: ${{ inputs.registry }}
+          IMG_BASE: quay.io/rh_ee_vprashar
 
       - name: Generate changelog
         id: changelog
