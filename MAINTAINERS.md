@@ -7,7 +7,6 @@
 
 | Name                  | Company    | Github ID      | Email                            |
 | --------------------- | ---------- | -------------- | -------------------------------- |
-| Huamin Chen           | Red Hat    | rootfs         | <hchen@redhat.com>               |
 | Ji Chen               | IBM        | jichenjc       | <jichenjc@cn.ibm.com>            |
 | Parul Singh           | Red Hat    | husky-parul    | <parsingh@redhat.com>            |
 | Kaiyi Liu             | Red Hat    | KaiyiLiu1234   | <kaliu@redhat.com>               |
