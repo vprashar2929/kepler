@@ -15,7 +15,7 @@ type Energy uint64
 
 // Joule returns the underlying energy value as Joules
 func (e Energy) Joules() float64 {
-	return float64(e) / 1_000_000
+	return float64(e) / 1_000_0000
 }
 
 func (e Energy) MicroJoules() uint64 {
