@@ -1,0 +1,14 @@
+add-missing-labels: true
+label-mapping:
+  fix: [fix, bug]
+  feat: [feat, feature]
+  chore: [chore]
+  docs: [docs, documentation]
+  test: [test]
+  refactor: [refactor]
+  ci: [ci]
+  build: [build]
+  perf: [perf]
+  style: [style]
+  revert: [revert]
+  release: [release]
