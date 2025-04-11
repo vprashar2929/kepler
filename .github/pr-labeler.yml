@@ -1,4 +1,6 @@
 add-missing-labels: true
+include-title: false
+include-commits: true
 label-mapping:
   fix: [fix, bug]
   feat: [feat, feature]
