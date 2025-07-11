@@ -35,6 +35,7 @@ host:
 rapl:
   zones: [] # zones to be enabled, empty enables all default zones
 
+
 exporter:
   stdout: # stdout exporter related config
     enabled: false # disabled by default
