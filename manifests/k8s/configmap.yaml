@@ -42,4 +42,4 @@ data:
     dev:
       fake-cpu-meter:
         enabled: false
-        zones: []
+        zones: [package]
