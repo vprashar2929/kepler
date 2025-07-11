@@ -13,7 +13,7 @@ Kepler supports two primary methods for configuration:
 
 ## 🖥️ Command-line Flags
 
-You can configure Kepler by passing flags when starting the service. The following flags are available:
+You can configure Kepler by passing flags when starting the service. The following flags are available
 
 | Flag | Description | Default | Values |
 |------|-------------|---------|--------|
