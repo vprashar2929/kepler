@@ -39,12 +39,12 @@ jobs:
   comment-on-pr:
     needs: check-changes
     if: >-
-      ${{ needs.check-changes.outputs.changes == 'true' }} &&
+      needs.check-changes.outputs.changes == 'true' &&
       (
-        ${{ needs.check-changes.outputs.doc_changes != 'true' }} ||
-        ${{ needs.check-changes.outputs.compose_changes != 'true' }} ||
-        ${{ needs.check-changes.outputs.hack_changes != 'true' }} ||
-        ${{ needs.check-changes.outputs.manifest_changes != 'true' }}
+        needs.check-changes.outputs.doc_changes != 'true' ||
+        needs.check-changes.outputs.compose_changes != 'true' ||
+        needs.check-changes.outputs.hack_changes != 'true' ||
+        needs.check-changes.outputs.manifest_changes != 'true'
       )
     runs-on: ubuntu-latest
     steps:
