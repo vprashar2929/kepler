@@ -8,7 +8,7 @@ Kepler (Kubernetes-based Efficient Power Level Exporter) is a Prometheus exporte
 
 **Important Notice:** Starting with version 0.10.0, Kepler has undergone a complete ground-up rewrite.
 This represents a significant architectural improvement while maintaining the core mission of
-accurate energy consumption monitoring for cloud-native workloads.
+accurate energy consumption monitoring for cloud-native workloads
 
 > 📢 **Read the full announcement:** [CNCF Slack Announcement](https://cloud-native.slack.com/archives/C05QK3KN3HT/p1752049660866519)
 
