@@ -12,7 +12,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      IMG_BASE: quay.io/sustainable_computing_io
+      IMG_BASE: quay.io/rh_ee_vprashar
 
     steps:
       - name: Checkout source
@@ -39,8 +39,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.IMG_BASE }}
-          username: ${{ secrets.BOT_NAME }}
-          password: ${{ secrets.BOT_TOKEN }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
 
       - name: make deps
         shell: bash
@@ -72,7 +72,22 @@ jobs:
         shell: bash
         run: |
           mkdir -p helm-releases
+          VERSION=${{ steps.version.outputs.version }}
+          # Remove 'v' prefix from version
+          CHART_VERSION=${VERSION#v}
           helm package manifests/helm/kepler -d helm-releases
+          # Rename the helm chart to include 'helm' identifier
+          mv helm-releases/kepler-${CHART_VERSION}.tgz helm-releases/kepler-helm-${CHART_VERSION}.tgz
+
+      - name: Build Kepler binary
+        shell: bash
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          # Remove 'v' prefix from version
+          VERSION=${VERSION#v}
+          make build PRODUCTION=1
+          # Currently the binary is built for linux-amd64 only
+          tar -czvf bin/kepler-${VERSION}.linux-amd64.tar.gz bin/kepler-release
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -84,6 +99,7 @@ jobs:
           make_latest: true
           files: |
             helm-releases/*.tgz
+            bin/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
