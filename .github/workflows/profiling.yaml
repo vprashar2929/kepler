@@ -3,7 +3,6 @@ name: Profiling Report
 # 1. On 'pull_request': Builds and run pprof profiling scripts
 # 2. On 'pull_request_target': Deploys the artifacts from (1) with write permissions
 on:
-  pull_request:
   pull_request_target:
 
 permissions:
@@ -13,8 +12,6 @@ permissions:
 jobs:
   # Job 1: Run on the PR from the fork with a read-only token
   build_and_profile:
-    # This job only runs for the 'pull_request' event, not 'pull_request_target'
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -60,10 +57,7 @@ jobs:
 
   # Job 2: Run in the context of the base repo with a write token
   deploy_and_comment:
-    # This job only runs for the 'pull_request_target' event
-    if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
-    # It requires the build_and_profile job from the corresponding 'pull_request' workflow to succeed
     needs: build_and_profile
     steps:
       - name: Checkout source
