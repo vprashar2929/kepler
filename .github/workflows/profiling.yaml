@@ -81,7 +81,7 @@ jobs:
           name: mem-profile-${{ github.event.pull_request.number }}
           path: ./tmp/mem-profile
 
-      - name: Generate comment message
+      - name: Generate comment messages
         id: generate_message
         run: |
           {
@@ -89,10 +89,18 @@ jobs:
             echo "Profiling reports are ready to be viewed."
             echo ""
             echo "CPU Profiling Artifact:"
-            echo " * Download: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/cpu-profile-${{ github.event.pull_request.number }}"
+            echo " * Download from the [Actions Summary page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo " * Artifact name: \`cpu-profile-${{ github.event.pull_request.number }}\`"
             echo ""
             echo "Memory Profiling Artifact:"
-            echo " * Download: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/mem-profile-${{ github.event.pull_request.number }}"           echo ""
+            echo " * Download from the [Actions Summary page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo " * Artifact name: \`mem-profile-${{ github.event.pull_request.number }}\`"
+            echo ""
+            echo "Or use GitHub CLI to download artifacts:"
+            echo "\`\`\`bash"
+            echo "gh run download ${{ github.run_id }} -n cpu-profile-${{ github.event.pull_request.number }}"
+            echo "gh run download ${{ github.run_id }} -n mem-profile-${{ github.event.pull_request.number }}"
+            echo "\`\`\`"
             echo ""
             echo "EOF"
           } >> $GITHUB_OUTPUT
