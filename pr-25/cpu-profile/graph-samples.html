@@ -1,1 +1,1798 @@
-Could not execute dot; may need to install graphviz.
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>kepler samples</title>
+  <style type="text/css">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 13px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+a {
+  color: #2a66d9;
+}
+.header {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  min-height: 44px;
+  background-color: #eee;
+  color: #212121;
+  padding: 0 1rem;
+}
+.header > div {
+  margin: 0 0.125em;
+}
+.header .title h1 {
+  font-size: 1.75em;
+  margin-right: 1rem;
+  margin-bottom: 4px;
+}
+.header .title a {
+  color: #212121;
+  text-decoration: none;
+}
+.header .title a:hover {
+  text-decoration: underline;
+}
+.header .description {
+  width: 100%;
+  text-align: right;
+  white-space: nowrap;
+}
+@media screen and (max-width: 799px) {
+  .header input {
+    display: none;
+  }
+}
+#detailsbox {
+  display: none;
+  position: fixed;
+  top: 40px;
+  right: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 5px rgba(0,0,0,.3);
+  line-height: 24px;
+  padding: 1em;
+  text-align: left;
+}
+.header input {
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' style='pointer-events:none;display:block;width:100%25;height:100%25;fill:%23757575'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61.0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 4px center/20px 20px;
+  border: 1px solid #d1d2d3;
+  border-radius: 2px 0 0 2px;
+  padding: 0.25em;
+  padding-left: 28px;
+  margin-left: 1em;
+  font-family: 'Roboto', 'Noto', sans-serif;
+  font-size: 1em;
+  line-height: 24px;
+  color: #212121;
+}
+.downArrow {
+  border-top: .36em solid #ccc;
+  border-left: .36em solid transparent;
+  border-right: .36em solid transparent;
+  margin-bottom: .05em;
+  margin-left: .5em;
+  transition: border-top-color 200ms;
+}
+.menu-item {
+  height: 100%;
+  text-transform: uppercase;
+  font-family: 'Roboto Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  position: relative;
+}
+.menu-item .menu-name:hover {
+  opacity: 0.75;
+}
+.menu-item .menu-name:hover .downArrow {
+  border-top-color: #666;
+}
+.menu-name {
+  height: 100%;
+  padding: 0 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.menu-name a {
+  text-decoration: none;
+  color: #212121;
+}
+.submenu {
+  display: none;
+  margin-top: -4px;
+  min-width: 10em;
+  position: absolute;
+  left: 0px;
+  background-color: white;
+  box-shadow: 0 1px 5px rgba(0,0,0,.3);
+  font-size: 100%;
+  text-transform: none;
+  white-space: nowrap;
+}
+.menu-item, .submenu {
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+}
+.submenu hr {
+  border: 0;
+  border-top: 2px solid #eee;
+}
+.submenu a {
+  display: block;
+  padding: .5em 1em;
+  text-decoration: none;
+}
+.submenu a:hover, .submenu a.active {
+  color: white;
+  background-color: #6b82d6;
+}
+.submenu a.disabled {
+  color: gray;
+  pointer-events: none;
+}
+.menu-check-mark {
+  position: absolute;
+  left: 2px;
+}
+.menu-delete-btn {
+  position: absolute;
+  right: 2px;
+}
+
+.help {
+  padding-left: 1em;
+}
+
+
+#dialog-overlay {
+  display: none;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(1,1,1,0.1);
+}
+
+.dialog {
+  
+  display: none;
+  position: fixed;
+  margin: 0px;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 125%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 5px rgba(0,0,0,.3);
+}
+.dialog-header {
+  font-size: 120%;
+  border-bottom: 1px solid #CCCCCC;
+  width: 100%;
+  text-align: center;
+  background: #EEEEEE;
+  user-select: none;
+}
+.dialog-footer {
+  border-top: 1px solid #CCCCCC;
+  width: 100%;
+  text-align: right;
+  padding: 10px;
+}
+.dialog-error {
+  margin: 10px;
+  color: red;
+}
+.dialog input {
+  margin: 10px;
+  font-size: inherit;
+}
+.dialog button {
+  margin-left: 10px;
+  font-size: inherit;
+}
+#save-dialog, #delete-dialog {
+  width: 50%;
+  max-width: 20em;
+}
+#delete-prompt {
+  padding: 10px;
+}
+
+#content {
+  overflow-y: scroll;
+  padding: 1em;
+}
+#top {
+  overflow-y: scroll;
+}
+#graph {
+  overflow: hidden;
+}
+#graph svg {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+}
+#content.source .filename {
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-size: 120%;
+}
+#content.source pre {
+  margin-bottom: 3em;
+}
+table {
+  border-spacing: 0px;
+  width: 100%;
+  padding-bottom: 1em;
+  white-space: nowrap;
+}
+table thead {
+  font-family: 'Roboto Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+table tr th {
+  position: sticky;
+  top: 0;
+  background-color: #ddd;
+  text-align: right;
+  padding: .3em .5em;
+}
+table tr td {
+  padding: .3em .5em;
+  text-align: right;
+}
+#top table tr th:nth-child(6),
+#top table tr th:nth-child(7),
+#top table tr td:nth-child(6),
+#top table tr td:nth-child(7) {
+  text-align: left;
+}
+#top table tr td:nth-child(6) {
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#flathdr1, #flathdr2, #cumhdr1, #cumhdr2, #namehdr {
+  cursor: ns-resize;
+}
+.hilite {
+  background-color: #ebf5fb;
+  font-weight: bold;
+}
+ 
+.boxtext         { z-index: 2; }   
+#current-details { z-index: 2; }   
+#detailsbox      { z-index: 3; }   
+.submenu         { z-index: 4; }
+.dialog          { z-index: 5; }
+</style>
+
+  <style type="text/css">
+#graph {
+    cursor: grab;
+}
+
+#graph:active {
+    cursor: grabbing;
+}
+</style>
+
+</head>
+<body>
+  <div class="header">
+  <div class="title">
+    <h1><a href="./">pprof</a></h1>
+  </div>
+
+  <div id="view" class="menu-item">
+    <div class="menu-name">
+      View
+      <i class="downArrow"></i>
+    </div>
+    <div class="submenu">
+      <a title="Outputs top entries in text form"  href="./top" id="topbtn">Top</a>
+      <a title="Display profile as a directed graph" href="./" id="graphbtn">Graph</a>
+      <a title="Display profile as a flame graph" href="./flamegraph" id="flamegraph">Flame Graph</a>
+      <a title="Output callers/callees of functions matching regexp" href="./peek" id="peek">Peek</a>
+      <a title="Output annotated source for functions matching regexp" href="./source" id="list">Source</a>
+      <a title="Output assembly listings annotated with samples" href="./disasm" id="disasm">Disassemble</a>
+    </div>
+  </div>
+
+  
+  
+  <div id="sample" class="menu-item">
+    <div class="menu-name">
+      Sample
+      <i class="downArrow"></i>
+    </div>
+    <div class="submenu">
+      
+      <a href="?si=samples" id="sampletype-samples">samples</a>
+      
+      <a href="?si=cpu" id="sampletype-cpu">cpu</a>
+      
+    </div>
+  </div>
+  
+
+  <div id="refine" class="menu-item">
+    <div class="menu-name">
+      Refine
+      <i class="downArrow"></i>
+    </div>
+    <div class="submenu">
+      <a title="Restricts to samples going through a node matching regexp
+Discard samples that do not include a node matching this regexp.
+Matching includes the function name, filename or object name.
+" href="?" id="focus">Focus</a>
+      <a title="Skips paths going through any nodes matching regexp
+If set, discard samples that include a node matching this regexp.
+Matching includes the function name, filename or object name.
+" href="?" id="ignore">Ignore</a>
+      <a title="Skips nodes matching regexp
+Discard nodes that match this location.
+Other nodes from samples that include this location will be shown.
+Matching includes the function name, filename or object name.
+" href="?" id="hide">Hide</a>
+      <a title="Only show nodes matching regexp
+If set, only show nodes that match this location.
+Matching includes the function name, filename or object name.
+" href="?" id="show">Show</a>
+      <a title="Drops functions above the highest matched frame.
+If set, all frames above the highest match are dropped from every sample.
+Matching includes the function name, filename or object name.
+" href="?" id="show-from">Show from</a>
+      <hr>
+      <a title="Show the entire profile" href="?">Reset</a>
+    </div>
+  </div>
+
+  <div id="config" class="menu-item">
+    <div class="menu-name">
+      Config
+      <i class="downArrow"></i>
+    </div>
+    <div class="submenu">
+      <a title="Save current settings" id="save-config">Save as ...</a>
+      <hr>
+      
+      <a href="?si=samples">
+        <span class="menu-check-mark">✓</span>
+        Default
+        
+      </a>
+      
+    </div>
+  </div>
+
+  <div id="download" class="menu-item">
+    <div class="menu-name">
+      <a href="./download">Download</a>
+    </div>
+  </div>
+
+  <div>
+    <input id="search" type="text" placeholder="Search regexp" autocomplete="off" autocapitalize="none" size=40>
+  </div>
+
+  <div class="description">
+    <a title="Show information about the profile and this view" href="#" id="details">kepler samples</a>
+    <div id="detailsbox">
+      <div>File: kepler</div><div>Build ID: 551364edf210718e666d22eef53dd63da1089599</div><div>Type: samples</div><div>Time: 2025-08-11 17:25:41 UTC</div><div>Duration: 30s, Total samples = 1 </div><div>Showing nodes accounting for 1, 100% of 1 total</div><div>
+See https://git.io/JfYMW for how to read the graph</div>
+    </div>
+  </div>
+
+  
+</div>
+
+<div id="dialog-overlay"></div>
+
+<div class="dialog" id="save-dialog">
+  <div class="dialog-header">Save options as</div>
+  <datalist id="config-list">
+    
+  </datalist>
+  <input id="save-name" type="text" list="config-list" placeholder="New config" />
+  <div class="dialog-footer">
+    <span class="dialog-error" id="save-error"></span>
+    <button id="save-cancel">Cancel</button>
+    <button id="save-confirm">Save</button>
+  </div>
+</div>
+
+<div class="dialog" id="delete-dialog">
+  <div class="dialog-header" id="delete-dialog-title">Delete config</div>
+  <div id="delete-prompt"></div>
+  <div class="dialog-footer">
+    <span class="dialog-error" id="delete-error"></span>
+    <button id="delete-cancel">Cancel</button>
+    <button id="delete-confirm">Delete</button>
+  </div>
+</div>
+
+<div id="errors"></div>
+
+  <div id="graph">
+    <svg width="133pt" height="2477pt"
+ viewBox="0.00 0.00 133.00 2477.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 2473)">
+<title>kepler</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-2473 129,-2473 129,4 -4,4"/>
+<!-- N1 -->
+<g id="node1" class="node">
+<title>N1</title>
+<g id="a_node1"><a xlink:title="internal/runtime/syscall.Syscall6 (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="125,-86 0,-86 0,0 125,0 125,-86"/>
+<text text-anchor="middle" x="62.5" y="-62.8" font-family="Times,serif" font-size="24.00">syscall</text>
+<text text-anchor="middle" x="62.5" y="-36.8" font-family="Times,serif" font-size="24.00">Syscall6</text>
+<text text-anchor="middle" x="62.5" y="-10.8" font-family="Times,serif" font-size="24.00">1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N2 -->
+<g id="node2" class="node">
+<title>N2</title>
+<g id="a_node2"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="117.5,-2469 7.5,-2469 7.5,-2416 117.5,-2416 117.5,-2469"/>
+<text text-anchor="middle" x="62.5" y="-2458.6" font-family="Times,serif" font-size="8.00">monitor</text>
+<text text-anchor="middle" x="62.5" y="-2449.6" font-family="Times,serif" font-size="8.00">(*PowerMonitor)</text>
+<text text-anchor="middle" x="62.5" y="-2440.6" font-family="Times,serif" font-size="8.00">scheduleNextCollection</text>
+<text text-anchor="middle" x="62.5" y="-2431.6" font-family="Times,serif" font-size="8.00">func1</text>
+<text text-anchor="middle" x="62.5" y="-2422.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N7 -->
+<g id="node7" class="node">
+<title>N7</title>
+<g id="a_node7"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="125,-2365 0,-2365 0,-2321 125,-2321 125,-2365"/>
+<text text-anchor="middle" x="62.5" y="-2354.6" font-family="Times,serif" font-size="8.00">monitor</text>
+<text text-anchor="middle" x="62.5" y="-2345.6" font-family="Times,serif" font-size="8.00">(*PowerMonitor)</text>
+<text text-anchor="middle" x="62.5" y="-2336.6" font-family="Times,serif" font-size="8.00">synchronizedPowerRefresh</text>
+<text text-anchor="middle" x="62.5" y="-2327.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N2&#45;&gt;N7 -->
+<g id="edge5" class="edge">
+<title>N2&#45;&gt;N7</title>
+<g id="a_edge5"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-2415.88C62.5,-2403.42 62.5,-2388.32 62.5,-2375.19"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-2375.17 62.5,-2365.17 57.25,-2375.17 67.75,-2375.17"/>
+</a>
+</g>
+<g id="a_edge5&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh (1)">
+<text text-anchor="middle" x="69.5" y="-2386.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N3 -->
+<g id="node3" class="node">
+<title>N3</title>
+<g id="a_node3"><a xlink:title="github.com/prometheus/procfs.Proc.Stat (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-1215 27,-1215 27,-1171 98,-1171 98,-1215"/>
+<text text-anchor="middle" x="62.5" y="-1204.6" font-family="Times,serif" font-size="8.00">procfs</text>
+<text text-anchor="middle" x="62.5" y="-1195.6" font-family="Times,serif" font-size="8.00">Proc</text>
+<text text-anchor="middle" x="62.5" y="-1186.6" font-family="Times,serif" font-size="8.00">Stat</text>
+<text text-anchor="middle" x="62.5" y="-1177.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N4 -->
+<g id="node4" class="node">
+<title>N4</title>
+<g id="a_node4"><a xlink:title="github.com/prometheus/procfs/internal/util.ReadFileNoStat (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="101.5,-1120 23.5,-1120 23.5,-1084 101.5,-1084 101.5,-1120"/>
+<text text-anchor="middle" x="62.5" y="-1109.1" font-family="Times,serif" font-size="8.00">util</text>
+<text text-anchor="middle" x="62.5" y="-1100.1" font-family="Times,serif" font-size="8.00">ReadFileNoStat</text>
+<text text-anchor="middle" x="62.5" y="-1091.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N3&#45;&gt;N4 -->
+<g id="edge1" class="edge">
+<title>N3&#45;&gt;N4</title>
+<g id="a_edge1"><a xlink:title="github.com/prometheus/procfs.Proc.Stat &#45;&gt; github.com/prometheus/procfs/internal/util.ReadFileNoStat (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1170.91C62.5,-1158.78 62.5,-1143.41 62.5,-1130.36"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1130.07 62.5,-1120.07 57.25,-1130.07 67.75,-1130.07"/>
+</a>
+</g>
+<g id="a_edge1&#45;label"><a xlink:title="github.com/prometheus/procfs.Proc.Stat &#45;&gt; github.com/prometheus/procfs/internal/util.ReadFileNoStat (1)">
+<text text-anchor="middle" x="69.5" y="-1141.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N20 -->
+<g id="node20" class="node">
+<title>N20</title>
+<g id="a_node20"><a xlink:title="io.ReadAll (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-1033 27,-1033 27,-997 98,-997 98,-1033"/>
+<text text-anchor="middle" x="62.5" y="-1022.1" font-family="Times,serif" font-size="8.00">io</text>
+<text text-anchor="middle" x="62.5" y="-1013.1" font-family="Times,serif" font-size="8.00">ReadAll</text>
+<text text-anchor="middle" x="62.5" y="-1004.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N4&#45;&gt;N20 -->
+<g id="edge2" class="edge">
+<title>N4&#45;&gt;N20</title>
+<g id="a_edge2"><a xlink:title="github.com/prometheus/procfs/internal/util.ReadFileNoStat &#45;&gt; io.ReadAll (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1083.8C62.5,-1072.16 62.5,-1056.55 62.5,-1043.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1043.18 62.5,-1033.18 57.25,-1043.18 67.75,-1043.18"/>
+</a>
+</g>
+<g id="a_edge2&#45;label"><a xlink:title="github.com/prometheus/procfs/internal/util.ReadFileNoStat &#45;&gt; io.ReadAll (1)">
+<text text-anchor="middle" x="69.5" y="-1054.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N5 -->
+<g id="node5" class="node">
+<title>N5</title>
+<g id="a_node5"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).calculatePower (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="104,-1777 21,-1777 21,-1733 104,-1733 104,-1777"/>
+<text text-anchor="middle" x="62.5" y="-1766.6" font-family="Times,serif" font-size="8.00">monitor</text>
+<text text-anchor="middle" x="62.5" y="-1757.6" font-family="Times,serif" font-size="8.00">(*PowerMonitor)</text>
+<text text-anchor="middle" x="62.5" y="-1748.6" font-family="Times,serif" font-size="8.00">calculatePower</text>
+<text text-anchor="middle" x="62.5" y="-1739.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N10 -->
+<g id="node10" class="node">
+<title>N10</title>
+<g id="a_node10"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).Refresh (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="110.5,-1682 14.5,-1682 14.5,-1638 110.5,-1638 110.5,-1682"/>
+<text text-anchor="middle" x="62.5" y="-1671.6" font-family="Times,serif" font-size="8.00">resource</text>
+<text text-anchor="middle" x="62.5" y="-1662.6" font-family="Times,serif" font-size="8.00">(*resourceInformer)</text>
+<text text-anchor="middle" x="62.5" y="-1653.6" font-family="Times,serif" font-size="8.00">Refresh</text>
+<text text-anchor="middle" x="62.5" y="-1644.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N5&#45;&gt;N10 -->
+<g id="edge3" class="edge">
+<title>N5&#45;&gt;N10</title>
+<g id="a_edge3"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).calculatePower &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).Refresh (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1732.9C62.5,-1720.89 62.5,-1705.62 62.5,-1692.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1692.02 62.5,-1682.02 57.25,-1692.02 67.75,-1692.02"/>
+</a>
+</g>
+<g id="a_edge3&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).calculatePower &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).Refresh (1)">
+<text text-anchor="middle" x="69.5" y="-1703.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N6 -->
+<g id="node6" class="node">
+<title>N6</title>
+<g id="a_node6"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="104,-1872 21,-1872 21,-1828 104,-1828 104,-1872"/>
+<text text-anchor="middle" x="62.5" y="-1861.6" font-family="Times,serif" font-size="8.00">monitor</text>
+<text text-anchor="middle" x="62.5" y="-1852.6" font-family="Times,serif" font-size="8.00">(*PowerMonitor)</text>
+<text text-anchor="middle" x="62.5" y="-1843.6" font-family="Times,serif" font-size="8.00">refreshSnapshot</text>
+<text text-anchor="middle" x="62.5" y="-1834.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N6&#45;&gt;N5 -->
+<g id="edge4" class="edge">
+<title>N6&#45;&gt;N5</title>
+<g id="a_edge4"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).calculatePower (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1827.9C62.5,-1815.89 62.5,-1800.62 62.5,-1787.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1787.02 62.5,-1777.02 57.25,-1787.02 67.75,-1787.02"/>
+</a>
+</g>
+<g id="a_edge4&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).calculatePower (1)">
+<text text-anchor="middle" x="69.5" y="-1798.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N14 -->
+<g id="node14" class="node">
+<title>N14</title>
+<g id="a_node14"><a xlink:title="golang.org/x/sync/singleflight.(*Group).Do (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-2270 27,-2270 27,-2226 98,-2226 98,-2270"/>
+<text text-anchor="middle" x="62.5" y="-2259.6" font-family="Times,serif" font-size="8.00">singleflight</text>
+<text text-anchor="middle" x="62.5" y="-2250.6" font-family="Times,serif" font-size="8.00">(*Group)</text>
+<text text-anchor="middle" x="62.5" y="-2241.6" font-family="Times,serif" font-size="8.00">Do</text>
+<text text-anchor="middle" x="62.5" y="-2232.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N7&#45;&gt;N14 -->
+<g id="edge6" class="edge">
+<title>N7&#45;&gt;N14</title>
+<g id="a_edge6"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh &#45;&gt; golang.org/x/sync/singleflight.(*Group).Do (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-2320.9C62.5,-2308.89 62.5,-2293.62 62.5,-2280.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-2280.02 62.5,-2270.02 57.25,-2280.02 67.75,-2280.02"/>
+</a>
+</g>
+<g id="a_edge6&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh &#45;&gt; golang.org/x/sync/singleflight.(*Group).Do (1)">
+<text text-anchor="middle" x="69.5" y="-2291.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N8 -->
+<g id="node8" class="node">
+<title>N8</title>
+<g id="a_node8"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="125,-1976 0,-1976 0,-1923 125,-1923 125,-1976"/>
+<text text-anchor="middle" x="62.5" y="-1965.6" font-family="Times,serif" font-size="8.00">monitor</text>
+<text text-anchor="middle" x="62.5" y="-1956.6" font-family="Times,serif" font-size="8.00">(*PowerMonitor)</text>
+<text text-anchor="middle" x="62.5" y="-1947.6" font-family="Times,serif" font-size="8.00">synchronizedPowerRefresh</text>
+<text text-anchor="middle" x="62.5" y="-1938.6" font-family="Times,serif" font-size="8.00">func1</text>
+<text text-anchor="middle" x="62.5" y="-1929.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N8&#45;&gt;N6 -->
+<g id="edge7" class="edge">
+<title>N8&#45;&gt;N6</title>
+<g id="a_edge7"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1922.88C62.5,-1910.42 62.5,-1895.32 62.5,-1882.19"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1882.17 62.5,-1872.17 57.25,-1882.17 67.75,-1882.17"/>
+</a>
+</g>
+<g id="a_edge7&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot (1)">
+<text text-anchor="middle" x="69.5" y="-1893.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N9 -->
+<g id="node9" class="node">
+<title>N9</title>
+<g id="a_node9"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*procWrapper).CPUTime (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="102,-1310 23,-1310 23,-1266 102,-1266 102,-1310"/>
+<text text-anchor="middle" x="62.5" y="-1299.6" font-family="Times,serif" font-size="8.00">resource</text>
+<text text-anchor="middle" x="62.5" y="-1290.6" font-family="Times,serif" font-size="8.00">(*procWrapper)</text>
+<text text-anchor="middle" x="62.5" y="-1281.6" font-family="Times,serif" font-size="8.00">CPUTime</text>
+<text text-anchor="middle" x="62.5" y="-1272.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N9&#45;&gt;N3 -->
+<g id="edge8" class="edge">
+<title>N9&#45;&gt;N3</title>
+<g id="a_edge8"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*procWrapper).CPUTime &#45;&gt; github.com/prometheus/procfs.Proc.Stat (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1265.9C62.5,-1253.89 62.5,-1238.62 62.5,-1225.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1225.02 62.5,-1215.02 57.25,-1225.02 67.75,-1225.02"/>
+</a>
+</g>
+<g id="a_edge8&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*procWrapper).CPUTime &#45;&gt; github.com/prometheus/procfs.Proc.Stat (1)">
+<text text-anchor="middle" x="69.5" y="-1236.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N11 -->
+<g id="node11" class="node">
+<title>N11</title>
+<g id="a_node11"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).refreshProcesses (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="110.5,-1587 14.5,-1587 14.5,-1543 110.5,-1543 110.5,-1587"/>
+<text text-anchor="middle" x="62.5" y="-1576.6" font-family="Times,serif" font-size="8.00">resource</text>
+<text text-anchor="middle" x="62.5" y="-1567.6" font-family="Times,serif" font-size="8.00">(*resourceInformer)</text>
+<text text-anchor="middle" x="62.5" y="-1558.6" font-family="Times,serif" font-size="8.00">refreshProcesses</text>
+<text text-anchor="middle" x="62.5" y="-1549.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N10&#45;&gt;N11 -->
+<g id="edge9" class="edge">
+<title>N10&#45;&gt;N11</title>
+<g id="a_edge9"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).Refresh &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).refreshProcesses (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1637.9C62.5,-1625.89 62.5,-1610.62 62.5,-1597.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1597.02 62.5,-1587.02 57.25,-1597.02 67.75,-1597.02"/>
+</a>
+</g>
+<g id="a_edge9&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).Refresh &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).refreshProcesses (1)">
+<text text-anchor="middle" x="69.5" y="-1608.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N12 -->
+<g id="node12" class="node">
+<title>N12</title>
+<g id="a_node12"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).updateProcessCache (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="112,-1492 13,-1492 13,-1448 112,-1448 112,-1492"/>
+<text text-anchor="middle" x="62.5" y="-1481.6" font-family="Times,serif" font-size="8.00">resource</text>
+<text text-anchor="middle" x="62.5" y="-1472.6" font-family="Times,serif" font-size="8.00">(*resourceInformer)</text>
+<text text-anchor="middle" x="62.5" y="-1463.6" font-family="Times,serif" font-size="8.00">updateProcessCache</text>
+<text text-anchor="middle" x="62.5" y="-1454.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N11&#45;&gt;N12 -->
+<g id="edge10" class="edge">
+<title>N11&#45;&gt;N12</title>
+<g id="a_edge10"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).refreshProcesses &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).updateProcessCache (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1542.9C62.5,-1530.89 62.5,-1515.62 62.5,-1502.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1502.02 62.5,-1492.02 57.25,-1502.02 67.75,-1502.02"/>
+</a>
+</g>
+<g id="a_edge10&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).refreshProcesses &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).updateProcessCache (1)">
+<text text-anchor="middle" x="69.5" y="-1513.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N13 -->
+<g id="node13" class="node">
+<title>N13</title>
+<g id="a_node13"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.populateProcessFields (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="114.5,-1397 10.5,-1397 10.5,-1361 114.5,-1361 114.5,-1397"/>
+<text text-anchor="middle" x="62.5" y="-1386.1" font-family="Times,serif" font-size="8.00">resource</text>
+<text text-anchor="middle" x="62.5" y="-1377.1" font-family="Times,serif" font-size="8.00">populateProcessFields</text>
+<text text-anchor="middle" x="62.5" y="-1368.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N12&#45;&gt;N13 -->
+<g id="edge11" class="edge">
+<title>N12&#45;&gt;N13</title>
+<g id="a_edge11"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).updateProcessCache &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.populateProcessFields (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1447.91C62.5,-1435.78 62.5,-1420.41 62.5,-1407.36"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1407.07 62.5,-1397.07 57.25,-1407.07 67.75,-1407.07"/>
+</a>
+</g>
+<g id="a_edge11&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*resourceInformer).updateProcessCache &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.populateProcessFields (1)">
+<text text-anchor="middle" x="69.5" y="-1418.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N13&#45;&gt;N9 -->
+<g id="edge12" class="edge">
+<title>N13&#45;&gt;N9</title>
+<g id="a_edge12"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.populateProcessFields &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*procWrapper).CPUTime (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-1360.84C62.5,-1349.44 62.5,-1334.13 62.5,-1320.58"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1320.19 62.5,-1310.19 57.25,-1320.19 67.75,-1320.19"/>
+</a>
+</g>
+<g id="a_edge12&#45;label"><a xlink:title="github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.populateProcessFields &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/resource.(*procWrapper).CPUTime (1)">
+<text text-anchor="middle" x="69.5" y="-1331.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N15 -->
+<g id="node15" class="node">
+<title>N15</title>
+<g id="a_node15"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-2175 27,-2175 27,-2131 98,-2131 98,-2175"/>
+<text text-anchor="middle" x="62.5" y="-2164.6" font-family="Times,serif" font-size="8.00">singleflight</text>
+<text text-anchor="middle" x="62.5" y="-2155.6" font-family="Times,serif" font-size="8.00">(*Group)</text>
+<text text-anchor="middle" x="62.5" y="-2146.6" font-family="Times,serif" font-size="8.00">doCall</text>
+<text text-anchor="middle" x="62.5" y="-2137.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N14&#45;&gt;N15 -->
+<g id="edge13" class="edge">
+<title>N14&#45;&gt;N15</title>
+<g id="a_edge13"><a xlink:title="golang.org/x/sync/singleflight.(*Group).Do &#45;&gt; golang.org/x/sync/singleflight.(*Group).doCall (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-2225.9C62.5,-2213.89 62.5,-2198.62 62.5,-2185.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-2185.02 62.5,-2175.02 57.25,-2185.02 67.75,-2185.02"/>
+</a>
+</g>
+<g id="a_edge13&#45;label"><a xlink:title="golang.org/x/sync/singleflight.(*Group).Do &#45;&gt; golang.org/x/sync/singleflight.(*Group).doCall (1)">
+<text text-anchor="middle" x="69.5" y="-2196.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N16 -->
+<g id="node16" class="node">
+<title>N16</title>
+<g id="a_node16"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall.func2 (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-2080 27,-2080 27,-2027 98,-2027 98,-2080"/>
+<text text-anchor="middle" x="62.5" y="-2069.6" font-family="Times,serif" font-size="8.00">singleflight</text>
+<text text-anchor="middle" x="62.5" y="-2060.6" font-family="Times,serif" font-size="8.00">(*Group)</text>
+<text text-anchor="middle" x="62.5" y="-2051.6" font-family="Times,serif" font-size="8.00">doCall</text>
+<text text-anchor="middle" x="62.5" y="-2042.6" font-family="Times,serif" font-size="8.00">func2</text>
+<text text-anchor="middle" x="62.5" y="-2033.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N15&#45;&gt;N16 -->
+<g id="edge14" class="edge">
+<title>N15&#45;&gt;N16</title>
+<g id="a_edge14"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall &#45;&gt; golang.org/x/sync/singleflight.(*Group).doCall.func2 (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-2130.84C62.5,-2118.97 62.5,-2103.85 62.5,-2090.19"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-2090.12 62.5,-2080.12 57.25,-2090.12 67.75,-2090.12"/>
+</a>
+</g>
+<g id="a_edge14&#45;label"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall &#45;&gt; golang.org/x/sync/singleflight.(*Group).doCall.func2 (1)">
+<text text-anchor="middle" x="69.5" y="-2101.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N16&#45;&gt;N8 -->
+<g id="edge15" class="edge">
+<title>N16&#45;&gt;N8</title>
+<g id="a_edge15"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall.func2 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-2026.76C62.5,-2014.56 62.5,-1999.78 62.5,-1986.49"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-1986.23 62.5,-1976.23 57.25,-1986.23 67.75,-1986.23"/>
+</a>
+</g>
+<g id="a_edge15&#45;label"><a xlink:title="golang.org/x/sync/singleflight.(*Group).doCall.func2 &#45;&gt; github.com/sustainable&#45;computing&#45;io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 (1)">
+<text text-anchor="middle" x="69.5" y="-1997.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N17 -->
+<g id="node17" class="node">
+<title>N17</title>
+<g id="a_node17"><a xlink:title="internal/poll.(*FD).Read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-646 27,-646 27,-602 98,-602 98,-646"/>
+<text text-anchor="middle" x="62.5" y="-635.6" font-family="Times,serif" font-size="8.00">poll</text>
+<text text-anchor="middle" x="62.5" y="-626.6" font-family="Times,serif" font-size="8.00">(*FD)</text>
+<text text-anchor="middle" x="62.5" y="-617.6" font-family="Times,serif" font-size="8.00">Read</text>
+<text text-anchor="middle" x="62.5" y="-608.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N18 -->
+<g id="node18" class="node">
+<title>N18</title>
+<g id="a_node18"><a xlink:title="internal/poll.ignoringEINTRIO (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="106,-536 19,-536 19,-500 106,-500 106,-536"/>
+<text text-anchor="middle" x="62.5" y="-525.1" font-family="Times,serif" font-size="8.00">poll</text>
+<text text-anchor="middle" x="62.5" y="-516.1" font-family="Times,serif" font-size="8.00">ignoringEINTRIO</text>
+<text text-anchor="middle" x="62.5" y="-507.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N17&#45;&gt;N18 -->
+<g id="edge16" class="edge">
+<title>N17&#45;&gt;N18</title>
+<g id="a_edge16"><a xlink:title="internal/poll.(*FD).Read &#45;&gt; internal/poll.ignoringEINTRIO (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-601.95C62.5,-585.93 62.5,-563.74 62.5,-546.34"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-546.23 62.5,-536.23 57.25,-546.23 67.75,-546.23"/>
+</a>
+</g>
+<g id="a_edge16&#45;label"><a xlink:title="internal/poll.(*FD).Read &#45;&gt; internal/poll.ignoringEINTRIO (1)">
+<text text-anchor="middle" x="90" y="-572.8" font-family="Times,serif" font-size="14.00"> 1</text>
+<text text-anchor="middle" x="90" y="-557.8" font-family="Times,serif" font-size="14.00"> (inline)</text>
+</a>
+</g>
+</g>
+<!-- N24 -->
+<g id="node24" class="node">
+<title>N24</title>
+<g id="a_node24"><a xlink:title="syscall.Read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-434 27,-434 27,-398 98,-398 98,-434"/>
+<text text-anchor="middle" x="62.5" y="-423.1" font-family="Times,serif" font-size="8.00">syscall</text>
+<text text-anchor="middle" x="62.5" y="-414.1" font-family="Times,serif" font-size="8.00">Read</text>
+<text text-anchor="middle" x="62.5" y="-405.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N18&#45;&gt;N24 -->
+<g id="edge17" class="edge">
+<title>N18&#45;&gt;N24</title>
+<g id="a_edge17"><a xlink:title="internal/poll.ignoringEINTRIO &#45;&gt; syscall.Read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-499.58C62.5,-484.38 62.5,-462.07 62.5,-444.46"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-444.22 62.5,-434.22 57.25,-444.22 67.75,-444.22"/>
+</a>
+</g>
+<g id="a_edge17&#45;label"><a xlink:title="internal/poll.ignoringEINTRIO &#45;&gt; syscall.Read (1)">
+<text text-anchor="middle" x="90" y="-470.8" font-family="Times,serif" font-size="14.00"> 1</text>
+<text text-anchor="middle" x="90" y="-455.8" font-family="Times,serif" font-size="14.00"> (inline)</text>
+</a>
+</g>
+</g>
+<!-- N19 -->
+<g id="node19" class="node">
+<title>N19</title>
+<g id="a_node19"><a xlink:title="io.(*LimitedReader).Read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="105,-946 20,-946 20,-902 105,-902 105,-946"/>
+<text text-anchor="middle" x="62.5" y="-935.6" font-family="Times,serif" font-size="8.00">io</text>
+<text text-anchor="middle" x="62.5" y="-926.6" font-family="Times,serif" font-size="8.00">(*LimitedReader)</text>
+<text text-anchor="middle" x="62.5" y="-917.6" font-family="Times,serif" font-size="8.00">Read</text>
+<text text-anchor="middle" x="62.5" y="-908.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N21 -->
+<g id="node21" class="node">
+<title>N21</title>
+<g id="a_node21"><a xlink:title="os.(*File).Read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-851 27,-851 27,-807 98,-807 98,-851"/>
+<text text-anchor="middle" x="62.5" y="-840.6" font-family="Times,serif" font-size="8.00">os</text>
+<text text-anchor="middle" x="62.5" y="-831.6" font-family="Times,serif" font-size="8.00">(*File)</text>
+<text text-anchor="middle" x="62.5" y="-822.6" font-family="Times,serif" font-size="8.00">Read</text>
+<text text-anchor="middle" x="62.5" y="-813.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N19&#45;&gt;N21 -->
+<g id="edge18" class="edge">
+<title>N19&#45;&gt;N21</title>
+<g id="a_edge18"><a xlink:title="io.(*LimitedReader).Read &#45;&gt; os.(*File).Read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-901.9C62.5,-889.89 62.5,-874.62 62.5,-861.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-861.02 62.5,-851.02 57.25,-861.02 67.75,-861.02"/>
+</a>
+</g>
+<g id="a_edge18&#45;label"><a xlink:title="io.(*LimitedReader).Read &#45;&gt; os.(*File).Read (1)">
+<text text-anchor="middle" x="69.5" y="-872.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N20&#45;&gt;N19 -->
+<g id="edge19" class="edge">
+<title>N20&#45;&gt;N19</title>
+<g id="a_edge19"><a xlink:title="io.ReadAll &#45;&gt; io.(*LimitedReader).Read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-996.84C62.5,-985.44 62.5,-970.13 62.5,-956.58"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-956.19 62.5,-946.19 57.25,-956.19 67.75,-956.19"/>
+</a>
+</g>
+<g id="a_edge19&#45;label"><a xlink:title="io.ReadAll &#45;&gt; io.(*LimitedReader).Read (1)">
+<text text-anchor="middle" x="69.5" y="-967.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N22 -->
+<g id="node22" class="node">
+<title>N22</title>
+<g id="a_node22"><a xlink:title="os.(*File).read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-741 27,-741 27,-697 98,-697 98,-741"/>
+<text text-anchor="middle" x="62.5" y="-730.6" font-family="Times,serif" font-size="8.00">os</text>
+<text text-anchor="middle" x="62.5" y="-721.6" font-family="Times,serif" font-size="8.00">(*File)</text>
+<text text-anchor="middle" x="62.5" y="-712.6" font-family="Times,serif" font-size="8.00">read</text>
+<text text-anchor="middle" x="62.5" y="-703.6" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N21&#45;&gt;N22 -->
+<g id="edge20" class="edge">
+<title>N21&#45;&gt;N22</title>
+<g id="a_edge20"><a xlink:title="os.(*File).Read &#45;&gt; os.(*File).read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-806.92C62.5,-791.09 62.5,-769.15 62.5,-751.27"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-751.03 62.5,-741.03 57.25,-751.03 67.75,-751.03"/>
+</a>
+</g>
+<g id="a_edge20&#45;label"><a xlink:title="os.(*File).Read &#45;&gt; os.(*File).read (1)">
+<text text-anchor="middle" x="90" y="-777.8" font-family="Times,serif" font-size="14.00"> 1</text>
+<text text-anchor="middle" x="90" y="-762.8" font-family="Times,serif" font-size="14.00"> (inline)</text>
+</a>
+</g>
+</g>
+<!-- N22&#45;&gt;N17 -->
+<g id="edge21" class="edge">
+<title>N22&#45;&gt;N17</title>
+<g id="a_edge21"><a xlink:title="os.(*File).read &#45;&gt; internal/poll.(*FD).Read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-696.9C62.5,-684.89 62.5,-669.62 62.5,-656.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-656.02 62.5,-646.02 57.25,-656.02 67.75,-656.02"/>
+</a>
+</g>
+<g id="a_edge21&#45;label"><a xlink:title="os.(*File).read &#45;&gt; internal/poll.(*FD).Read (1)">
+<text text-anchor="middle" x="69.5" y="-667.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N23 -->
+<g id="node23" class="node">
+<title>N23</title>
+<g id="a_node23"><a xlink:title="syscall.RawSyscall6 (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-173 27,-173 27,-137 98,-137 98,-173"/>
+<text text-anchor="middle" x="62.5" y="-162.1" font-family="Times,serif" font-size="8.00">syscall</text>
+<text text-anchor="middle" x="62.5" y="-153.1" font-family="Times,serif" font-size="8.00">RawSyscall6</text>
+<text text-anchor="middle" x="62.5" y="-144.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N23&#45;&gt;N1 -->
+<g id="edge22" class="edge">
+<title>N23&#45;&gt;N1</title>
+<g id="a_edge22"><a xlink:title="syscall.RawSyscall6 &#45;&gt; internal/runtime/syscall.Syscall6 (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-136.81C62.5,-125.82 62.5,-110.91 62.5,-96.26"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-96.21 62.5,-86.21 57.25,-96.21 67.75,-96.21"/>
+</a>
+</g>
+<g id="a_edge22&#45;label"><a xlink:title="syscall.RawSyscall6 &#45;&gt; internal/runtime/syscall.Syscall6 (1)">
+<text text-anchor="middle" x="69.5" y="-107.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N26 -->
+<g id="node26" class="node">
+<title>N26</title>
+<g id="a_node26"><a xlink:title="syscall.read (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-347 27,-347 27,-311 98,-311 98,-347"/>
+<text text-anchor="middle" x="62.5" y="-336.1" font-family="Times,serif" font-size="8.00">syscall</text>
+<text text-anchor="middle" x="62.5" y="-327.1" font-family="Times,serif" font-size="8.00">read</text>
+<text text-anchor="middle" x="62.5" y="-318.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N24&#45;&gt;N26 -->
+<g id="edge23" class="edge">
+<title>N24&#45;&gt;N26</title>
+<g id="a_edge23"><a xlink:title="syscall.Read &#45;&gt; syscall.read (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-397.8C62.5,-386.16 62.5,-370.55 62.5,-357.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-357.18 62.5,-347.18 57.25,-357.18 67.75,-357.18"/>
+</a>
+</g>
+<g id="a_edge23&#45;label"><a xlink:title="syscall.Read &#45;&gt; syscall.read (1)">
+<text text-anchor="middle" x="69.5" y="-368.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N25 -->
+<g id="node25" class="node">
+<title>N25</title>
+<g id="a_node25"><a xlink:title="syscall.Syscall (1)">
+<polygon fill="#edd5d5" stroke="#b20000" points="98,-260 27,-260 27,-224 98,-224 98,-260"/>
+<text text-anchor="middle" x="62.5" y="-249.1" font-family="Times,serif" font-size="8.00">syscall</text>
+<text text-anchor="middle" x="62.5" y="-240.1" font-family="Times,serif" font-size="8.00">Syscall</text>
+<text text-anchor="middle" x="62.5" y="-231.1" font-family="Times,serif" font-size="8.00">0 of 1 (100%)</text>
+</a>
+</g>
+</g>
+<!-- N25&#45;&gt;N23 -->
+<g id="edge24" class="edge">
+<title>N25&#45;&gt;N23</title>
+<g id="a_edge24"><a xlink:title="syscall.Syscall &#45;&gt; syscall.RawSyscall6 (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-223.8C62.5,-212.16 62.5,-196.55 62.5,-183.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-183.18 62.5,-173.18 57.25,-183.18 67.75,-183.18"/>
+</a>
+</g>
+<g id="a_edge24&#45;label"><a xlink:title="syscall.Syscall &#45;&gt; syscall.RawSyscall6 (1)">
+<text text-anchor="middle" x="69.5" y="-194.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+<!-- N26&#45;&gt;N25 -->
+<g id="edge25" class="edge">
+<title>N26&#45;&gt;N25</title>
+<g id="a_edge25"><a xlink:title="syscall.read &#45;&gt; syscall.Syscall (1)">
+<path fill="none" stroke="#b20000" stroke-width="6" d="M62.5,-310.8C62.5,-299.16 62.5,-283.55 62.5,-270.24"/>
+<polygon fill="#b20000" stroke="#b20000" stroke-width="6" points="67.75,-270.18 62.5,-260.18 57.25,-270.18 67.75,-270.18"/>
+</a>
+</g>
+<g id="a_edge25&#45;label"><a xlink:title="syscall.read &#45;&gt; syscall.Syscall (1)">
+<text text-anchor="middle" x="69.5" y="-281.8" font-family="Times,serif" font-size="14.00"> 1</text>
+</a>
+</g>
+</g>
+</g>
+</svg>
+
+  </div>
+  <script>
+
+
+function initPanAndZoom(svg, clickHandler) {
+  'use strict';
+
+  
+  const IDLE = 0;
+  const MOUSEPAN = 1;
+  const TOUCHPAN = 2;
+  const TOUCHZOOM = 3;
+  let mode = IDLE;
+
+  
+  let currentScale = 1.0;
+  const initWidth = svg.viewBox.baseVal.width;
+  const initHeight = svg.viewBox.baseVal.height;
+
+  
+  let panLastX = 0;      
+  let panLastY = 0;      
+  let moved = false;     
+  let touchid = null;    
+
+  
+  let touchid2 = null;     
+  let initGap = 1.0;       
+  let initScale = 1.0;     
+  let centerPoint = null;  
+
+  
+  function toSvg(x, y) {
+    const p = svg.createSVGPoint();
+    p.x = x;
+    p.y = y;
+    let m = svg.getCTM();
+    if (m == null) m = svg.getScreenCTM(); 
+    return p.matrixTransform(m.inverse());
+  }
+
+  
+  
+  function rescale(s, u) {
+    
+    if (s < 0.2) s = 0.2;
+    if (s > 10.0) s = 10.0;
+
+    currentScale = s;
+
+    
+    
+    
+    const vb = svg.viewBox;
+    const w1 = vb.baseVal.width;
+    const w2 = initWidth / s;
+    const h1 = vb.baseVal.height;
+    const h2 = initHeight / s;
+    vb.baseVal.width = w2;
+    vb.baseVal.height = h2;
+
+    
+    
+    
+    
+    
+    
+    
+    vb.baseVal.x = u.x - (u.x - vb.baseVal.x) * (w2 / w1);
+    vb.baseVal.y = u.y - (u.y - vb.baseVal.y) * (h2 / h1);
+  }
+
+  function handleWheel(e) {
+    if (e.deltaY == 0) return;
+    
+    rescale(currentScale * (e.deltaY < 0 ? 1.1 : (1/1.1)),
+            toSvg(e.offsetX, e.offsetY));
+  }
+
+  function setMode(m) {
+    mode = m;
+    touchid = null;
+    touchid2 = null;
+  }
+
+  function panStart(x, y) {
+    moved = false;
+    panLastX = x;
+    panLastY = y;
+  }
+
+  function panMove(x, y) {
+    let dx = x - panLastX;
+    let dy = y - panLastY;
+    if (Math.abs(dx) <= 2 && Math.abs(dy) <= 2) return; 
+
+    moved = true;
+    panLastX = x;
+    panLastY = y;
+
+    
+    const swidth = svg.clientWidth || svg.parentNode.clientWidth;
+    const sheight = svg.clientHeight || svg.parentNode.clientHeight;
+
+    
+    dx *= (svg.viewBox.baseVal.width / swidth);
+    dy *= (svg.viewBox.baseVal.height / sheight);
+
+    svg.viewBox.baseVal.x -= dx;
+    svg.viewBox.baseVal.y -= dy;
+  }
+
+  function handleScanStart(e) {
+    if (e.button != 0) return; 
+    setMode(MOUSEPAN);
+    panStart(e.clientX, e.clientY);
+    e.preventDefault();
+    svg.addEventListener('mousemove', handleScanMove);
+  }
+
+  function handleScanMove(e) {
+    if (e.buttons == 0) {
+      
+      setMode(IDLE);
+      svg.removeEventListener('mousemove', handleScanMove);
+      return;
+    }
+    if (mode == MOUSEPAN) panMove(e.clientX, e.clientY);
+  }
+
+  function handleScanEnd(e) {
+    if (mode == MOUSEPAN) panMove(e.clientX, e.clientY);
+    setMode(IDLE);
+    svg.removeEventListener('mousemove', handleScanMove);
+    if (!moved) clickHandler(e.target);
+  }
+
+  
+  function findTouch(tlist, id) {
+    for (const t of tlist) {
+      if (t.identifier == id) return t;
+    }
+    return null;
+  }
+
+  
+  function touchGap(t1, t2) {
+    const dx = t1.clientX - t2.clientX;
+    const dy = t1.clientY - t2.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  function handleTouchStart(e) {
+    if (mode == IDLE && e.changedTouches.length == 1) {
+      
+      const t = e.changedTouches[0];
+      setMode(TOUCHPAN);
+      touchid = t.identifier;
+      panStart(t.clientX, t.clientY);
+      e.preventDefault();
+    } else if (mode == TOUCHPAN && e.touches.length == 2) {
+      
+      setMode(TOUCHZOOM);
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      touchid = t1.identifier;
+      touchid2 = t2.identifier;
+      initScale = currentScale;
+      initGap = touchGap(t1, t2);
+      centerPoint = toSvg((t1.clientX + t2.clientX) / 2,
+                          (t1.clientY + t2.clientY) / 2);
+      e.preventDefault();
+    }
+  }
+
+  function handleTouchMove(e) {
+    if (mode == TOUCHPAN) {
+      const t = findTouch(e.changedTouches, touchid);
+      if (t == null) return;
+      if (e.touches.length != 1) {
+        setMode(IDLE);
+        return;
+      }
+      panMove(t.clientX, t.clientY);
+      e.preventDefault();
+    } else if (mode == TOUCHZOOM) {
+      
+      const t1 = findTouch(e.touches, touchid);
+      const t2 = findTouch(e.touches, touchid2);
+      if (t1 == null || t2 == null) return;
+      const gap = touchGap(t1, t2);
+      rescale(initScale * gap / initGap, centerPoint);
+      e.preventDefault();
+    }
+  }
+
+  function handleTouchEnd(e) {
+    if (mode == TOUCHPAN) {
+      const t = findTouch(e.changedTouches, touchid);
+      if (t == null) return;
+      panMove(t.clientX, t.clientY);
+      setMode(IDLE);
+      e.preventDefault();
+      if (!moved) clickHandler(t.target);
+    } else if (mode == TOUCHZOOM) {
+      setMode(IDLE);
+      e.preventDefault();
+    }
+  }
+
+  svg.addEventListener('mousedown', handleScanStart);
+  svg.addEventListener('mouseup', handleScanEnd);
+  svg.addEventListener('touchstart', handleTouchStart);
+  svg.addEventListener('touchmove', handleTouchMove);
+  svg.addEventListener('touchend', handleTouchEnd);
+  svg.addEventListener('wheel', handleWheel, true);
+}
+
+function initMenus() {
+  'use strict';
+
+  let activeMenu = null;
+  let activeMenuHdr = null;
+
+  function cancelActiveMenu() {
+    if (activeMenu == null) return;
+    activeMenu.style.display = 'none';
+    activeMenu = null;
+    activeMenuHdr = null;
+  }
+
+  
+  for (const menu of document.getElementsByClassName('submenu')) {
+    const hdr = menu.parentElement;
+    if (hdr == null) return;
+    if (hdr.classList.contains('disabled')) return;
+    function showMenu(e) {
+      
+      
+      if (e.target.parentElement != hdr) return;
+      activeMenu = menu;
+      activeMenuHdr = hdr;
+      menu.style.display = 'block';
+    }
+    hdr.addEventListener('mousedown', showMenu);
+    hdr.addEventListener('touchstart', showMenu);
+  }
+
+  
+  for (const t of ['mousedown', 'touchstart']) {
+    document.addEventListener(t, (e) => {
+      
+      
+      if (activeMenuHdr != e.target.closest('.menu-item')) {
+        cancelActiveMenu();
+      }
+    }, { passive: true, capture: true });
+  }
+
+  
+  document.addEventListener('mouseup', (e) => {
+    if (activeMenu == e.target.closest('.submenu')) {
+      cancelActiveMenu();
+    }
+  }, { passive: true, capture: true });
+}
+
+function sendURL(method, url, done) {
+  fetch(url.toString(), {method: method})
+      .then((response) => { done(response.ok); })
+      .catch((error) => { done(false); });
+}
+
+
+function initConfigManager() {
+  'use strict';
+
+  
+  function elem(id) {
+    const result = document.getElementById(id);
+    if (!result) console.warn('element ' + id + ' not found');
+    return result;
+  }
+  const overlay = elem('dialog-overlay');
+  const saveDialog = elem('save-dialog');
+  const saveInput = elem('save-name');
+  const saveError = elem('save-error');
+  const delDialog = elem('delete-dialog');
+  const delPrompt = elem('delete-prompt');
+  const delError = elem('delete-error');
+
+  let currentDialog = null;
+  let currentDeleteTarget = null;
+
+  function showDialog(dialog) {
+    if (currentDialog != null) {
+      overlay.style.display = 'none';
+      currentDialog.style.display = 'none';
+    }
+    currentDialog = dialog;
+    if (dialog != null) {
+      overlay.style.display = 'block';
+      dialog.style.display = 'block';
+    }
+  }
+
+  function cancelDialog(e) {
+    showDialog(null);
+  }
+
+  
+  function showSaveDialog(e) {
+    saveError.innerText = '';
+    showDialog(saveDialog);
+    saveInput.focus();
+  }
+
+  
+  function commitSave(e) {
+    const name = saveInput.value;
+    const url = new URL(document.URL);
+    
+    url.pathname = new URL('./saveconfig', document.URL).pathname;
+    url.searchParams.set('config', name);
+    saveError.innerText = '';
+    sendURL('POST', url, (ok) => {
+      if (!ok) {
+        saveError.innerText = 'Save failed';
+      } else {
+        showDialog(null);
+        location.reload();  
+      }
+    });
+  }
+
+  function handleSaveInputKey(e) {
+    if (e.key === 'Enter') commitSave(e);
+  }
+
+  function deleteConfig(e, elem) {
+    e.preventDefault();
+    const config = elem.dataset.config;
+    delPrompt.innerText = 'Delete ' + config + '?';
+    currentDeleteTarget = elem;
+    showDialog(delDialog);
+  }
+
+  function commitDelete(e, elem) {
+    if (!currentDeleteTarget) return;
+    const config = currentDeleteTarget.dataset.config;
+    const url = new URL('./deleteconfig', document.URL);
+    url.searchParams.set('config', config);
+    delError.innerText = '';
+    sendURL('DELETE', url, (ok) => {
+      if (!ok) {
+        delError.innerText = 'Delete failed';
+        return;
+      }
+      showDialog(null);
+      
+      if (currentDeleteTarget && currentDeleteTarget.parentElement) {
+        currentDeleteTarget.parentElement.remove();
+      }
+    });
+  }
+
+  
+  function bind(event, elem, fn) {
+    if (elem == null) return;
+    elem.addEventListener(event, fn);
+    if (event == 'click') {
+      
+      elem.addEventListener('touchstart', fn);
+    }
+  }
+
+  bind('click', elem('save-config'), showSaveDialog);
+  bind('click', elem('save-cancel'), cancelDialog);
+  bind('click', elem('save-confirm'), commitSave);
+  bind('keydown', saveInput, handleSaveInputKey);
+
+  bind('click', elem('delete-cancel'), cancelDialog);
+  bind('click', elem('delete-confirm'), commitDelete);
+
+  
+  for (const del of Array.from(document.getElementsByClassName('menu-delete-btn'))) {
+    bind('click', del, (e) => {
+      deleteConfig(e, del);
+    });
+  }
+}
+
+
+
+
+
+
+function viewer(baseUrl, nodes, options) {
+  'use strict';
+
+  
+  const search = document.getElementById('search');
+  const graph0 = document.getElementById('graph0');
+  const svg = (graph0 == null ? null : graph0.parentElement);
+  const toptable = document.getElementById('toptable');
+
+  let regexpActive = false;
+  let selected = new Map();
+  let origFill = new Map();
+  let searchAlarm = null;
+  let buttonsEnabled = true;
+
+  
+  function getSelection() {
+    if (selected.size > 0) {
+      return selected;
+    } else if (options && options.current) {
+      return options.current();
+    }
+    return new Map();
+  }
+
+  function handleDetails(e) {
+    e.preventDefault();
+    const detailsText = document.getElementById('detailsbox');
+    if (detailsText != null) {
+      if (detailsText.style.display === 'block') {
+        detailsText.style.display = 'none';
+      } else {
+        detailsText.style.display = 'block';
+      }
+    }
+  }
+
+  function handleKey(e) {
+    if (e.keyCode != 13) return;
+    setHrefParams(window.location, function (params) {
+      params.set('f', search.value);
+    });
+    e.preventDefault();
+  }
+
+  function handleSearch() {
+    
+    if (searchAlarm != null) {
+      clearTimeout(searchAlarm);
+    }
+    searchAlarm = setTimeout(selectMatching, 300);
+
+    regexpActive = true;
+    updateButtons();
+  }
+
+  function selectMatching() {
+    searchAlarm = null;
+    let re = null;
+    if (search.value != '') {
+      try {
+        re = new RegExp(search.value);
+      } catch (e) {
+        
+        return;
+      }
+    }
+
+    function match(text) {
+      return re != null && re.test(text);
+    }
+
+    
+    selected.forEach(function(v, n) {
+      if (!match(nodes[n])) {
+        unselect(n);
+      }
+    })
+
+    
+    if (nodes) {
+      for (let n = 0; n < nodes.length; n++) {
+        if (!selected.has(n) && match(nodes[n])) {
+          select(n);
+        }
+      }
+    }
+
+    updateButtons();
+  }
+
+  function toggleSvgSelect(elem) {
+    
+    while (elem != null && elem.parentElement != graph0) {
+      elem = elem.parentElement;
+    }
+    if (!elem) return;
+
+    
+    regexpActive = false;
+
+    const n = nodeId(elem);
+    if (n < 0) return;
+    if (selected.has(n)) {
+      unselect(n);
+    } else {
+      select(n);
+    }
+    updateButtons();
+  }
+
+  function unselect(n) {
+    if (setNodeHighlight(n, false)) selected.delete(n);
+  }
+
+  function select(n, elem) {
+    if (setNodeHighlight(n, true)) selected.set(n, true);
+  }
+
+  function nodeId(elem) {
+    const id = elem.id;
+    if (!id) return -1;
+    if (!id.startsWith('node')) return -1;
+    const n = parseInt(id.slice(4), 10);
+    if (isNaN(n)) return -1;
+    if (n < 0 || n >= nodes.length) return -1;
+    return n;
+  }
+
+  
+  function setNodeHighlight(n, set) {
+    if (options && options.hiliter) return options.hiliter(n, set);
+
+    const elem = document.getElementById('node' + n);
+    if (!elem) return false;
+
+    
+    if (elem.nodeName == 'TR') {
+      elem.classList.toggle('hilite', set);
+      return true;
+    }
+
+    
+    const p = findPolygon(elem);
+    if (p != null) {
+      if (set) {
+        origFill.set(p, p.style.fill);
+        p.style.fill = '#ccccff';
+      } else if (origFill.has(p)) {
+        p.style.fill = origFill.get(p);
+      }
+    }
+
+    return true;
+  }
+
+  function findPolygon(elem) {
+    if (elem.localName == 'polygon') return elem;
+    for (const c of elem.children) {
+      const p = findPolygon(c);
+      if (p != null) return p;
+    }
+    return null;
+  }
+
+  function setSampleIndexLink(si) {
+    const elem = document.getElementById('sampletype-' + si);
+    if (elem != null) {
+      setHrefParams(elem, function (params) {
+        params.set("si", si);
+      });
+    }
+  }
+
+  
+  
+  function makeSearchLinkDynamic(id) {
+    const elem = document.getElementById(id);
+    if (elem == null) return;
+
+    
+    
+    let param = 'f';
+    if (id == 'ignore') param = 'i';
+    if (id == 'hide') param = 'h';
+    if (id == 'show') param = 's';
+    if (id == 'show-from') param = 'sf';
+
+    
+    elem.addEventListener('mouseenter', updater);
+    elem.addEventListener('touchstart', updater);
+
+    function updater() {
+      
+      
+      let re = regexpActive
+          ? search.value
+          : Array.from(getSelection().keys()).map(key => pprofQuoteMeta(nodes[key])).join('|');
+
+      setHrefParams(elem, function (params) {
+        if (re != '') {
+          
+          if (param != 'f' && param != 's' && param != 'sf' && params.has(param)) {
+            const old = params.get(param);
+            if (old != '') {
+              re += '|' + old;
+            }
+          }
+          params.set(param, re);
+        } else {
+          params.delete(param);
+        }
+      });
+    }
+  }
+
+  function setHrefParams(elem, paramSetter) {
+    let url = new URL(elem.href);
+    url.hash = '';
+
+    
+    const params = url.searchParams;
+    for (const p of new URLSearchParams(window.location.search)) {
+      params.set(p[0], p[1]);
+    }
+
+    
+    paramSetter(params);
+
+    elem.href = url.toString();
+  }
+
+  function handleTopClick(e) {
+    
+    let elem = e.target;
+    while (elem != null && elem.nodeName != 'TR') {
+      elem = elem.parentElement;
+    }
+    if (elem == null || elem.children.length < 6) return;
+
+    e.preventDefault();
+    const tr = elem;
+    const td = elem.children[5];
+    if (td.nodeName != 'TD') return;
+    const name = td.innerText;
+    const index = nodes.indexOf(name);
+    if (index < 0) return;
+
+    
+    regexpActive = false;
+
+    if (selected.has(index)) {
+      unselect(index, elem);
+    } else {
+      select(index, elem);
+    }
+    updateButtons();
+  }
+
+  function updateButtons() {
+    const enable = (search.value != '' || getSelection().size != 0);
+    if (buttonsEnabled == enable) return;
+    buttonsEnabled = enable;
+    for (const id of ['focus', 'ignore', 'hide', 'show', 'show-from']) {
+      const link = document.getElementById(id);
+      if (link != null) {
+        link.classList.toggle('disabled', !enable);
+      }
+    }
+  }
+
+  
+  updateButtons();
+
+  
+  initMenus();
+  if (svg != null) {
+    initPanAndZoom(svg, toggleSvgSelect);
+  }
+  if (toptable != null) {
+    toptable.addEventListener('mousedown', handleTopClick);
+    toptable.addEventListener('touchstart', handleTopClick);
+  }
+
+  const ids = ['topbtn', 'graphbtn',
+               'flamegraph',
+               'peek', 'list',
+               'disasm', 'focus', 'ignore', 'hide', 'show', 'show-from'];
+  ids.forEach(makeSearchLinkDynamic);
+
+  const sampleIDs = ['samples', 'cpu', ];
+  sampleIDs.forEach(setSampleIndexLink);
+
+  
+  function addAction(id, action) {
+    const btn = document.getElementById(id);
+    if (btn != null) {
+      btn.addEventListener('click', action);
+      btn.addEventListener('touchstart', action);
+    }
+  }
+
+  addAction('details', handleDetails);
+  initConfigManager();
+
+  search.addEventListener('input', handleSearch);
+  search.addEventListener('keydown', handleKey);
+
+  
+  const main = document.getElementById('bodycontainer');
+  if (main) {
+    main.focus();
+  }
+}
+
+
+function pprofQuoteMeta(str) {
+  return '^' + str.replace(/([\\\.?+*\[\](){}|^$])/g, '\\$1') + '$';
+}
+</script>
+
+  <script>viewer(new URL(window.location.href), ["","internal/runtime/syscall.Syscall6","github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1","github.com/prometheus/procfs.Proc.Stat","github.com/prometheus/procfs/internal/util.ReadFileNoStat","github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower","github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot","github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh","github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1","github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime","github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh","github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses","github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache","github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields","golang.org/x/sync/singleflight.(*Group).Do","golang.org/x/sync/singleflight.(*Group).doCall","golang.org/x/sync/singleflight.(*Group).doCall.func2","internal/poll.(*FD).Read","internal/poll.ignoringEINTRIO","io.(*LimitedReader).Read","io.ReadAll","os.(*File).Read","os.(*File).read","syscall.RawSyscall6","syscall.Read","syscall.Syscall","syscall.read"]);</script>
+</body>
+</html>

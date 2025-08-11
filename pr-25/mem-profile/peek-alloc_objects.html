@@ -391,7 +391,7 @@ Matching includes the function name, filename or object name.
   <div class="description">
     <a title="Show information about the profile and this view" href="#" id="details">kepler alloc_objects</a>
     <div id="detailsbox">
-      <div>File: kepler</div><div>Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349</div><div>Type: alloc_objects</div><div>Time: 2025-08-11 17:19:36 UTC</div><div>Duration: 30s, Total samples = 46145 </div>
+      <div>File: kepler</div><div>Build ID: 551364edf210718e666d22eef53dd63da1089599</div><div>Type: alloc_objects</div><div>Time: 2025-08-11 17:26:42 UTC</div><div>Duration: 30s, Total samples = 51864 </div>
     </div>
   </div>
 
@@ -428,319 +428,203 @@ Matching includes the function name, filename or object name.
   <div id="content">
     <pre>
       File: kepler
-Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349
+Build ID: 551364edf210718e666d22eef53dd63da1089599
 Type: alloc_objects
-Time: 2025-08-11 17:19:36 UTC
-Duration: 30s, Total samples = 46145 
-Showing nodes accounting for 46145, 100% of 46145 total
+Time: 2025-08-11 17:26:42 UTC
+Duration: 30s, Total samples = 51864 
+Showing nodes accounting for 51864, 100% of 51864 total
 ----------------------------------------------------------&#43;-------------
       flat  flat%   sum%        cum   cum%   calls calls% &#43; context 	 	 
 ----------------------------------------------------------&#43;-------------
-                                             32768   100% |   fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:686
-     32768 71.01% 71.01%      32768 71.01%                | fmt.(*ss).scanNumber /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:597
+                                             32768   100% |   fmt.(*ss).scanInt /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:656
+     32768 63.18% 63.18%      32768 63.18%                | fmt.(*ss).scanNumber /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:597
 ----------------------------------------------------------&#43;-------------
-                                              6554   100% |   log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-      6554 14.20% 85.21%       6554 14.20%                | fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:240
+                                             16384   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
+     16384 31.59% 94.77%      16384 31.59%                | github.com/prometheus/procfs.Proc.path /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:307
 ----------------------------------------------------------&#43;-------------
-                                              2185   100% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:297
-      2185  4.74% 89.95%       2185  4.74%                | log/slog.Record.source /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:219
+                                              2049   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
+      2049  3.95% 98.72%       2049  3.95%                | io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:710
 ----------------------------------------------------------&#43;-------------
-                                              1820   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-      1820  3.94% 93.89%       1820  3.94%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:140
+                                               410   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
+       410  0.79% 99.51%        410  0.79%                | runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:606
 ----------------------------------------------------------&#43;-------------
-                                              1024   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
-      1024  2.22% 96.11%       1024  2.22%                | io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:710
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
+       171  0.33% 99.84%        171  0.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:150
 ----------------------------------------------------------&#43;-------------
-                                               764 65.08% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
-       988  2.14% 98.25%       1174  2.54%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
-                                               186 15.84% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:54
-----------------------------------------------------------&#43;-------------
-                                               455   100% |   os.(*File).Readdirnames /opt/hostedtoolcache/go/1.24.5/x64/src/os/dir.go:73
-       455  0.99% 99.24%        455  0.99%                | os.(*File).readdir /opt/hostedtoolcache/go/1.24.5/x64/src/os/dir_unix.go:130
-----------------------------------------------------------&#43;-------------
-                                               186   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
-       186   0.4% 99.64%        186   0.4%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:54
-----------------------------------------------------------&#43;-------------
-                                               108   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-       108  0.23% 99.88%        108  0.23%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:174
-----------------------------------------------------------&#43;-------------
-                                                55   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
-        55  0.12%   100%         55  0.12%                | runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:606
+                                                80   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:411
+        80  0.15%   100%         80  0.15%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculateProcessPower /home/runner/work/kepler/kepler/internal/monitor/process.go:111
 ----------------------------------------------------------&#43;-------------
                                                  2   100% |   compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191 (inline)
-         2 0.0043%   100%          2 0.0043%                | compress/flate.NewWriter /opt/hostedtoolcache/go/1.24.5/x64/src/compress/flate/deflate.go:663
+         2 0.0039%   100%          2 0.0039%                | compress/flate.NewWriter /opt/hostedtoolcache/go/1.24.5/x64/src/compress/flate/deflate.go:663
 ----------------------------------------------------------&#43;-------------
                                                  1 50.00% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:390
                                                  1 50.00% |   runtime/pprof.(*profileBuilder).flush /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:146
-         0     0%   100%          2 0.0043%                | compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191
+         0     0%   100%          2 0.0039%                | compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191
                                                  2   100% |   compress/flate.NewWriter /opt/hostedtoolcache/go/1.24.5/x64/src/compress/flate/deflate.go:663 (inline)
 ----------------------------------------------------------&#43;-------------
-                                               764   100% |   fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
-         0     0%   100%        764  1.66%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
-                                               764   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
-----------------------------------------------------------&#43;-------------
-                                               764   100% |   fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
-         0     0%   100%        764  1.66%                | fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
-                                               764   100% |   fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
-----------------------------------------------------------&#43;-------------
-                                               764   100% |   fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
-         0     0%   100%        764  1.66%                | fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
-                                               764   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
-----------------------------------------------------------&#43;-------------
-                                               764   100% |   fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
-         0     0%   100%        764  1.66%                | fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
-                                               764   100% |   fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
-----------------------------------------------------------&#43;-------------
                                              32768   100% |   fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
-         0     0%   100%      32768 71.01%                | fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
-                                             32768   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
+         0     0%   100%      32768 63.18%                | fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
+                                             32768   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:976
 ----------------------------------------------------------&#43;-------------
-                                             32768   100% |   fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
-         0     0%   100%      32768 71.01%                | fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
-                                             32768   100% |   fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:686
-----------------------------------------------------------&#43;-------------
-                                             32768   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
-         0     0%   100%      32768 71.01%                | fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:686
+                                             32768   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:976
+         0     0%   100%      32768 63.18%                | fmt.(*ss).scanInt /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:656
                                              32768   100% |   fmt.(*ss).scanNumber /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:597
 ----------------------------------------------------------&#43;-------------
+                                             32768   100% |   fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
+         0     0%   100%      32768 63.18%                | fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:976
+                                             32768   100% |   fmt.(*ss).scanInt /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:656
+----------------------------------------------------------&#43;-------------
                                              32768   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
-         0     0%   100%      32768 71.01%                | fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
+         0     0%   100%      32768 63.18%                | fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
                                              32768   100% |   fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
 ----------------------------------------------------------&#43;-------------
-                                               764   100% |   log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-         0     0%   100%        764  1.66%                | fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
-                                               764   100% |   fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
-----------------------------------------------------------&#43;-------------
-                                               455   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:145
-         0     0%   100%        455  0.99%                | github.com/prometheus/procfs.FS.AllProcs /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:112
-                                               455   100% |   os.(*File).Readdirnames /opt/hostedtoolcache/go/1.24.5/x64/src/os/dir.go:73
-----------------------------------------------------------&#43;-------------
-                                              1024   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-         0     0%   100%       1024  2.22%                | github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
-                                              1024   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
+                                             18433   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
+         0     0%   100%      18433 35.54%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
+                                             16384 88.88% |   github.com/prometheus/procfs.Proc.path /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:307
+                                              2049 11.12% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
 ----------------------------------------------------------&#43;-------------
                                              32768   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-         0     0%   100%      32768 71.01%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
+         0     0%   100%      32768 63.18%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
                                              32768   100% |   fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
 ----------------------------------------------------------&#43;-------------
-                                              1024   100% |   github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
-         0     0%   100%       1024  2.22%                | github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
-                                              1024   100% |   io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:710
+                                              2049   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
+         0     0%   100%       2049  3.95%                | github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
+                                              2049   100% |   io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:710
 ----------------------------------------------------------&#43;-------------
-                                             44914   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
-         0     0%   100%      44914 97.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
-                                             44914   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+                                             51372   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+         0     0%   100%      51372 99.05%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+                                             51372   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
 ----------------------------------------------------------&#43;-------------
-                                               394   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
-         0     0%   100%        394  0.85%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:373
-                                               394   100% |   log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229 (inline)
+                                                80   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+         0     0%   100%         80  0.15%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:411
+                                                80   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculateProcessPower /home/runner/work/kepler/kepler/internal/monitor/process.go:111
 ----------------------------------------------------------&#43;-------------
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
-         0     0%   100%      45308 98.19%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
-                                             44914 99.13% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
-                                               394  0.87% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:373
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+         0     0%   100%      51452 99.21%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+                                             51372 99.84% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+                                                80  0.16% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:411
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%      45308 98.19%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+         0     0%   100%      51452 99.21%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%        370   0.8%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:242
-                                               370   100% |   log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229 (inline)
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+         0     0%   100%      51452 99.21%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
 ----------------------------------------------------------&#43;-------------
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
-         0     0%   100%      45308 98.19%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+         0     0%   100%      51452 99.21%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
 ----------------------------------------------------------&#43;-------------
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-         0     0%   100%      45308 98.19%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
+         0     0%   100%      51201 98.72%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
+                                             32768 64.00% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
+                                             18433 36.00% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
 ----------------------------------------------------------&#43;-------------
-                                               455   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
-         0     0%   100%        455  0.99%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:145
-                                               455   100% |   github.com/prometheus/procfs.FS.AllProcs /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:112
+                                             51372   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+         0     0%   100%      51372 99.05%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+                                             51201 99.67% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+                                               171  0.33% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
 ----------------------------------------------------------&#43;-------------
-                                             34588   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-         0     0%   100%      34588 74.96%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-                                             32768 94.74% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
-                                              1820  5.26% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:140
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+         0     0%   100%        171  0.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:150
 ----------------------------------------------------------&#43;-------------
-                                              1024   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-         0     0%   100%       1024  2.22%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-                                              1024   100% |   github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+         0     0%   100%      51201 98.72%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
 ----------------------------------------------------------&#43;-------------
-                                             44914   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
-         0     0%   100%      44914 97.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-                                             35612 79.29% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
-                                              8739 19.46% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:192
-                                               455  1.01% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
-                                               108  0.24% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:174
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+         0     0%   100%      51201 98.72%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
 ----------------------------------------------------------&#43;-------------
-                                               455   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-         0     0%   100%        455  0.99%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
-                                               455   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:145
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
+         0     0%   100%      51201 98.72%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
+                                             51201   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
 ----------------------------------------------------------&#43;-------------
-                                             35612   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-         0     0%   100%      35612 77.17%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
-                                             35612   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+         0     0%   100%      51452 99.21%                | golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
 ----------------------------------------------------------&#43;-------------
-                                              8739   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-         0     0%   100%       8739 18.94%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:192
-                                              8739   100% |   log/slog.(*Logger).Debug /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:199 (inline)
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+         0     0%   100%      51452 99.21%                | golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
 ----------------------------------------------------------&#43;-------------
-                                             35612   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
-         0     0%   100%      35612 77.17%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
-                                             35612   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-----------------------------------------------------------&#43;-------------
-                                             35612   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
-         0     0%   100%      35612 77.17%                | github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-                                             34588 97.12% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-                                              1024  2.88% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-----------------------------------------------------------&#43;-------------
-                                             34588   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-         0     0%   100%      34588 74.96%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-                                             34588   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-----------------------------------------------------------&#43;-------------
-                                              1024   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-         0     0%   100%       1024  2.22%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-                                              1024   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-----------------------------------------------------------&#43;-------------
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
-         0     0%   100%      45308 98.19%                | golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-----------------------------------------------------------&#43;-------------
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
-         0     0%   100%      45308 98.19%                | golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-----------------------------------------------------------&#43;-------------
-                                             45308   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-         0     0%   100%      45308 98.19%                | golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-                                             45308   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
-----------------------------------------------------------&#43;-------------
-                                              8739   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:192 (inline)
-         0     0%   100%       8739 18.94%                | log/slog.(*Logger).Debug /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:199
-                                              8739   100% |   log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-----------------------------------------------------------&#43;-------------
-                                               394 51.57% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:373 (inline)
-                                               370 48.43% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:242 (inline)
-         0     0%   100%        764  1.66%                | log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229
-                                               764   100% |   log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-----------------------------------------------------------&#43;-------------
-                                              8739 91.96% |   log/slog.(*Logger).Debug /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:199
-                                               764  8.04% |   log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229
-         0     0%   100%       9503 20.59%                | log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-                                              9503   100% |   log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-----------------------------------------------------------&#43;-------------
-                                              9503   100% |   log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-         0     0%   100%       9503 20.59%                | log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-                                              7318 77.01% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
-                                              2185 22.99% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:297
-----------------------------------------------------------&#43;-------------
-                                              2185   100% |   log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-         0     0%   100%       2185  4.74%                | log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:297
-                                              2185   100% |   log/slog.Record.source /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:219
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-         0     0%   100%       7318 15.86%                | log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
-                                              7318   100% |   log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342
-         0     0%   100%       7318 15.86%                | log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
-                                              7318   100% |   log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
-         0     0%   100%       7318 15.86%                | log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341
-                                              7318   100% |   log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84 (inline)
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84 (inline)
-         0     0%   100%       7318 15.86%                | log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342
-                                              7318   100% |   log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
-         0     0%   100%       7318 15.86%                | log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
-                                              7318   100% |   log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341 (inline)
-         0     0%   100%       7318 15.86%                | log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84
-                                              7318   100% |   log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342 (inline)
-----------------------------------------------------------&#43;-------------
-                                              7318   100% |   log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
-         0     0%   100%       7318 15.86%                | log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-                                              6554 89.56% |   fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:240
-                                               764 10.44% |   fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
+                                             51452   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+         0     0%   100%      51452 99.21%                | golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+                                             51452   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
-         0     0%   100%          1 0.0022%                | net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
+         0     0%   100%          1 0.0019%                | net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
                                                  1   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%          1 0.0022%                | net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
+         0     0%   100%          1 0.0019%                | net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
                                                  1   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
-         0     0%   100%          1 0.0022%                | net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
+         0     0%   100%          1 0.0019%                | net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
                                                  1   100% |   net/http/pprof.Index /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:389
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
-         0     0%   100%          1 0.0022%                | net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
+         0     0%   100%          1 0.0019%                | net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
                                                  1   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
-         0     0%   100%          1 0.0022%                | net/http/pprof.Index /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:389
+         0     0%   100%          1 0.0019%                | net/http/pprof.Index /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:389
                                                  1   100% |   net/http/pprof.handler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:258
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http/pprof.handler.serveDeltaProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:294
-         0     0%   100%          1 0.0022%                | net/http/pprof.collectProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:341
+         0     0%   100%          1 0.0019%                | net/http/pprof.collectProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:341
                                                  1   100% |   runtime/pprof.(*Profile).WriteTo /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:377
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http/pprof.Index /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:389
-         0     0%   100%          1 0.0022%                | net/http/pprof.handler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:258
+         0     0%   100%          1 0.0019%                | net/http/pprof.handler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:258
                                                  1   100% |   net/http/pprof.handler.serveDeltaProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:294
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http/pprof.handler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:258
-         0     0%   100%          1 0.0022%                | net/http/pprof.handler.serveDeltaProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:294
+         0     0%   100%          1 0.0019%                | net/http/pprof.handler.serveDeltaProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:294
                                                  1   100% |   net/http/pprof.collectProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:341
 ----------------------------------------------------------&#43;-------------
-                                               455   100% |   github.com/prometheus/procfs.FS.AllProcs /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:112
-         0     0%   100%        455  0.99%                | os.(*File).Readdirnames /opt/hostedtoolcache/go/1.24.5/x64/src/os/dir.go:73
-                                               455   100% |   os.(*File).readdir /opt/hostedtoolcache/go/1.24.5/x64/src/os/dir_unix.go:130
-----------------------------------------------------------&#43;-------------
                                                  1   100% |   net/http/pprof.collectProfile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:341
-         0     0%   100%          1 0.0022%                | runtime/pprof.(*Profile).WriteTo /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:377
+         0     0%   100%          1 0.0019%                | runtime/pprof.(*Profile).WriteTo /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:377
                                                  1   100% |   runtime/pprof.writeHeap /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:593
 ----------------------------------------------------------&#43;-------------
-                                                55   100% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
-         0     0%   100%         55  0.12%                | runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
-                                                55   100% |   runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:606
+                                               410 99.76% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
+                                                 1  0.24% |   runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:47
+         0     0%   100%        411  0.79%                | runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
+                                               410 99.76% |   runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:606
+                                                 1  0.24% |   runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:655
 ----------------------------------------------------------&#43;-------------
-                                                55   100% |   runtime/pprof.profileWriter /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:885
-         0     0%   100%         55  0.12%                | runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
-                                                55   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
+                                               410   100% |   runtime/pprof.profileWriter /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:885
+         0     0%   100%        410  0.79%                | runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
+                                               410   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   runtime/pprof.profileWriter /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:885
-         0     0%   100%          1 0.0022%                | runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:390
+         0     0%   100%          1 0.0019%                | runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:390
                                                  1   100% |   compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191
 ----------------------------------------------------------&#43;-------------
-                                                 1   100% |   runtime/pprof.(*profileBuilder).pbSample /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:168
-         0     0%   100%          1 0.0022%                | runtime/pprof.(*profileBuilder).flush /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:146
-                                                 1   100% |   compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191
-----------------------------------------------------------&#43;-------------
-                                                 1   100% |   runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:60
-         0     0%   100%          1 0.0022%                | runtime/pprof.(*profileBuilder).pbSample /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:168
+                                                 1   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
+         0     0%   100%          1 0.0019%                | runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:655
                                                  1   100% |   runtime/pprof.(*profileBuilder).flush /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:146
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%         56  0.12%                | runtime/pprof.profileWriter /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:885
-                                                55 98.21% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
-                                                 1  1.79% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:390
+                                                 1   100% |   runtime/pprof.(*profileBuilder).emitLocation /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:655
+         0     0%   100%          1 0.0019%                | runtime/pprof.(*profileBuilder).flush /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:146
+                                                 1   100% |   compress/gzip.(*Writer).Write /opt/hostedtoolcache/go/1.24.5/x64/src/compress/gzip/gzip.go:191
+----------------------------------------------------------&#43;-------------
+         0     0%   100%        411  0.79%                | runtime/pprof.profileWriter /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:885
+                                               410 99.76% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:376
+                                                 1  0.24% |   runtime/pprof.(*profileBuilder).build /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:390
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   runtime/pprof.(*Profile).WriteTo /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:377
-         0     0%   100%          1 0.0022%                | runtime/pprof.writeHeap /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:593
+         0     0%   100%          1 0.0019%                | runtime/pprof.writeHeap /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:593
                                                  1   100% |   runtime/pprof.writeHeapInternal /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:634
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   runtime/pprof.writeHeap /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:593
-         0     0%   100%          1 0.0022%                | runtime/pprof.writeHeapInternal /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:634
-                                                 1   100% |   runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:60
+         0     0%   100%          1 0.0019%                | runtime/pprof.writeHeapInternal /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:634
+                                                 1   100% |   runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:47
 ----------------------------------------------------------&#43;-------------
                                                  1   100% |   runtime/pprof.writeHeapInternal /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:634
-         0     0%   100%          1 0.0022%                | runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:60
-                                                 1   100% |   runtime/pprof.(*profileBuilder).pbSample /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:168
+         0     0%   100%          1 0.0019%                | runtime/pprof.writeHeapProto /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/protomem.go:47
+                                                 1   100% |   runtime/pprof.(*profileBuilder).appendLocsForStack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/proto.go:467
 ----------------------------------------------------------&#43;-------------
 
     </pre>

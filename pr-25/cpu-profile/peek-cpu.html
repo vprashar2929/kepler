@@ -387,7 +387,7 @@ Matching includes the function name, filename or object name.
   <div class="description">
     <a title="Show information about the profile and this view" href="#" id="details">kepler cpu</a>
     <div id="detailsbox">
-      <div>File: kepler</div><div>Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349</div><div>Type: cpu</div><div>Time: 2025-08-11 17:18:35 UTC</div><div>Duration: 30s, Total samples = 60ms (  0.2%)</div>
+      <div>File: kepler</div><div>Build ID: 551364edf210718e666d22eef53dd63da1089599</div><div>Type: cpu</div><div>Time: 2025-08-11 17:25:41 UTC</div><div>Duration: 30s, Total samples = 10ms (0.033%)</div>
     </div>
   </div>
 
@@ -424,280 +424,114 @@ Matching includes the function name, filename or object name.
   <div id="content">
     <pre>
       File: kepler
-Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349
+Build ID: 551364edf210718e666d22eef53dd63da1089599
 Type: cpu
-Time: 2025-08-11 17:18:35 UTC
-Duration: 30s, Total samples = 60ms (  0.2%)
-Showing nodes accounting for 60ms, 100% of 60ms total
+Time: 2025-08-11 17:25:41 UTC
+Duration: 30s, Total samples = 10ms (0.033%)
+Showing nodes accounting for 10ms, 100% of 10ms total
 ----------------------------------------------------------&#43;-------------
       flat  flat%   sum%        cum   cum%   calls calls% &#43; context 	 	 
 ----------------------------------------------------------&#43;-------------
-                                              20ms   100% |   syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
-      20ms 33.33% 33.33%       20ms 33.33%                | internal/runtime/syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/internal/runtime/syscall/asm_linux_amd64.s:36
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.reentersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4477
-      10ms 16.67% 50.00%       10ms 16.67%                | runtime.casgstatus /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:1211
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.entersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4552
-      10ms 16.67% 66.67%       10ms 16.67%                | runtime.reentersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4459
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.stackcacherefill /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:282
-      10ms 16.67% 83.33%       10ms 16.67%                | runtime.stackpoolalloc /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:222
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:687
-      10ms 16.67%   100%       10ms 16.67%                | strconv.ParseUint /opt/hostedtoolcache/go/1.24.5/x64/src/strconv/atoi.go:158
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
-         0     0%   100%       10ms 16.67%                | fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
-                                              10ms   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
-         0     0%   100%       10ms 16.67%                | fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
-                                              10ms   100% |   fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:687
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   fmt.(*ss).scanOne /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:994
-         0     0%   100%       10ms 16.67%                | fmt.(*ss).scanUint /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:687
-                                              10ms   100% |   strconv.ParseUint /opt/hostedtoolcache/go/1.24.5/x64/src/strconv/atoi.go:158
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
-         0     0%   100%       10ms 16.67%                | fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
-                                              10ms   100% |   fmt.(*ss).doScan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:1073
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).CPUUsageRatio /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:108
-         0     0%   100%       10ms 16.67%                | github.com/prometheus/procfs.FS.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/stat.go:167
-                                              10ms   100% |   runtime.newstack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:1116
-----------------------------------------------------------&#43;-------------
-                                              30ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-         0     0%   100%       30ms 50.00%                | github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
-                                              20ms 66.67% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:29
-                                              10ms 33.33% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
+                                              10ms   100% |   syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
+      10ms   100%   100%       10ms   100%                | internal/runtime/syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/internal/runtime/syscall/asm_linux_amd64.s:36
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-         0     0%   100%       10ms 16.67%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
-                                              10ms   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:29
+         0     0%   100%       10ms   100%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
+                                              10ms   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
 ----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-         0     0%   100%       10ms 16.67%                | github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
-                                              10ms   100% |   fmt.Fscan /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/scan.go:123
-----------------------------------------------------------&#43;-------------
-                                              20ms 66.67% |   github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
-                                              10ms 33.33% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
-         0     0%   100%       30ms 50.00%                | github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:29
-                                              30ms   100% |   os.Open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:370 (inline)
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
-         0     0%   100%       10ms 16.67%                | github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
+                                              10ms   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
+         0     0%   100%       10ms   100%                | github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
                                               10ms   100% |   io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:712
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:328
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
 ----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshNode /home/runner/work/kepler/kepler/internal/resource/informer.go:336
-         0     0%   100%       10ms 16.67%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).CPUUsageRatio /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:108
-                                              10ms   100% |   github.com/prometheus/procfs.FS.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/stat.go:167
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
+                                              10ms   100% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
 ----------------------------------------------------------&#43;-------------
-                                              20ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-         0     0%   100%       20ms 33.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-                                              10ms 50.00% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:131
-                                              10ms 50.00% |   github.com/prometheus/procfs.Proc.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc_stat.go:155
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
 ----------------------------------------------------------&#43;-------------
-                                              30ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-         0     0%   100%       30ms 50.00%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-                                              30ms   100% |   github.com/prometheus/procfs.Proc.Comm /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/proc.go:166
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).firstReading /home/runner/work/kepler/kepler/internal/monitor/monitor.go:372
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
 ----------------------------------------------------------&#43;-------------
-         0     0%   100%       10ms 16.67%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh.func3 /home/runner/work/kepler/kepler/internal/resource/informer.go:385
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshNode /home/runner/work/kepler/kepler/internal/resource/informer.go:336
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:456
+         0     0%   100%       10ms   100%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
 ----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh.func3 /home/runner/work/kepler/kepler/internal/resource/informer.go:385
-         0     0%   100%       10ms 16.67%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshNode /home/runner/work/kepler/kepler/internal/resource/informer.go:336
-                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).CPUUsageRatio /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:108
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+         0     0%   100%       10ms   100%                | golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+         0     0%   100%       10ms   100%                | golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
 ----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:185
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).updateProcessCache /home/runner/work/kepler/kepler/internal/resource/informer.go:460
-         0     0%   100%       50ms 83.33%                | github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-                                              30ms 60.00% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-                                              20ms 40.00% |   github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-----------------------------------------------------------&#43;-------------
-                                              20ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-         0     0%   100%       20ms 33.33%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:513
-                                              20ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).CPUTime /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:76
-----------------------------------------------------------&#43;-------------
-                                              30ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.newProcess /home/runner/work/kepler/kepler/internal/resource/informer.go:609
-         0     0%   100%       30ms 50.00%                | github.com/sustainable-computing-io/kepler/internal/resource.populateProcessFields /home/runner/work/kepler/kepler/internal/resource/informer.go:526
-                                              30ms   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procWrapper).Comm /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:41
-----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
-         0     0%   100%       50ms 83.33%                | golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
-         0     0%   100%       50ms 83.33%                | golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-----------------------------------------------------------&#43;-------------
-                                              50ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
-         0     0%   100%       50ms 83.33%                | golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
-                                              50ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+                                              10ms   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+         0     0%   100%       10ms   100%                | golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+                                              10ms   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   os.(*File).read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:29
-         0     0%   100%       10ms 16.67%                | internal/poll.(*FD).Read /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:161
+         0     0%   100%       10ms   100%                | internal/poll.(*FD).Read /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:161
                                               10ms   100% |   internal/poll.ignoringEINTRIO /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:745 (inline)
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   internal/poll.(*FD).Read /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:161 (inline)
-         0     0%   100%       10ms 16.67%                | internal/poll.ignoringEINTRIO /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:745
+         0     0%   100%       10ms   100%                | internal/poll.ignoringEINTRIO /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:745
                                               10ms   100% |   syscall.Read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_unix.go:183 (inline)
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:712
-         0     0%   100%       10ms 16.67%                | io.(*LimitedReader).Read /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:479
+         0     0%   100%       10ms   100%                | io.(*LimitedReader).Read /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:479
                                               10ms   100% |   os.(*File).Read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:124
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:36
-         0     0%   100%       10ms 16.67%                | io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:712
+         0     0%   100%       10ms   100%                | io.ReadAll /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:712
                                               10ms   100% |   io.(*LimitedReader).Read /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:479
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   io.(*LimitedReader).Read /opt/hostedtoolcache/go/1.24.5/x64/src/io/io.go:479
-         0     0%   100%       10ms 16.67%                | os.(*File).Read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:124
+         0     0%   100%       10ms   100%                | os.(*File).Read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:124
                                               10ms   100% |   os.(*File).read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:29 (inline)
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   os.(*File).Read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:124 (inline)
-         0     0%   100%       10ms 16.67%                | os.(*File).read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:29
+         0     0%   100%       10ms   100%                | os.(*File).read /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:29
                                               10ms   100% |   internal/poll.(*FD).Read /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:161
 ----------------------------------------------------------&#43;-------------
-                                              30ms   100% |   github.com/prometheus/procfs/internal/util.ReadFileNoStat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/internal/util/readfile.go:29 (inline)
-         0     0%   100%       30ms 50.00%                | os.Open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:370
-                                              30ms   100% |   os.OpenFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:392
-----------------------------------------------------------&#43;-------------
-                                              30ms   100% |   os.Open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:370
-         0     0%   100%       30ms 50.00%                | os.OpenFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:392
-                                              20ms 66.67% |   os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:297
-                                              10ms 33.33% |   os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:278
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:278 (inline)
-         0     0%   100%       10ms 16.67%                | os.ignoringEINTR /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:251
-                                              10ms   100% |   os.openFileNolog.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:279 (inline)
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:297
-         0     0%   100%       10ms 16.67%                | os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:222
-                                              10ms   100% |   syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:106
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:297
-         0     0%   100%       10ms 16.67%                | os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:238
-                                              10ms   100% |   syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:118
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.openFileNolog.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:279
-         0     0%   100%       10ms 16.67%                | os.open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_open_unix.go:15
-                                              10ms   100% |   syscall.Open /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:284 (inline)
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.OpenFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:392
-         0     0%   100%       10ms 16.67%                | os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:278
-                                              10ms   100% |   os.ignoringEINTR /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:251 (inline)
-----------------------------------------------------------&#43;-------------
-                                              20ms   100% |   os.OpenFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file.go:392
-         0     0%   100%       20ms 33.33%                | os.openFileNolog /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:297
-                                              10ms 50.00% |   os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:222
-                                              10ms 50.00% |   os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:238
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.ignoringEINTR /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_posix.go:251 (inline)
-         0     0%   100%       10ms 16.67%                | os.openFileNolog.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:279
-                                              10ms   100% |   os.open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_open_unix.go:15
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.newstack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:1116
-         0     0%   100%       10ms 16.67%                | runtime.copystack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:874
-                                              10ms   100% |   runtime.stackalloc /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:384
-----------------------------------------------------------&#43;-------------
-                                              10ms 50.00% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:73
-                                              10ms 50.00% |   syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:95
-         0     0%   100%       20ms 33.33%                | runtime.entersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4552
-                                              10ms 50.00% |   runtime.reentersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4459
-                                              10ms 50.00% |   runtime.reentersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4477
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   github.com/prometheus/procfs.FS.Stat /home/runner/go/pkg/mod/github.com/prometheus/procfs@v0.15.1/stat.go:167
-         0     0%   100%       10ms 16.67%                | runtime.newstack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:1116
-                                              10ms   100% |   runtime.copystack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:874
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.entersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4552
-         0     0%   100%       10ms 16.67%                | runtime.reentersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4477
-                                              10ms   100% |   runtime.casgstatus /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:1211
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.copystack /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:874
-         0     0%   100%       10ms 16.67%                | runtime.stackalloc /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:384
-                                              10ms   100% |   runtime.stackcacherefill /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:282
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   runtime.stackalloc /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:384
-         0     0%   100%       10ms 16.67%                | runtime.stackcacherefill /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:282
-                                              10ms   100% |   runtime.stackpoolalloc /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/stack.go:222
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.open /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_open_unix.go:15 (inline)
-         0     0%   100%       10ms 16.67%                | syscall.Open /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:284
-                                              10ms   100% |   syscall.openat /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:98
-----------------------------------------------------------&#43;-------------
-                                              20ms   100% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
-         0     0%   100%       20ms 33.33%                | syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
-                                              20ms   100% |   internal/runtime/syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/internal/runtime/syscall/asm_linux_amd64.s:36
+                                              10ms   100% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
+         0     0%   100%       10ms   100%                | syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
+                                              10ms   100% |   internal/runtime/syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/internal/runtime/syscall/asm_linux_amd64.s:36
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   internal/poll.ignoringEINTRIO /opt/hostedtoolcache/go/1.24.5/x64/src/internal/poll/fd_unix.go:745 (inline)
-         0     0%   100%       10ms 16.67%                | syscall.Read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_unix.go:183
+         0     0%   100%       10ms   100%                | syscall.Read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_unix.go:183
                                               10ms   100% |   syscall.read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:736
 ----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:222
-         0     0%   100%       10ms 16.67%                | syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:106
-                                              10ms   100% |   syscall.fcntl /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:432
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   os.newFile /opt/hostedtoolcache/go/1.24.5/x64/src/os/file_unix.go:238
-         0     0%   100%       10ms 16.67%                | syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:118
-                                              10ms   100% |   syscall.fcntl /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:432
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   syscall.fcntl /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:432
-         0     0%   100%       10ms 16.67%                | syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:73
-                                              10ms   100% |   runtime.entersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4552
-----------------------------------------------------------&#43;-------------
-                                              10ms 50.00% |   syscall.fcntl /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:432
-                                              10ms 50.00% |   syscall.read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:736
-         0     0%   100%       20ms 33.33%                | syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
-                                              20ms   100% |   syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   syscall.openat /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:98
-         0     0%   100%       10ms 16.67%                | syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:95
-                                              10ms   100% |   runtime.entersyscall /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/proc.go:4552
-----------------------------------------------------------&#43;-------------
-                                              10ms 50.00% |   syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:106
-                                              10ms 50.00% |   syscall.SetNonblock /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/exec_unix.go:118
-         0     0%   100%       20ms 33.33%                | syscall.fcntl /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:432
-                                              10ms 50.00% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:73
-                                              10ms 50.00% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
-----------------------------------------------------------&#43;-------------
-                                              10ms   100% |   syscall.Open /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:284
-         0     0%   100%       10ms 16.67%                | syscall.openat /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:98
-                                              10ms   100% |   syscall.Syscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:95
+                                              10ms   100% |   syscall.read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:736
+         0     0%   100%       10ms   100%                | syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
+                                              10ms   100% |   syscall.RawSyscall6 /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:64
 ----------------------------------------------------------&#43;-------------
                                               10ms   100% |   syscall.Read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_unix.go:183
-         0     0%   100%       10ms 16.67%                | syscall.read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:736
+         0     0%   100%       10ms   100%                | syscall.read /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/zsyscall_linux_amd64.go:736
                                               10ms   100% |   syscall.Syscall /opt/hostedtoolcache/go/1.24.5/x64/src/syscall/syscall_linux.go:86
 ----------------------------------------------------------&#43;-------------
 

@@ -391,7 +391,7 @@ Matching includes the function name, filename or object name.
   <div class="description">
     <a title="Show information about the profile and this view" href="#" id="details">kepler inuse_objects</a>
     <div id="detailsbox">
-      <div>File: kepler</div><div>Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349</div><div>Type: inuse_objects</div><div>Time: 2025-08-11 17:19:36 UTC</div><div>Duration: 30s, Total samples = 42 </div>
+      <div>File: kepler</div><div>Build ID: 551364edf210718e666d22eef53dd63da1089599</div><div>Type: inuse_objects</div><div>Time: 2025-08-11 17:26:42 UTC</div><div>Duration: 30s, Total samples = 172 </div>
     </div>
   </div>
 
@@ -428,105 +428,77 @@ Matching includes the function name, filename or object name.
   <div id="content">
     <pre>
       File: kepler
-Build ID: e1055a0cd7f6f14944d5e88e34c1043629eb9349
+Build ID: 551364edf210718e666d22eef53dd63da1089599
 Type: inuse_objects
-Time: 2025-08-11 17:19:36 UTC
-Duration: 30s, Total samples = 42 
-Showing nodes accounting for 32, 76.19% of 42 total
+Time: 2025-08-11 17:26:42 UTC
+Duration: 30s, Total samples = 172 
+Showing nodes accounting for 170, 98.84% of 172 total
 ----------------------------------------------------------&#43;-------------
       flat  flat%   sum%        cum   cum%   calls calls% &#43; context 	 	 
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
-        37 88.10% 88.10%         37 88.10%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:54
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
+       171 99.42% 99.42%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:150
 ----------------------------------------------------------&#43;-------------
-                                                -5   100% |   net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
-        -5 11.90% 76.19%         -5 11.90%                | runtime/pprof.StartCPUProfile /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:855
+                                                -1   100% |   net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
+        -1  0.58% 98.84%         -1  0.58%                | runtime/pprof.StartCPUProfile /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:855
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
-         0     0% 76.19%         37 88.10%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
-                                                37   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
-         0     0% 76.19%         37 88.10%                | errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:51
-                                                37   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:54
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
-         0     0% 76.19%         37 88.10%                | fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
-                                                37   100% |   fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
-         0     0% 76.19%         37 88.10%                | fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
-                                                37   100% |   errors.(*joinError).Error /opt/hostedtoolcache/go/1.24.5/x64/src/errors/join.go:48
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:241
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
-         0     0% 76.19%         37 88.10%                | fmt.(*pp).printArg /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:756
-                                                37   100% |   fmt.(*pp).handleMethods /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:667
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).refreshSnapshot /home/runner/work/kepler/kepler/internal/monitor/monitor.go:332
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-         0     0% 76.19%         37 88.10%                | fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
-                                                37   100% |   fmt.(*pp).doPrintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:1074
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).calculatePower /home/runner/work/kepler/kepler/internal/monitor/monitor.go:405
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
 ----------------------------------------------------------&#43;-------------
-         0     0% 76.19%         37 88.10%                | github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:242
-                                                37   100% |   log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229 (inline)
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).Refresh /home/runner/work/kepler/kepler/internal/resource/informer.go:360
+         0     0% 98.84%        171 99.42%                | github.com/sustainable-computing-io/kepler/internal/resource.(*resourceInformer).refreshProcesses /home/runner/work/kepler/kepler/internal/resource/informer.go:168
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/resource.(*procFSReader).AllProcs /home/runner/work/kepler/kepler/internal/resource/procfs_reader.go:150
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).scheduleNextCollection.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:242 (inline)
-         0     0% 76.19%         37 88.10%                | log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229
-                                                37   100% |   log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh /home/runner/work/kepler/kepler/internal/monitor/monitor.go:268
+         0     0% 98.84%        171 99.42%                | golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*Logger).Error /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:229
-         0     0% 76.19%         37 88.10%                | log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-                                                37   100% |   log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).Do /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:113
+         0     0% 98.84%        171 99.42%                | golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*Logger).log /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/logger.go:256
-         0     0% 76.19%         37 88.10%                | log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-                                                37   100% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
+                                               171   100% |   golang.org/x/sync/singleflight.(*Group).doCall /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:200
+         0     0% 98.84%        171 99.42%                | golang.org/x/sync/singleflight.(*Group).doCall.func2 /home/runner/go/pkg/mod/golang.org/x/sync@v0.12.0/singleflight/singleflight.go:198
+                                               171   100% |   github.com/sustainable-computing-io/kepler/internal/monitor.(*PowerMonitor).synchronizedPowerRefresh.func1 /home/runner/work/kepler/kepler/internal/monitor/monitor.go:298
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*TextHandler).Handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:95
-         0     0% 76.19%         37 88.10%                | log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
-                                                37   100% |   log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341
+                                                -1   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
+         0     0% 98.84%         -1  0.58%                | net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
+                                                -1   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342
-         0     0% 76.19%         37 88.10%                | log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
-                                                37   100% |   log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
+         0     0% 98.84%         -1  0.58%                | net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
+                                                -1   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*commonHandler).handle /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:308
-         0     0% 76.19%         37 88.10%                | log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341
-                                                37   100% |   log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84 (inline)
+                                                -1   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
+         0     0% 98.84%         -1  0.58%                | net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
+                                                -1   100% |   net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84 (inline)
-         0     0% 76.19%         37 88.10%                | log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342
-                                                37   100% |   log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
+                                                -1   100% |   net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
+         0     0% 98.84%         -1  0.58%                | net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
+                                                -1   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
 ----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*handleState).appendAttr /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:516
-         0     0% 76.19%         37 88.10%                | log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
-                                                37   100% |   log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*handleState).appendNonBuiltIns /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:341 (inline)
-         0     0% 76.19%         37 88.10%                | log/slog.Record.Attrs /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/record.go:84
-                                                37   100% |   log/slog.(*handleState).appendNonBuiltIns.func1 /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:342 (inline)
-----------------------------------------------------------&#43;-------------
-                                                37   100% |   log/slog.(*handleState).appendValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/handler.go:578
-         0     0% 76.19%         37 88.10%                | log/slog.appendTextValue /opt/hostedtoolcache/go/1.24.5/x64/src/log/slog/text_handler.go:119
-                                                37   100% |   fmt.Sprintf /opt/hostedtoolcache/go/1.24.5/x64/src/fmt/print.go:239
-----------------------------------------------------------&#43;-------------
-                                                -5   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
-         0     0% 76.19%         -5 11.90%                | net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
-                                                -5   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
-----------------------------------------------------------&#43;-------------
-         0     0% 76.19%         -5 11.90%                | net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
-                                                -5   100% |   net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
-----------------------------------------------------------&#43;-------------
-                                                -5   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
-         0     0% 76.19%         -5 11.90%                | net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
-                                                -5   100% |   net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
-----------------------------------------------------------&#43;-------------
-                                                -5   100% |   net/http.(*conn).serve /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2102
-         0     0% 76.19%         -5 11.90%                | net/http.serverHandler.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:3301
-                                                -5   100% |   net/http.(*ServeMux).ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2822
-----------------------------------------------------------&#43;-------------
-                                                -5   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
-         0     0% 76.19%         -5 11.90%                | net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
-                                                -5   100% |   runtime/pprof.StartCPUProfile /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:855
+                                                -1   100% |   net/http.HandlerFunc.ServeHTTP /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/server.go:2294
+         0     0% 98.84%         -1  0.58%                | net/http/pprof.Profile /opt/hostedtoolcache/go/1.24.5/x64/src/net/http/pprof/pprof.go:157
+                                                -1   100% |   runtime/pprof.StartCPUProfile /opt/hostedtoolcache/go/1.24.5/x64/src/runtime/pprof/pprof.go:855
 ----------------------------------------------------------&#43;-------------
 
     </pre>
