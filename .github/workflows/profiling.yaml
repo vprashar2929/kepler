@@ -14,6 +14,11 @@ jobs:
   build_and_profile:
     runs-on: ubuntu-latest
     steps:
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
       - name: Checkout source
         uses: actions/checkout@v4
         # This explicitly checks out the head of the pull request
@@ -31,7 +36,7 @@ jobs:
 
       - name: Run Kepler in the background
         run: |
-          nohup ./bin/kepler --config.file=hack/config.yaml > kepler.log 2>&1 &
+          nohup sudo ./bin/kepler --config.file=hack/config.yaml > kepler.log 2>&1 &
 
       - name: Run profiling script
         run: |
@@ -64,7 +69,7 @@ jobs:
         uses: actions/checkout@v4
         # Checks out the base branch of the PR, NOT the fork's code
 
-      - name: Download rofiling artifacts
+      - name: Download profiling artifacts
         uses: actions/download-artifact@v4
         with:
           name: profiling-results-${{ github.event.pull_request.number }}
