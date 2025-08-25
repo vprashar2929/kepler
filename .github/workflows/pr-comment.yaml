@@ -10,6 +10,7 @@ on:
 permissions:
   pull-requests: write
   contents: write
+  actions: read
 
 jobs:
   comment-on-pr:
@@ -22,6 +23,7 @@ jobs:
           name: comment-message
           path: /tmp/message.txt
           run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v3
