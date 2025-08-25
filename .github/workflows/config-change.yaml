@@ -52,7 +52,6 @@ jobs:
         id: generate_message
         run: |
           {
-            echo "message<<EOF"
             echo "⚠️ Config changes detected in this PR"
             echo "Please make sure that the config changes are updated in the following places as part of this PR:"
             if [[ "${{ needs.check-changes.outputs.doc_changes }}" != "true" ]]; then
@@ -70,7 +69,6 @@ jobs:
             if [[ "${{ needs.check-changes.outputs.helm_changes }}" != "true" ]]; then
               echo "- manifests/helm/kepler/values.yaml"
             fi
-            echo "EOF"
           } > /tmp/message.txt
 
       - name: Upload comment message
