@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// Level represents the metrics level configuration using bit patterns
 type Level uint32
 
 const (
