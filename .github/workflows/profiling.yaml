@@ -1,6 +1,6 @@
 name: Profiling Report
 on:
-  pull_request_target:
+  pull_request:
 
 permissions:
   contents: write
@@ -135,7 +135,6 @@ jobs:
         id: generate_message
         run: |
           {
-            echo "message<<EOF"
             ./hack/reports/profiling.sh output
             echo ""
             echo "⬇️ Download the Profiling artifacts from the [Actions Summary page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
@@ -147,11 +146,11 @@ jobs:
             echo "gh run download ${{ github.run_id }} -n profile-artifacts-${{ github.event.pull_request.number }}"
             echo "\`\`\`"
             echo ""
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } > /tmp/message.txt
 
-      - name: Create PR Comment with report links
-        uses: thollander/actions-comment-pull-request@v3
+      - name: Upload comment message
+        uses: actions/upload-artifact@v4
         with:
-          message: ${{ steps.generate_message.outputs.message }}
-          reactions: eyes, rocket
+          name: comment-message
+          path: /tmp/message.txt
+          retention-days: 1
