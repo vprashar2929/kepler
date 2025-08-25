@@ -29,3 +29,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           file-path: /tmp/message.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
