@@ -1,0 +1,27 @@
+name: PR Comment
+
+on:
+  workflow_run:
+    workflows:
+      - Check Config Changes
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  comment-on-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download comment message
+        uses: actions/download-artifact@v4
+        with:
+          name: comment-message
+          path: /tmp/message.txt
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          file-path: /tmp/message.txt
