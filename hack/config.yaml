@@ -3,7 +3,6 @@ log:
   format: text # text or json (default: text)
 
 monitor:
-  #  Interval is the monitor's refresh interval. All process that
   #  have a life time (gets spawned and killed within one monitor interval)
   #  less than the interval will be ignored.
   #
