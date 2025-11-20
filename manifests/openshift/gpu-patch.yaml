@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kepler
+  namespace: kepler
+data:
+  config.yaml: |
+    log:
+      level: info
+      format: text
+    host:
+      sysfs: /host/sys
+      procfs: /host/proc
+    monitor:
+      interval: 3s
+      staleness: 500ms
+      maxTerminated: 100
+      minTerminatedEnergyThreshold: 10
+    rapl:
+      zones: []
+    exporter:
+      stdout:
+        enabled: false
+      prometheus:
+        enabled: true
+        debugCollectors:
+          - go
+    web:
+      configFile: ""
+      listenAddresses:
+        - ":28282"
+    debug:
+      pprof:
+        enabled: false
+    kube:
+      enabled: false
+      config: ""
+      nodeName: ""
+    dev:
+      fake-cpu-meter:
+        enabled: true
+        zones: []
+      fake-gpu-meter:
+        enabled: false
+    experimental:
+      platform:
+        gpu:
+          enabled: true
+          type: dcgm
+          devices: [0]
+          updateFreq: 1s
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kepler
+  namespace: kepler
+spec:
+  template:
+    spec:
+      runtimeClassName: nvidia
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      containers:
+        - name: kepler
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "utility"

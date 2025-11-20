@@ -50,15 +50,22 @@ type Usage struct {
 // Used by processes, containers, and VMs which only track their attributed energy consumption.
 type ZoneUsageMap map[EnergyZone]Usage
 
+// GPUUsageMap maps GPU device ID to usage data for GPU-specific metrics
+type GPUUsageMap map[uint]Usage
+
 // NodeZoneUsageMap maps energy zones to node-specific usage data that includes idle/used breakdown.
 // Used exclusively by Node to track total energy consumption with attribution between active workloads
 // and idle system overhead, enabling proper power attribution calculations.
 type NodeZoneUsageMap map[EnergyZone]NodeUsage
 
+// NodeGPUUsageMap maps GPU device ID to node-specific GPU usage data
+type NodeGPUUsageMap map[uint]NodeUsage
+
 type Node struct {
 	Timestamp  time.Time        // Timestamp of the last measurement
 	UsageRatio float64          // ratio of usage
 	Zones      NodeZoneUsageMap // Map of zones to usage
+	GPUZones   NodeGPUUsageMap  // Map of GPU devices to usage
 }
 
 func (n *Node) Clone() *Node {
@@ -66,8 +73,14 @@ func (n *Node) Clone() *Node {
 		return nil
 	}
 	ret := *n
-	ret.Zones = make(NodeZoneUsageMap, len(n.Zones))
-	maps.Copy(ret.Zones, n.Zones)
+	if n.Zones != nil {
+		ret.Zones = make(NodeZoneUsageMap, len(n.Zones))
+		maps.Copy(ret.Zones, n.Zones)
+	}
+	if n.GPUZones != nil {
+		ret.GPUZones = make(NodeGPUUsageMap, len(n.GPUZones))
+		maps.Copy(ret.GPUZones, n.GPUZones)
+	}
 	return &ret
 }
 
@@ -81,7 +94,8 @@ type Process struct {
 
 	CPUTotalTime float64 // CPU time in seconds
 
-	Zones ZoneUsageMap
+	Zones    ZoneUsageMap
+	GPUZones GPUUsageMap // GPU usage per device
 
 	ContainerID      string // empty if not a container
 	VirtualMachineID string // empty if not a virtual machine
@@ -93,8 +107,14 @@ func (p *Process) Clone() *Process {
 	}
 
 	ret := *p
-	ret.Zones = make(ZoneUsageMap, len(p.Zones))
-	maps.Copy(ret.Zones, p.Zones)
+	if p.Zones != nil {
+		ret.Zones = make(ZoneUsageMap, len(p.Zones))
+		maps.Copy(ret.Zones, p.Zones)
+	}
+	if p.GPUZones != nil {
+		ret.GPUZones = make(GPUUsageMap, len(p.GPUZones))
+		maps.Copy(ret.GPUZones, p.GPUZones)
+	}
 	return &ret
 }
 
@@ -119,7 +139,8 @@ type Container struct {
 
 	CPUTotalTime float64 // CPU time in seconds
 
-	Zones ZoneUsageMap
+	Zones    ZoneUsageMap
+	GPUZones GPUUsageMap // GPU usage per device
 
 	// pod id is empty if the container is not a pod
 	PodID string
@@ -131,8 +152,14 @@ func (c *Container) Clone() *Container {
 	}
 
 	ret := *c
-	ret.Zones = make(ZoneUsageMap, len(c.Zones))
-	maps.Copy(ret.Zones, c.Zones)
+	if c.Zones != nil {
+		ret.Zones = make(ZoneUsageMap, len(c.Zones))
+		maps.Copy(ret.Zones, c.Zones)
+	}
+	if c.GPUZones != nil {
+		ret.GPUZones = make(GPUUsageMap, len(c.GPUZones))
+		maps.Copy(ret.GPUZones, c.GPUZones)
+	}
 	return &ret
 }
 
@@ -157,7 +184,8 @@ type VirtualMachine struct {
 
 	CPUTotalTime float64 // CPU time in seconds
 
-	Zones ZoneUsageMap
+	Zones    ZoneUsageMap
+	GPUZones GPUUsageMap // GPU usage per device
 }
 
 func (vm *VirtualMachine) Clone() *VirtualMachine {
@@ -166,8 +194,14 @@ func (vm *VirtualMachine) Clone() *VirtualMachine {
 	}
 
 	ret := *vm
-	ret.Zones = make(ZoneUsageMap, len(vm.Zones))
-	maps.Copy(ret.Zones, vm.Zones)
+	if vm.Zones != nil {
+		ret.Zones = make(ZoneUsageMap, len(vm.Zones))
+		maps.Copy(ret.Zones, vm.Zones)
+	}
+	if vm.GPUZones != nil {
+		ret.GPUZones = make(GPUUsageMap, len(vm.GPUZones))
+		maps.Copy(ret.GPUZones, vm.GPUZones)
+	}
 	return &ret
 }
 
@@ -189,7 +223,8 @@ type Pod struct {
 	CPUTotalTime float64 // CPU time in seconds
 
 	// Replace single Usage with ZoneUsageMap
-	Zones ZoneUsageMap
+	Zones    ZoneUsageMap
+	GPUZones GPUUsageMap // GPU usage per device
 }
 
 func (p *Pod) Clone() *Pod {
@@ -198,8 +233,14 @@ func (p *Pod) Clone() *Pod {
 	}
 
 	ret := *p
-	ret.Zones = make(ZoneUsageMap, len(p.Zones))
-	maps.Copy(ret.Zones, p.Zones)
+	if p.Zones != nil {
+		ret.Zones = make(ZoneUsageMap, len(p.Zones))
+		maps.Copy(ret.Zones, p.Zones)
+	}
+	if p.GPUZones != nil {
+		ret.GPUZones = make(GPUUsageMap, len(p.GPUZones))
+		maps.Copy(ret.GPUZones, p.GPUZones)
+	}
 	return &ret
 }
 
@@ -242,7 +283,8 @@ func NewSnapshot() *Snapshot {
 	return &Snapshot{
 		// Timestamp: time.Time{}, // Zero value to indicate unset
 		Node: &Node{
-			Zones: make(NodeZoneUsageMap),
+			Zones:    make(NodeZoneUsageMap),
+			GPUZones: make(NodeGPUUsageMap),
 		},
 		Processes:                 make(Processes),
 		TerminatedProcesses:       make(Processes),

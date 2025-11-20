@@ -5,6 +5,7 @@ package monitor
 
 import (
 	"errors"
+	"time"
 )
 
 func (pm *PowerMonitor) calculateNodePower(prevNode, newNode *Node) error {
@@ -80,6 +81,11 @@ func (pm *PowerMonitor) calculateNodePower(prevNode, newNode *Node) error {
 		}
 	}
 
+	// Collect GPU power data if available
+	if pm.gpu != nil {
+		pm.collectNodeGPUData(newNode, prevNode, time.Duration(timeDiff), nodeCPUUsageRatio)
+	}
+
 	return retErr
 }
 
@@ -127,5 +133,101 @@ func (pm *PowerMonitor) firstNodeRead(node *Node) error {
 		}
 	}
 
+	// Initialize GPU zones if GPU meter is available
+	if pm.gpu != nil {
+		pm.initNodeGPUData(node)
+	}
+
 	return retErr
+}
+
+// collectNodeGPUData collects GPU power data for the node
+func (pm *PowerMonitor) collectNodeGPUData(node, prevNode *Node, timeDiff time.Duration, nodeCPUUsageRatio float64) {
+	gpuZones, err := pm.gpu.Zones()
+	if err != nil {
+		pm.logger.Error("Failed to get GPU zones", "error", err)
+		return
+	}
+
+	prevGPUZones := make(NodeGPUUsageMap)
+	if prevNode != nil && prevNode.GPUZones != nil {
+		prevGPUZones = prevNode.GPUZones
+	}
+
+	for _, zone := range gpuZones {
+		gpuID := zone.DeviceID()
+
+		// Get current energy reading
+		absEnergy, err := zone.Energy()
+		if err != nil {
+			pm.logger.Warn("Could not read energy for GPU", "gpu", gpuID, "error", err)
+			continue
+		}
+
+		// Calculate power and energy deltas
+		var activeEnergy, activeEnergyTotal, idleEnergyTotal Energy
+		var power, activePower, idlePower Power
+
+		if prevUsage, ok := prevGPUZones[gpuID]; ok {
+			deltaEnergy := calculateEnergyDelta(absEnergy, prevUsage.EnergyTotal, zone.MaxEnergy())
+
+			// For GPUs, use full energy as active (no idle/active split for now)
+			// GPU workloads are typically active when running
+			activeEnergy = deltaEnergy
+
+			activeEnergyTotal = prevUsage.ActiveEnergyTotal + activeEnergy
+			idleEnergyTotal = prevUsage.IdleEnergyTotal // No idle energy for GPUs
+
+			// Use instantaneous power from DCGM if available
+			if instantPower, exists := pm.gpu.DevicePower(gpuID); exists {
+				power = instantPower
+				activePower = power // All GPU power is considered active
+				idlePower = 0
+			} else {
+				// Fallback to calculating from energy delta if instantaneous power not available
+				// Convert time from nanoseconds to seconds for power calculation
+				// Power = Energy / Time = microJoules / seconds = microWatts
+				timeInSeconds := timeDiff.Seconds()
+				if timeInSeconds > 0 {
+					powerF64 := float64(deltaEnergy) / timeInSeconds
+					power = Power(powerF64)
+					activePower = power // All GPU power is considered active
+					idlePower = 0
+				}
+			}
+		}
+
+		node.GPUZones[gpuID] = NodeUsage{
+			EnergyTotal:       absEnergy,
+			activeEnergy:      activeEnergy,
+			ActiveEnergyTotal: activeEnergyTotal,
+			IdleEnergyTotal:   idleEnergyTotal,
+			Power:             power,
+			ActivePower:       activePower,
+			IdlePower:         idlePower,
+		}
+	}
+}
+
+// initNodeGPUData initializes GPU zones for the first read
+func (pm *PowerMonitor) initNodeGPUData(node *Node) {
+	gpuZones, err := pm.gpu.Zones()
+	if err != nil {
+		pm.logger.Error("Failed to get GPU zones", "error", err)
+		return
+	}
+
+	for _, zone := range gpuZones {
+		gpuID := zone.DeviceID()
+
+		absEnergy, err := zone.Energy()
+		if err != nil {
+			pm.logger.Warn("Could not read initial energy for GPU", "gpu", gpuID, "error", err)
+			absEnergy = 0
+		}
+
+		node.GPUZones[gpuID] = NodeUsage{
+			EnergyTotal: absEnergy,
+		}
+	}
 }

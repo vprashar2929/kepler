@@ -6,6 +6,7 @@ toolchain go1.24.9
 
 require (
 	dario.cat/mergo v1.0.2
+	github.com/NVIDIA/go-dcgm v0.0.0-20251024204555-c48e27bf2bf0
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/go-logr/logr v1.4.2
 	github.com/oklog/run v1.1.0
@@ -29,6 +30,7 @@ require (
 require (
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/bits-and-blooms/bitset v1.22.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
