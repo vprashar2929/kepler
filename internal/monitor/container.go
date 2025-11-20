@@ -37,6 +37,11 @@ func (pm *PowerMonitor) firstContainerRead(snapshot *Snapshot) error {
 	}
 	snapshot.Containers = containers
 
+	// Initialize GPU power for containers if GPU meter is available
+	if pm.gpu != nil {
+		pm.initContainerGPUPower(snapshot)
+	}
+
 	pm.logger.Debug("Initialized container power tracking",
 		"containers", len(containers))
 	return nil
@@ -49,6 +54,7 @@ func newContainer(cntr *resource.Container, zones NodeZoneUsageMap) *Container {
 		Runtime:      cntr.Runtime,
 		CPUTotalTime: cntr.CPUTotalTime,
 		Zones:        make(ZoneUsageMap, len(zones)),
+		GPUZones:     make(GPUUsageMap),
 	}
 
 	// Initialize each zone with zero values
@@ -142,6 +148,11 @@ func (pm *PowerMonitor) calculateContainerPower(prev, newSnapshot *Snapshot) err
 	// Update the snapshot
 	newSnapshot.Containers = containerMap
 
+	// Calculate GPU power for containers if GPU meter is available
+	if pm.gpu != nil {
+		pm.calculateContainerGPUPower(newSnapshot)
+	}
+
 	// Populate terminated containers from tracker
 	newSnapshot.TerminatedContainers = pm.terminatedContainersTracker.Items()
 	pm.logger.Debug("snapshot updated for containers",
@@ -150,4 +161,68 @@ func (pm *PowerMonitor) calculateContainerPower(prev, newSnapshot *Snapshot) err
 	)
 
 	return nil
+}
+
+// initContainerGPUPower initializes GPU power tracking for containers
+func (pm *PowerMonitor) initContainerGPUPower(snapshot *Snapshot) {
+	// For initial read, we aggregate GPU power from processes
+	for _, container := range snapshot.Containers {
+		// Initialize empty GPU zones
+		for gpuID := range snapshot.Node.GPUZones {
+			container.GPUZones[gpuID] = Usage{
+				EnergyTotal: 0,
+				Power:       0,
+			}
+		}
+
+		// Aggregate GPU power from processes in this container
+		for _, process := range snapshot.Processes {
+			if process.ContainerID != container.ID {
+				continue
+			}
+
+			// Sum up GPU power from all processes in this container
+			for gpuID, usage := range process.GPUZones {
+				containerUsage := container.GPUZones[gpuID]
+				containerUsage.EnergyTotal += usage.EnergyTotal
+				containerUsage.Power += usage.Power
+				container.GPUZones[gpuID] = containerUsage
+			}
+		}
+	}
+}
+
+// calculateContainerGPUPower calculates GPU power for containers by aggregating process GPU power
+func (pm *PowerMonitor) calculateContainerGPUPower(snapshot *Snapshot) {
+	// Clear GPU zones for all containers first
+	for _, container := range snapshot.Containers {
+		for gpuID := range container.GPUZones {
+			container.GPUZones[gpuID] = Usage{
+				EnergyTotal: 0,
+				Power:       0,
+			}
+		}
+	}
+
+	// Aggregate GPU power from processes to their containers
+	for _, process := range snapshot.Processes {
+		if process.ContainerID == "" {
+			continue
+		}
+
+		container, exists := snapshot.Containers[process.ContainerID]
+		if !exists {
+			pm.logger.Warn("Process belongs to unknown container",
+				"pid", process.PID, "container_id", process.ContainerID)
+			continue
+		}
+
+		// Sum up GPU power from this process to its container
+		for gpuID, usage := range process.GPUZones {
+			containerUsage := container.GPUZones[gpuID]
+			containerUsage.EnergyTotal += usage.EnergyTotal
+			containerUsage.Power += usage.Power
+			container.GPUZones[gpuID] = containerUsage
+		}
+	}
 }

@@ -25,6 +25,9 @@ const (
 	// ExperimentalRedfishFeature represents the Redfish BMC power monitoring feature
 	ExperimentalRedfishFeature Feature = "redfish"
 
+	// ExperimentalGPUFeature represents the GPU power monitoring feature
+	ExperimentalGPUFeature Feature = "gpu"
+
 	// PrometheusFeature represents the Prometheus exporter feature
 	PrometheusFeature Feature = "prometheus"
 
@@ -57,6 +60,13 @@ type (
 			Enabled *bool    `yaml:"enabled"`
 			Zones   []string `yaml:"zones"`
 		} `yaml:"fake-cpu-meter"`
+		FakeGpuMeter struct {
+			Enabled    *bool   `yaml:"enabled"`
+			Devices    []uint  `yaml:"devices"`
+			PowerBase  float64 `yaml:"powerBase"`  // Base power consumption in watts
+			PowerRange float64 `yaml:"powerRange"` // Power variation range in watts
+			EnergyStep float64 `yaml:"energyStep"` // Energy increment per update in joules
+		} `yaml:"fake-gpu-meter"`
 	}
 	Web struct {
 		Config          string   `yaml:"configFile"`
@@ -114,6 +124,7 @@ type (
 	// Platform contains settings for platform power monitoring
 	Platform struct {
 		Redfish Redfish `yaml:"redfish"`
+		GPU     GPU     `yaml:"gpu"`
 	}
 
 	// Redfish contains settings for Redfish BMC power monitoring
@@ -122,6 +133,14 @@ type (
 		NodeName    string        `yaml:"nodeName"`
 		ConfigFile  string        `yaml:"configFile"`
 		HTTPTimeout time.Duration `yaml:"httpTimeout"` // HTTP client timeout for BMC requests
+	}
+
+	// GPU contains settings for GPU power monitoring
+	GPU struct {
+		Enabled    *bool         `yaml:"enabled"`
+		Type       string        `yaml:"type"`       // "dcgm" or "fake"
+		Devices    []uint        `yaml:"devices"`    // GPU device IDs to monitor
+		UpdateFreq time.Duration `yaml:"updateFreq"` // Update frequency for GPU metrics
 	}
 
 	// Experimental contains experimental features (no stability guarantees)
@@ -231,6 +250,12 @@ const (
 	ExperimentalPlatformRedfishNodeNameFlag = "experimental.platform.redfish.node-name"
 	ExperimentalPlatformRedfishConfigFlag   = "experimental.platform.redfish.config-file"
 
+	// Experimental GPU power monitoring flags
+	ExperimentalPlatformGPUEnabledFlag    = "experimental.platform.gpu.enabled"
+	ExperimentalPlatformGPUTypeFlag       = "experimental.platform.gpu.type"
+	ExperimentalPlatformGPUDevicesFlag    = "experimental.platform.gpu.devices"
+	ExperimentalPlatformGPUUpdateFreqFlag = "experimental.platform.gpu.update-freq"
+
 // WARN:  dev settings shouldn't be exposed as flags as flags are intended for end users
 )
 
@@ -283,6 +308,11 @@ func DefaultConfig() *Config {
 	}
 
 	cfg.Dev.FakeCpuMeter.Enabled = ptr.To(false)
+	cfg.Dev.FakeGpuMeter.Enabled = ptr.To(false)
+	cfg.Dev.FakeGpuMeter.Devices = []uint{0}
+	cfg.Dev.FakeGpuMeter.PowerBase = 100.0
+	cfg.Dev.FakeGpuMeter.PowerRange = 50.0
+	cfg.Dev.FakeGpuMeter.EnergyStep = 1000.0
 	return cfg
 }
 
@@ -381,6 +411,12 @@ func RegisterFlags(app *kingpin.Application) ConfigUpdaterFn {
 	redfishNodeName := app.Flag(ExperimentalPlatformRedfishNodeNameFlag, "Node name for experimental Redfish platform power monitoring").String()
 	redfishConfig := app.Flag(ExperimentalPlatformRedfishConfigFlag, "Path to experimental Redfish BMC configuration file").String()
 
+	// experimental GPU
+	gpuEnabled := app.Flag(ExperimentalPlatformGPUEnabledFlag, "Enable experimental GPU power monitoring").Default("false").Bool()
+	gpuType := app.Flag(ExperimentalPlatformGPUTypeFlag, "GPU power meter type (dcgm or fake)").Default("dcgm").String()
+	gpuDevices := app.Flag(ExperimentalPlatformGPUDevicesFlag, "GPU device IDs to monitor (comma-separated)").String()
+	gpuUpdateFreq := app.Flag(ExperimentalPlatformGPUUpdateFreqFlag, "GPU metrics update frequency").Default("1s").Duration()
+
 	return func(cfg *Config) error {
 		// Logging settings
 		if flagsSet[LogLevelFlag] {
@@ -445,6 +481,9 @@ func RegisterFlags(app *kingpin.Application) ConfigUpdaterFn {
 
 		// Apply experimental platform settings
 		if err := applyRedfishConfig(cfg, flagsSet, redfishEnabled, redfishNodeName, redfishConfig); err != nil {
+			return err
+		}
+		if err := applyGPUConfig(cfg, flagsSet, gpuEnabled, gpuType, gpuDevices, gpuUpdateFreq); err != nil {
 			return err
 		}
 
@@ -548,6 +587,75 @@ func resolveNodeName(redfishNodeName, kubeNodeName string) (string, error) {
 	return hostname, nil
 }
 
+// applyGPUConfig applies GPU configuration flags
+func applyGPUConfig(cfg *Config, flagsSet map[string]bool, enabled *bool, gpuType *string, gpuDevices *string, updateFreq *time.Duration) error {
+	// Early exit if no GPU flags are set and config file does not have experimental section
+	if !hasGPUFlags(flagsSet) && cfg.Experimental == nil {
+		return nil
+	}
+
+	// Ensure experimental section exists
+	if cfg.Experimental == nil {
+		cfg.Experimental = &Experimental{
+			Platform: Platform{
+				GPU: defaultGPUConfig(),
+			},
+		}
+	} else if cfg.Experimental.Platform.GPU.Enabled == nil {
+		// Initialize GPU config if not present
+		cfg.Experimental.Platform.GPU = defaultGPUConfig()
+	}
+
+	gpu := &cfg.Experimental.Platform.GPU
+
+	// Apply flag values
+	if flagsSet[ExperimentalPlatformGPUEnabledFlag] {
+		gpu.Enabled = enabled
+	}
+
+	if flagsSet[ExperimentalPlatformGPUTypeFlag] {
+		gpu.Type = *gpuType
+	}
+
+	if flagsSet[ExperimentalPlatformGPUDevicesFlag] && *gpuDevices != "" {
+		// Parse comma-separated device IDs
+		deviceStrs := strings.Split(*gpuDevices, ",")
+		devices := make([]uint, 0, len(deviceStrs))
+		for _, devStr := range deviceStrs {
+			devID, err := strconv.ParseUint(strings.TrimSpace(devStr), 10, 32)
+			if err != nil {
+				return fmt.Errorf("invalid GPU device ID %q: %w", devStr, err)
+			}
+			devices = append(devices, uint(devID))
+		}
+		gpu.Devices = devices
+	}
+
+	if flagsSet[ExperimentalPlatformGPUUpdateFreqFlag] {
+		gpu.UpdateFreq = *updateFreq
+	}
+
+	return nil
+}
+
+// hasGPUFlags returns true if any GPU experimental flags are set
+func hasGPUFlags(flagsSet map[string]bool) bool {
+	return flagsSet[ExperimentalPlatformGPUEnabledFlag] ||
+		flagsSet[ExperimentalPlatformGPUTypeFlag] ||
+		flagsSet[ExperimentalPlatformGPUDevicesFlag] ||
+		flagsSet[ExperimentalPlatformGPUUpdateFreqFlag]
+}
+
+// defaultGPUConfig returns default GPU configuration
+func defaultGPUConfig() GPU {
+	return GPU{
+		Enabled:    ptr.To(false),
+		Type:       "dcgm",
+		Devices:    []uint{0}, // Default to GPU 0
+		UpdateFreq: 1 * time.Second,
+	}
+}
+
 // IsFeatureEnabled returns true if the specified feature is enabled
 func (c *Config) IsFeatureEnabled(feature Feature) bool {
 	switch feature {
@@ -556,6 +664,11 @@ func (c *Config) IsFeatureEnabled(feature Feature) bool {
 			return false
 		}
 		return ptr.Deref(c.Experimental.Platform.Redfish.Enabled, false)
+	case ExperimentalGPUFeature:
+		if c.Experimental == nil {
+			return false
+		}
+		return ptr.Deref(c.Experimental.Platform.GPU.Enabled, false)
 	case PrometheusFeature:
 		return ptr.Deref(c.Exporter.Prometheus.Enabled, false)
 	case StdoutFeature:
@@ -575,6 +688,11 @@ func (c *Config) experimentalFeatureEnabled() bool {
 
 	// Check if Redfish is enabled
 	if ptr.Deref(c.Experimental.Platform.Redfish.Enabled, false) {
+		return true
+	}
+
+	// Check if GPU is enabled
+	if ptr.Deref(c.Experimental.Platform.GPU.Enabled, false) {
 		return true
 	}
 
@@ -729,6 +847,23 @@ func (c *Config) validateExperimentalConfig(validationSkipped map[SkipValidation
 				if err := canReadFile(c.Experimental.Platform.Redfish.ConfigFile); err != nil {
 					errs = append(errs, fmt.Sprintf("unreadable Redfish config file: %s: %s", c.Experimental.Platform.Redfish.ConfigFile, err.Error()))
 				}
+			}
+		}
+
+		if c.IsFeatureEnabled(ExperimentalGPUFeature) {
+			// Validate GPU type
+			if c.Experimental.Platform.GPU.Type != "dcgm" && c.Experimental.Platform.GPU.Type != "fake" {
+				errs = append(errs, fmt.Sprintf("invalid GPU type %q: must be 'dcgm' or 'fake'", c.Experimental.Platform.GPU.Type))
+			}
+
+			// Validate update frequency
+			if c.Experimental.Platform.GPU.UpdateFreq <= 0 {
+				errs = append(errs, "GPU update frequency must be positive")
+			}
+
+			// Validate device IDs (should have at least one)
+			if len(c.Experimental.Platform.GPU.Devices) == 0 {
+				errs = append(errs, "at least one GPU device ID must be specified")
 			}
 		}
 	}

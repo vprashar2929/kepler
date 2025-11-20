@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/sustainable-computing-io/kepler/internal/device"
 	"github.com/sustainable-computing-io/kepler/internal/resource"
 	"k8s.io/utils/clock"
 )
@@ -19,6 +20,7 @@ type Opts struct {
 	maxStaleness                 time.Duration
 	maxTerminated                int
 	minTerminatedEnergyThreshold Energy
+	gpu                          device.GPUPowerMeter // GPU power meter (optional)
 }
 
 // NewConfig returns a new Config with defaults set
@@ -83,5 +85,12 @@ func WithMaxTerminated(max int) OptionFn {
 func WithMinTerminatedEnergyThreshold(threshold Energy) OptionFn {
 	return func(o *Opts) {
 		o.minTerminatedEnergyThreshold = threshold
+	}
+}
+
+// WithGPUPowerMeter sets the GPU power meter
+func WithGPUPowerMeter(gpu device.GPUPowerMeter) OptionFn {
+	return func(o *Opts) {
+		o.gpu = gpu
 	}
 }

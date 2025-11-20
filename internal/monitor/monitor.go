@@ -39,6 +39,7 @@ type PowerMonitor struct {
 	// passed externally
 	logger *slog.Logger
 	cpu    device.CPUPowerMeter
+	gpu    device.GPUPowerMeter // GPU power meter (optional)
 
 	interval time.Duration
 	clock    clock.WithTicker
@@ -94,6 +95,7 @@ func NewPowerMonitor(meter device.CPUPowerMeter, applyOpts ...OptionFn) *PowerMo
 	monitor := &PowerMonitor{
 		logger:    opts.logger.With("service", "monitor"),
 		cpu:       meter,
+		gpu:       opts.gpu,
 		clock:     opts.clock,
 		interval:  opts.interval,
 		resources: opts.resources,
@@ -160,9 +162,29 @@ func (pm *PowerMonitor) signalNewData() {
 
 func (pm *PowerMonitor) Run(ctx context.Context) error {
 	pm.logger.Info("Monitor is running...")
+
+	// Start GPU monitoring if available
+	if pm.gpu != nil {
+		pm.logger.Info("Starting GPU power monitoring")
+		if err := pm.gpu.Start(); err != nil {
+			pm.logger.Error("Failed to start GPU monitoring", "error", err)
+			// Continue without GPU monitoring
+			pm.gpu = nil
+		}
+	}
+
 	pm.collectionLoop()
 	<-ctx.Done()
 	pm.collectionCancel()
+
+	// Stop GPU monitoring if running
+	if pm.gpu != nil {
+		pm.logger.Info("Stopping GPU power monitoring")
+		if err := pm.gpu.Stop(); err != nil {
+			pm.logger.Error("Failed to stop GPU monitoring", "error", err)
+		}
+	}
+
 	pm.logger.Info("Monitor has terminated.")
 	return nil
 }

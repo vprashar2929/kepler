@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"os"
 	"syscall"
+	"time"
 
 	"github.com/alecthomas/kingpin/v2"
 
@@ -129,6 +130,13 @@ func createServices(logger *slog.Logger, cfg *config.Config) ([]service.Service,
 	if err != nil {
 		return nil, fmt.Errorf("failed to create CPU power meter: %w", err)
 	}
+
+	// Create GPU meter if enabled
+	gpuPowerMeter, err := createGPUMeter(logger, cfg)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create GPU power meter: %w", err)
+	}
+
 	var services []service.Service
 
 	var podInformer pod.Informer
@@ -149,15 +157,21 @@ func createServices(logger *slog.Logger, cfg *config.Config) ([]service.Service,
 		return nil, fmt.Errorf("failed to create resource informer: %w", err)
 	}
 
-	pm := monitor.NewPowerMonitor(
-		cpuPowerMeter,
+	monitorOpts := []monitor.OptionFn{
 		monitor.WithLogger(logger),
 		monitor.WithResourceInformer(resourceInformer),
 		monitor.WithInterval(cfg.Monitor.Interval),
 		monitor.WithMaxStaleness(cfg.Monitor.Staleness),
 		monitor.WithMaxTerminated(cfg.Monitor.MaxTerminated),
-		monitor.WithMinTerminatedEnergyThreshold(monitor.Energy(cfg.Monitor.MinTerminatedEnergyThreshold)*monitor.Joule),
-	)
+		monitor.WithMinTerminatedEnergyThreshold(monitor.Energy(cfg.Monitor.MinTerminatedEnergyThreshold) * monitor.Joule),
+	}
+
+	// Add GPU meter if available
+	if gpuPowerMeter != nil {
+		monitorOpts = append(monitorOpts, monitor.WithGPUPowerMeter(gpuPowerMeter))
+	}
+
+	pm := monitor.NewPowerMonitor(cpuPowerMeter, monitorOpts...)
 
 	// Create Redfish service if enabled (experimental feature)
 
@@ -268,4 +282,51 @@ func createCPUMeter(logger *slog.Logger, cfg *config.Config) (device.CPUPowerMet
 		device.WithRaplLogger(logger),
 		device.WithZoneFilter(cfg.Rapl.Zones),
 	)
+}
+
+func createGPUMeter(logger *slog.Logger, cfg *config.Config) (device.GPUPowerMeter, error) {
+	// Check if GPU monitoring is enabled
+	if !cfg.IsFeatureEnabled(config.ExperimentalGPUFeature) {
+		return nil, nil
+	}
+
+	logger.Info("GPU power monitoring is enabled (experimental)",
+		"type", cfg.Experimental.Platform.GPU.Type,
+		"devices", cfg.Experimental.Platform.GPU.Devices)
+
+	// Check for fake GPU meter in dev mode
+	if fake := cfg.Dev.FakeGpuMeter; *fake.Enabled {
+		logger.Info("Using fake GPU meter for development")
+		return device.NewFakeGPUMeter(
+			fake.Devices,
+			device.WithFakeGPULogger(logger),
+			device.WithFakeGPUPowerBase(fake.PowerBase),
+			device.WithFakeGPUPowerRange(fake.PowerRange),
+			device.WithFakeGPUEnergyStep(fake.EnergyStep),
+		)
+	}
+
+	// Use experimental configuration
+	gpuCfg := cfg.Experimental.Platform.GPU
+
+	switch gpuCfg.Type {
+	case "fake":
+		logger.Info("Using fake GPU meter from experimental config")
+		return device.NewFakeGPUMeter(
+			gpuCfg.Devices,
+			device.WithFakeGPULogger(logger),
+		)
+	case "dcgm":
+		logger.Info("Using DCGM GPU meter")
+		opts := device.DCGMGPUPowerMeterOpts{
+			Logger:     logger,
+			UpdateFreq: gpuCfg.UpdateFreq,
+			MaxKeepAge: 30 * time.Second,
+			MaxSamples: 1000,
+			GPUDevices: gpuCfg.Devices,
+		}
+		return device.NewDCGMGPUPowerMeter(opts)
+	default:
+		return nil, fmt.Errorf("unknown GPU meter type: %s", gpuCfg.Type)
+	}
 }

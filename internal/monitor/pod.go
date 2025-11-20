@@ -37,6 +37,11 @@ func (pm *PowerMonitor) firstPodRead(snapshot *Snapshot) error {
 	}
 	snapshot.Pods = pods
 
+	// Initialize GPU power for pods if GPU meter is available
+	if pm.gpu != nil {
+		pm.initPodGPUPower(snapshot)
+	}
+
 	pm.logger.Debug("Initialized pod power tracking",
 		"pods", len(pods))
 	return nil
@@ -120,6 +125,11 @@ func (pm *PowerMonitor) calculatePodPower(prev, newSnapshot *Snapshot) error {
 	// Update the snapshot
 	newSnapshot.Pods = podMap
 
+	// Calculate GPU power for pods if GPU meter is available
+	if pm.gpu != nil {
+		pm.calculatePodGPUPower(newSnapshot)
+	}
+
 	// Populate terminated pods from tracker
 	newSnapshot.TerminatedPods = pm.terminatedPodsTracker.Items()
 	pm.logger.Debug("snapshot updated for pods",
@@ -138,6 +148,7 @@ func newPod(pod *resource.Pod, zones NodeZoneUsageMap) *Pod {
 		Namespace:    pod.Namespace,
 		CPUTotalTime: pod.CPUTotalTime,
 		Zones:        make(ZoneUsageMap, len(zones)),
+		GPUZones:     make(GPUUsageMap),
 	}
 
 	// Initialize each zone with zero values
@@ -149,4 +160,68 @@ func newPod(pod *resource.Pod, zones NodeZoneUsageMap) *Pod {
 	}
 
 	return p
+}
+
+// initPodGPUPower initializes GPU power tracking for pods
+func (pm *PowerMonitor) initPodGPUPower(snapshot *Snapshot) {
+	// For initial read, we aggregate GPU power from containers
+	for _, pod := range snapshot.Pods {
+		// Initialize empty GPU zones
+		for gpuID := range snapshot.Node.GPUZones {
+			pod.GPUZones[gpuID] = Usage{
+				EnergyTotal: 0,
+				Power:       0,
+			}
+		}
+
+		// Aggregate GPU power from containers in this pod
+		for _, container := range snapshot.Containers {
+			if container.PodID != pod.ID {
+				continue
+			}
+
+			// Sum up GPU power from all containers in this pod
+			for gpuID, usage := range container.GPUZones {
+				podUsage := pod.GPUZones[gpuID]
+				podUsage.EnergyTotal += usage.EnergyTotal
+				podUsage.Power += usage.Power
+				pod.GPUZones[gpuID] = podUsage
+			}
+		}
+	}
+}
+
+// calculatePodGPUPower calculates GPU power for pods by aggregating container GPU power
+func (pm *PowerMonitor) calculatePodGPUPower(snapshot *Snapshot) {
+	// Clear GPU zones for all pods first
+	for _, pod := range snapshot.Pods {
+		for gpuID := range pod.GPUZones {
+			pod.GPUZones[gpuID] = Usage{
+				EnergyTotal: 0,
+				Power:       0,
+			}
+		}
+	}
+
+	// Aggregate GPU power from containers to their pods
+	for _, container := range snapshot.Containers {
+		if container.PodID == "" {
+			continue
+		}
+
+		pod, exists := snapshot.Pods[container.PodID]
+		if !exists {
+			pm.logger.Warn("Container belongs to unknown pod",
+				"container_id", container.ID, "pod_id", container.PodID)
+			continue
+		}
+
+		// Sum up GPU power from this container to its pod
+		for gpuID, usage := range container.GPUZones {
+			podUsage := pod.GPUZones[gpuID]
+			podUsage.EnergyTotal += usage.EnergyTotal
+			podUsage.Power += usage.Power
+			pod.GPUZones[gpuID] = podUsage
+		}
+	}
 }

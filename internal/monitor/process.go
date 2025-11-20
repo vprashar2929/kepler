@@ -5,6 +5,7 @@ package monitor
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/sustainable-computing-io/kepler/internal/resource"
 )
@@ -39,6 +40,11 @@ func (pm *PowerMonitor) firstProcessRead(snapshot *Snapshot) error {
 	}
 	snapshot.Processes = processes
 
+	// Initialize GPU power for processes if GPU meter is available
+	if pm.gpu != nil {
+		pm.initProcessGPUPower(snapshot)
+	}
+
 	pm.logger.Debug("Initialized process power tracking",
 		"processes", len(processes),
 	)
@@ -53,6 +59,7 @@ func newProcess(proc *resource.Process, zones NodeZoneUsageMap) *Process {
 		Type:         proc.Type,
 		CPUTotalTime: proc.CPUTotalTime,
 		Zones:        make(ZoneUsageMap, len(zones)),
+		GPUZones:     make(GPUUsageMap),
 	}
 
 	// Initialize each zone with zero values
@@ -150,6 +157,11 @@ func (pm *PowerMonitor) calculateProcessPower(prev, newSnapshot *Snapshot) error
 	// Update the snapshot of running processes
 	newSnapshot.Processes = processMap
 
+	// Calculate GPU power for processes if GPU meter is available
+	if pm.gpu != nil {
+		pm.calculateProcessGPUPower(newSnapshot, prev)
+	}
+
 	// Populate terminated processes from tracker
 	newSnapshot.TerminatedProcesses = pm.terminatedProcessesTracker.Items()
 	pm.logger.Debug("snapshot updated for process",
@@ -158,4 +170,73 @@ func (pm *PowerMonitor) calculateProcessPower(prev, newSnapshot *Snapshot) error
 	)
 
 	return nil
+}
+
+// initProcessGPUPower initializes GPU power tracking for processes
+func (pm *PowerMonitor) initProcessGPUPower(snapshot *Snapshot) {
+	// For initial read, we just set up empty GPU zones
+	// Actual power attribution happens in subsequent reads
+	for _, process := range snapshot.Processes {
+		for gpuID := range snapshot.Node.GPUZones {
+			process.GPUZones[gpuID] = Usage{
+				EnergyTotal: 0,
+				Power:       0,
+			}
+		}
+	}
+}
+
+// calculateProcessGPUPower calculates GPU power for each process
+func (pm *PowerMonitor) calculateProcessGPUPower(newSnapshot, prev *Snapshot) {
+	if newSnapshot.Node.GPUZones == nil || len(newSnapshot.Node.GPUZones) == 0 {
+		return
+	}
+
+	// Get GPU zones from the meter
+	gpuZones, err := pm.gpu.Zones()
+	if err != nil {
+		pm.logger.Error("Failed to get GPU zones for process attribution", "error", err)
+		return
+	}
+
+	// For each process, calculate its GPU power usage
+	for pid, process := range newSnapshot.Processes {
+		intPID, err := strconv.Atoi(pid)
+		if err != nil {
+			pm.logger.Warn("Invalid PID for GPU power calculation", "pid", pid, "error", err)
+			continue
+		}
+
+		// For each GPU, get process-specific power
+		for _, gpuZone := range gpuZones {
+			gpuID := gpuZone.DeviceID()
+
+			// Get process power from DCGM
+			power, energy, err := pm.gpu.ProcessPower(intPID, gpuID)
+			if err != nil {
+				// No GPU usage for this process on this GPU
+				continue
+			}
+
+			// Get previous energy if available
+			var absoluteEnergy = energy
+			if prev != nil && prev.Processes != nil {
+				if prevProc, exists := prev.Processes[pid]; exists {
+					if prevUsage, hasGPU := prevProc.GPUZones[gpuID]; hasGPU {
+						// Only add delta to avoid double counting
+						if energy > prevUsage.EnergyTotal {
+							absoluteEnergy = prevUsage.EnergyTotal + (energy - prevUsage.EnergyTotal)
+						} else {
+							absoluteEnergy = prevUsage.EnergyTotal
+						}
+					}
+				}
+			}
+
+			process.GPUZones[gpuID] = Usage{
+				Power:       power,
+				EnergyTotal: absoluteEnergy,
+			}
+		}
+	}
 }
