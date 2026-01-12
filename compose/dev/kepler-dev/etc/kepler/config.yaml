@@ -80,3 +80,13 @@ experimental:
       configFile: /etc/kepler/redfish.yaml # Path to Redfish BMC configuration file
       nodeName: kepler-dev # Node name to use (overrides Kubernetes node name and hostname fallback)
       httpTimeout: 5s # HTTP client timeout for BMC requests (default: 5s)
+
+    gpu:
+      enabled: true # Enable experimental GPU power monitoring
+      type: dcgm # GPU power meter type: "dcgm" or "fake"
+      # NOTE: Fake GPU IDs are 1-based (1, 2, 3, 4), not 0-based
+      devices: [1, 2, 3, 4] # GPU device IDs to monitor (matches NUM_FAKE_GPUS=4 in dcgm-exporter)
+      updateFreq: 1s # Update frequency for GPU metrics
+      dcgmMode: standalone # Connect to external DCGM host engine (dcgm-exporter)
+      # NOTE: Use port 5555 (DCGM host engine port), NOT 9400 (Prometheus HTTP port)
+      dcgmAddress: dcgm-exporter:5555

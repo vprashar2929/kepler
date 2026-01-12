@@ -20,6 +20,11 @@ func (m *mockDCGMImpl) Init() (func(), error) {
 	return calledArgs.Get(0).(func()), calledArgs.Error(1)
 }
 
+func (m *mockDCGMImpl) InitStandalone(address string) (func(), error) {
+	calledArgs := m.Called(address)
+	return calledArgs.Get(0).(func()), calledArgs.Error(1)
+}
+
 func (m *mockDCGMImpl) WatchPidFieldsEx(updateFreq, maxKeepAge time.Duration, maxKeepSamples int, gpus ...uint) (dcgm.GroupHandle, error) {
 	calledArgs := m.Called(updateFreq, maxKeepAge, maxKeepSamples, gpus)
 	return calledArgs.Get(0).(dcgm.GroupHandle), calledArgs.Error(1)

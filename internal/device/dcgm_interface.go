@@ -4,15 +4,30 @@
 package device
 
 import (
+	"fmt"
+	"net"
 	"time"
 
 	"github.com/NVIDIA/go-dcgm/pkg/dcgm"
 )
 
+// DCGMMode represents the DCGM connection mode
+type DCGMMode string
+
+const (
+	// DCGMModeEmbedded starts an embedded DCGM engine
+	DCGMModeEmbedded DCGMMode = "embedded"
+	// DCGMModeStandalone connects to an external DCGM host engine
+	DCGMModeStandalone DCGMMode = "standalone"
+)
+
 // dcgmInterface defines the methods we use from the DCGM library
 // This interface allows us to mock the DCGM library for testing
 type dcgmInterface interface {
+	// Init initializes DCGM in embedded mode (starts a local DCGM engine)
 	Init() (cleanup func(), err error)
+	// InitStandalone connects to an external DCGM host engine
+	InitStandalone(address string) (cleanup func(), err error)
 	WatchPidFieldsEx(updateFreq, maxKeepAge time.Duration, maxKeepSamples int, gpus ...uint) (dcgm.GroupHandle, error)
 	FieldGroupCreate(fieldsGroupName string, fields []dcgm.Short) (dcgm.FieldHandle, error)
 	WatchFieldsWithGroup(fieldsGroup dcgm.FieldHandle, group dcgm.GroupHandle) error
@@ -25,47 +40,28 @@ type dcgmInterface interface {
 // defaultDCGMImpl is the default implementation that calls the actual DCGM library
 type defaultDCGMImpl struct{}
 
+// Init initializes DCGM in embedded mode (starts a local DCGM engine)
 func (d *defaultDCGMImpl) Init() (func(), error) {
-	// Use the dcgm.Mode type directly if exported, otherwise use unexported alias
-	// Since we don't have access to unexported types, we rely on the method signature matching
-	// what dcgm.Init actually accepts.
-	//
-	// NOTE: dcgm.Embedded is an untyped constant or a type we can't see easily,
-	// but the function signature in api.go uses a private type 'mode'.
-	// However, since we are wrapping it, we need to match what we can pass.
-	//
-	// Wait, looking at api.go: func Init(m mode, args ...string)
-	// 'mode' is unexported. This makes it tricky to wrap directly if we can't name the type.
-	// BUT, the constants like dcgm.Embedded are likely exported constants of that type.
-	//
-	// Actually, in Go, if the type is unexported, we can't implement an interface method with it
-	// unless the interface is in the same package.
-	//
-	// We might need to use reflection or simply assume we can pass the constants which are likely ints.
-	// Let's check what dcgm.Embedded is defined as.
-	//
-	// If we can't name the type 'mode', we can't define the interface method with it.
-	// This implies we can't wrap Init() directly in an interface outside the dcgm package
-	// IF 'mode' is truly unexported and used in the signature.
-	//
-	// Let's workaround this by NOT wrapping Init directly in the same way,
-	// OR by using an interface that accepts 'any' or 'int' and we cast it?
-	// No, we can't cast to an unexported type.
-	//
-	// However, we observed dcgm.Init(dcgm.Embedded) works.
-	// If we change our interface to take (modeType any), we still can't pass it to dcgm.Init
-	// without casting to the unexported type `dcgm.mode`.
-	//
-	// Since we are in 'device' package, we cannot refer to 'dcgm.mode'.
-	//
-	// Strategy:
-	// We will wrap the *call* to dcgm.Init inside the implementation,
-	// but our interface will accept the values that are effectively the constants.
-	//
-	// Let's assume we only support Embedded mode for now as that's what we use.
-	// Or we can just make Init take nothing and hardcode Embedded in the default impl,
-	// since that's what the code does: cleanup, err := dcgm.Init(dcgm.Embedded)
+	// Embedded mode starts a DCGM engine within the process.
+	// This requires DCGM libraries and a local NVIDIA GPU.
 	return dcgm.Init(dcgm.Embedded)
+}
+
+// InitStandalone connects to an external DCGM host engine
+// The address should be in the format "hostname:port" (e.g., "dcgm-exporter:5555")
+func (d *defaultDCGMImpl) InitStandalone(address string) (func(), error) {
+	// Validate the address format (must include host and port)
+	_, _, err := net.SplitHostPort(address)
+	if err != nil {
+		return nil, fmt.Errorf("invalid DCGM address format %q (expected host:port): %w", address, err)
+	}
+
+	// Standalone mode connects to an external DCGM host engine.
+	// The go-dcgm library's Init function for Standalone mode expects:
+	//   args[0] = address in "host:port" format
+	//   args[1] = "0" for TCP socket, "1" for Unix socket
+	// We use TCP (0) for network connections to remote DCGM host engines.
+	return dcgm.Init(dcgm.Standalone, address, "0")
 }
 
 func (d *defaultDCGMImpl) WatchPidFieldsEx(updateFreq, maxKeepAge time.Duration, maxKeepSamples int, gpus ...uint) (dcgm.GroupHandle, error) {

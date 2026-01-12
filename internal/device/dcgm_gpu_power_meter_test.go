@@ -104,6 +104,83 @@ func TestDCGMGPUPowerMeterOpts(t *testing.T) {
 	assert.Equal(t, 1000, opts.MaxSamples)
 }
 
+// TestDCGMGPUPowerMeter_BackwardCompatibility tests that empty DCGMMode defaults to embedded
+// This ensures backward compatibility with existing configurations that don't specify dcgmMode
+func TestDCGMGPUPowerMeter_BackwardCompatibility(t *testing.T) {
+	// Save original DCGM lib and restore after test
+	originalLib := dcgmLib
+	defer func() { dcgmLib = originalLib }()
+
+	mockDCGM := new(mockDCGMImpl)
+	dcgmLib = mockDCGM
+
+	// Setup mock expectations - expect Init() (embedded mode), NOT InitStandalone()
+	mockDCGM.On("Init").Return(func() {}, nil)
+	mockDCGM.On("WatchPidFieldsEx", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(dcgm.GroupHandle{}, nil)
+	mockDCGM.On("FieldGroupCreate", mock.Anything, mock.Anything).Return(dcgm.FieldHandle{}, nil)
+	mockDCGM.On("WatchFieldsWithGroup", mock.Anything, mock.Anything).Return(nil)
+
+	// Create meter WITHOUT specifying DCGMMode (simulates old config)
+	opts := DCGMGPUPowerMeterOpts{
+		GPUDevices: []uint{0},
+		// DCGMMode is intentionally NOT set (empty string)
+	}
+	meter, err := NewDCGMGPUPowerMeter(opts)
+
+	assert.NoError(t, err, "Creating meter with empty DCGMMode should work (defaults to embedded)")
+	assert.NotNil(t, meter)
+
+	// Verify Init() was called (embedded mode) and NOT InitStandalone()
+	mockDCGM.AssertCalled(t, "Init")
+	mockDCGM.AssertNotCalled(t, "InitStandalone", mock.Anything)
+}
+
+// TestDCGMGPUPowerMeter_StandaloneMode tests that standalone mode uses InitStandalone
+func TestDCGMGPUPowerMeter_StandaloneMode(t *testing.T) {
+	// Save original DCGM lib and restore after test
+	originalLib := dcgmLib
+	defer func() { dcgmLib = originalLib }()
+
+	mockDCGM := new(mockDCGMImpl)
+	dcgmLib = mockDCGM
+
+	// Setup mock expectations - expect InitStandalone(), NOT Init()
+	testAddress := "dcgm-exporter:5555"
+	mockDCGM.On("InitStandalone", testAddress).Return(func() {}, nil)
+	mockDCGM.On("WatchPidFieldsEx", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(dcgm.GroupHandle{}, nil)
+	mockDCGM.On("FieldGroupCreate", mock.Anything, mock.Anything).Return(dcgm.FieldHandle{}, nil)
+	mockDCGM.On("WatchFieldsWithGroup", mock.Anything, mock.Anything).Return(nil)
+
+	// Create meter with standalone mode
+	opts := DCGMGPUPowerMeterOpts{
+		GPUDevices:  []uint{0},
+		DCGMMode:    DCGMModeStandalone,
+		DCGMAddress: testAddress,
+	}
+	meter, err := NewDCGMGPUPowerMeter(opts)
+
+	assert.NoError(t, err, "Creating meter with standalone mode should work")
+	assert.NotNil(t, meter)
+
+	// Verify InitStandalone() was called, NOT Init()
+	mockDCGM.AssertCalled(t, "InitStandalone", testAddress)
+	mockDCGM.AssertNotCalled(t, "Init")
+}
+
+// TestDCGMGPUPowerMeter_StandaloneModeNoAddress tests that standalone mode without address fails
+func TestDCGMGPUPowerMeter_StandaloneModeNoAddress(t *testing.T) {
+	opts := DCGMGPUPowerMeterOpts{
+		GPUDevices:  []uint{0},
+		DCGMMode:    DCGMModeStandalone,
+		DCGMAddress: "", // Missing address
+	}
+	meter, err := NewDCGMGPUPowerMeter(opts)
+
+	assert.Error(t, err, "Standalone mode without address should fail")
+	assert.Nil(t, meter)
+	assert.Contains(t, err.Error(), "DCGM address is required")
+}
+
 // TestDCGMGPUPowerMeter_InitAndUsage tests initialization and basic usage with mocked DCGM
 func TestDCGMGPUPowerMeter_InitAndUsage(t *testing.T) {
 	// Save original DCGM lib and restore after test

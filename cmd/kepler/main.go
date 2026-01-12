@@ -317,13 +317,15 @@ func createGPUMeter(logger *slog.Logger, cfg *config.Config) (device.GPUPowerMet
 			device.WithFakeGPULogger(logger),
 		)
 	case "dcgm":
-		logger.Info("Using DCGM GPU meter")
+		logger.Info("Using DCGM GPU meter", "mode", gpuCfg.DCGMMode, "address", gpuCfg.DCGMAddress)
 		opts := device.DCGMGPUPowerMeterOpts{
-			Logger:     logger,
-			UpdateFreq: gpuCfg.UpdateFreq,
-			MaxKeepAge: 30 * time.Second,
-			MaxSamples: 1000,
-			GPUDevices: gpuCfg.Devices,
+			Logger:      logger,
+			UpdateFreq:  gpuCfg.UpdateFreq,
+			MaxKeepAge:  30 * time.Second,
+			MaxSamples:  1000,
+			GPUDevices:  gpuCfg.Devices,
+			DCGMMode:    device.DCGMMode(gpuCfg.DCGMMode),
+			DCGMAddress: gpuCfg.DCGMAddress,
 		}
 		return device.NewDCGMGPUPowerMeter(opts)
 	default:

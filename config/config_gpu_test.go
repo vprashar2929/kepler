@@ -57,30 +57,36 @@ func TestGPUFeatureEnabled(t *testing.T) {
 
 func TestApplyGPUConfig(t *testing.T) {
 	tests := []struct {
-		name       string
-		cfg        *Config
-		flagsSet   map[string]bool
-		enabled    *bool
-		gpuType    *string
-		gpuDevices *string
-		updateFreq *time.Duration
-		wantErr    bool
-		expected   *GPU
+		name        string
+		cfg         *Config
+		flagsSet    map[string]bool
+		enabled     *bool
+		gpuType     *string
+		gpuDevices  *string
+		updateFreq  *time.Duration
+		dcgmMode    *string
+		dcgmAddress *string
+		wantErr     bool
+		expected    *GPU
 	}{{
 		name: "apply enabled flag",
 		cfg:  &Config{},
 		flagsSet: map[string]bool{
 			ExperimentalPlatformGPUEnabledFlag: true,
 		},
-		enabled:    ptr.To(true),
-		gpuType:    ptr.To("dcgm"),
-		gpuDevices: ptr.To(""),
-		updateFreq: ptr.To(1 * time.Second),
+		enabled:     ptr.To(true),
+		gpuType:     ptr.To("dcgm"),
+		gpuDevices:  ptr.To(""),
+		updateFreq:  ptr.To(1 * time.Second),
+		dcgmMode:    ptr.To("embedded"),
+		dcgmAddress: ptr.To(""),
 		expected: &GPU{
-			Enabled:    ptr.To(true),
-			Type:       "dcgm",
-			Devices:    []uint{0},
-			UpdateFreq: 1 * time.Second,
+			Enabled:     ptr.To(true),
+			Type:        "dcgm",
+			Devices:     []uint{0},
+			UpdateFreq:  1 * time.Second,
+			DCGMMode:    "embedded",
+			DCGMAddress: "",
 		},
 	}, {
 		name: "apply type and devices",
@@ -89,15 +95,19 @@ func TestApplyGPUConfig(t *testing.T) {
 			ExperimentalPlatformGPUTypeFlag:    true,
 			ExperimentalPlatformGPUDevicesFlag: true,
 		},
-		enabled:    ptr.To(false),
-		gpuType:    ptr.To("fake"),
-		gpuDevices: ptr.To("0,1,2"),
-		updateFreq: ptr.To(2 * time.Second),
+		enabled:     ptr.To(false),
+		gpuType:     ptr.To("fake"),
+		gpuDevices:  ptr.To("0,1,2"),
+		updateFreq:  ptr.To(2 * time.Second),
+		dcgmMode:    ptr.To("embedded"),
+		dcgmAddress: ptr.To(""),
 		expected: &GPU{
-			Enabled:    ptr.To(false),
-			Type:       "fake",
-			Devices:    []uint{0, 1, 2},
-			UpdateFreq: 1 * time.Second, // Default
+			Enabled:     ptr.To(false),
+			Type:        "fake",
+			Devices:     []uint{0, 1, 2},
+			UpdateFreq:  1 * time.Second, // Default
+			DCGMMode:    "embedded",
+			DCGMAddress: "",
 		},
 	}, {
 		name: "invalid device ID",
@@ -105,32 +115,59 @@ func TestApplyGPUConfig(t *testing.T) {
 		flagsSet: map[string]bool{
 			ExperimentalPlatformGPUDevicesFlag: true,
 		},
-		enabled:    ptr.To(false),
-		gpuType:    ptr.To("dcgm"),
-		gpuDevices: ptr.To("0,invalid,2"),
-		updateFreq: ptr.To(1 * time.Second),
-		wantErr:    true,
+		enabled:     ptr.To(false),
+		gpuType:     ptr.To("dcgm"),
+		gpuDevices:  ptr.To("0,invalid,2"),
+		updateFreq:  ptr.To(1 * time.Second),
+		dcgmMode:    ptr.To("embedded"),
+		dcgmAddress: ptr.To(""),
+		wantErr:     true,
 	}, {
 		name: "apply update frequency",
 		cfg:  &Config{},
 		flagsSet: map[string]bool{
 			ExperimentalPlatformGPUUpdateFreqFlag: true,
 		},
-		enabled:    ptr.To(false),
-		gpuType:    ptr.To("dcgm"),
-		gpuDevices: ptr.To(""),
-		updateFreq: ptr.To(5 * time.Second),
+		enabled:     ptr.To(false),
+		gpuType:     ptr.To("dcgm"),
+		gpuDevices:  ptr.To(""),
+		updateFreq:  ptr.To(5 * time.Second),
+		dcgmMode:    ptr.To("embedded"),
+		dcgmAddress: ptr.To(""),
 		expected: &GPU{
-			Enabled:    ptr.To(false),
-			Type:       "dcgm",
-			Devices:    []uint{0},
-			UpdateFreq: 5 * time.Second,
+			Enabled:     ptr.To(false),
+			Type:        "dcgm",
+			Devices:     []uint{0},
+			UpdateFreq:  5 * time.Second,
+			DCGMMode:    "embedded",
+			DCGMAddress: "",
+		},
+	}, {
+		name: "apply dcgm standalone mode",
+		cfg:  &Config{},
+		flagsSet: map[string]bool{
+			ExperimentalPlatformGPUDCGMModeFlag: true,
+			ExperimentalPlatformGPUDCGMAddrFlag: true,
+		},
+		enabled:     ptr.To(false),
+		gpuType:     ptr.To("dcgm"),
+		gpuDevices:  ptr.To(""),
+		updateFreq:  ptr.To(1 * time.Second),
+		dcgmMode:    ptr.To("standalone"),
+		dcgmAddress: ptr.To("dcgm-exporter:5555"),
+		expected: &GPU{
+			Enabled:     ptr.To(false),
+			Type:        "dcgm",
+			Devices:     []uint{0},
+			UpdateFreq:  1 * time.Second,
+			DCGMMode:    "standalone",
+			DCGMAddress: "dcgm-exporter:5555",
 		},
 	}}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			err := applyGPUConfig(tc.cfg, tc.flagsSet, tc.enabled, tc.gpuType, tc.gpuDevices, tc.updateFreq)
+			err := applyGPUConfig(tc.cfg, tc.flagsSet, tc.enabled, tc.gpuType, tc.gpuDevices, tc.updateFreq, tc.dcgmMode, tc.dcgmAddress)
 
 			if tc.wantErr {
 				assert.Error(t, err)
@@ -228,6 +265,58 @@ func TestGPUConfigValidation(t *testing.T) {
 		},
 		wantErr: true,
 		errMsg:  "at least one GPU device ID must be specified",
+	}, {
+		name: "invalid dcgm mode",
+		modify: func(cfg *Config) {
+			cfg.Experimental = &Experimental{
+				Platform: Platform{
+					GPU: GPU{
+						Enabled:    ptr.To(true),
+						Type:       "dcgm",
+						Devices:    []uint{0},
+						UpdateFreq: 1 * time.Second,
+						DCGMMode:   "invalid",
+					},
+				},
+			}
+		},
+		wantErr: true,
+		errMsg:  "invalid DCGM mode",
+	}, {
+		name: "standalone mode without address",
+		modify: func(cfg *Config) {
+			cfg.Experimental = &Experimental{
+				Platform: Platform{
+					GPU: GPU{
+						Enabled:     ptr.To(true),
+						Type:        "dcgm",
+						Devices:     []uint{0},
+						UpdateFreq:  1 * time.Second,
+						DCGMMode:    "standalone",
+						DCGMAddress: "", // Missing address
+					},
+				},
+			}
+		},
+		wantErr: true,
+		errMsg:  "DCGM address is required when using standalone mode",
+	}, {
+		name: "valid standalone mode with address",
+		modify: func(cfg *Config) {
+			cfg.Experimental = &Experimental{
+				Platform: Platform{
+					GPU: GPU{
+						Enabled:     ptr.To(true),
+						Type:        "dcgm",
+						Devices:     []uint{0},
+						UpdateFreq:  1 * time.Second,
+						DCGMMode:    "standalone",
+						DCGMAddress: "dcgm-exporter:5555",
+					},
+				},
+			}
+		},
+		wantErr: false,
 	}}
 
 	for _, tc := range tests {
@@ -282,6 +371,18 @@ func TestHasGPUFlags(t *testing.T) {
 		name: "has update freq flag",
 		flagsSet: map[string]bool{
 			ExperimentalPlatformGPUUpdateFreqFlag: true,
+		},
+		expected: true,
+	}, {
+		name: "has dcgm mode flag",
+		flagsSet: map[string]bool{
+			ExperimentalPlatformGPUDCGMModeFlag: true,
+		},
+		expected: true,
+	}, {
+		name: "has dcgm address flag",
+		flagsSet: map[string]bool{
+			ExperimentalPlatformGPUDCGMAddrFlag: true,
 		},
 		expected: true,
 	}, {
@@ -343,6 +444,69 @@ experimental:
 	assert.Equal(t, "fake", gpu.Type)
 	assert.Equal(t, []uint{0, 1, 2}, gpu.Devices)
 	assert.Equal(t, 2*time.Second, gpu.UpdateFreq)
+	// Backward compatibility: DCGMMode should be empty when not specified in YAML
+	// The power meter will default to "embedded" mode when DCGMMode is empty
+	assert.Equal(t, "", gpu.DCGMMode)
+	assert.Equal(t, "", gpu.DCGMAddress)
+}
+
+// TestGPUConfigBackwardCompatibility tests that old GPU configs without dcgmMode
+// still work correctly (validation passes and embedded mode is used by default)
+func TestGPUConfigBackwardCompatibility(t *testing.T) {
+	// This simulates an old config that doesn't have dcgmMode/dcgmAddress fields
+	yamlStr := `
+experimental:
+  platform:
+    gpu:
+      enabled: true
+      type: dcgm
+      devices: [0]
+      updateFreq: 1s
+`
+	reader := strings.NewReader(yamlStr)
+	cfg, err := Load(reader)
+	assert.NoError(t, err, "Old GPU config format should load without error")
+
+	// Verify GPU config was parsed correctly
+	assert.NotNil(t, cfg.Experimental)
+	gpu := cfg.Experimental.Platform.GPU
+	assert.Equal(t, ptr.To(true), gpu.Enabled)
+	assert.Equal(t, "dcgm", gpu.Type)
+
+	// DCGMMode should be empty string (not set in YAML)
+	// This is backward compatible - power meter will default to embedded
+	assert.Equal(t, "", gpu.DCGMMode)
+	assert.Equal(t, "", gpu.DCGMAddress)
+
+	// Validation should pass with empty DCGMMode (defaults to embedded)
+	err = cfg.Validate()
+	assert.NoError(t, err, "Validation should pass for old GPU config without dcgmMode")
+}
+
+func TestGPUConfigYAMLStandalone(t *testing.T) {
+	yamlStr := `
+experimental:
+  platform:
+    gpu:
+      enabled: true
+      type: dcgm
+      devices: [0, 1, 2, 3]
+      updateFreq: 1s
+      dcgmMode: standalone
+      dcgmAddress: dcgm-exporter:5555
+`
+	reader := strings.NewReader(yamlStr)
+	cfg, err := Load(reader)
+	assert.NoError(t, err)
+
+	assert.NotNil(t, cfg.Experimental)
+	gpu := cfg.Experimental.Platform.GPU
+	assert.Equal(t, ptr.To(true), gpu.Enabled)
+	assert.Equal(t, "dcgm", gpu.Type)
+	assert.Equal(t, []uint{0, 1, 2, 3}, gpu.Devices)
+	assert.Equal(t, 1*time.Second, gpu.UpdateFreq)
+	assert.Equal(t, "standalone", gpu.DCGMMode)
+	assert.Equal(t, "dcgm-exporter:5555", gpu.DCGMAddress)
 }
 
 func TestExperimentalFeatureEnabled(t *testing.T) {

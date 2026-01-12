@@ -141,6 +141,10 @@ type (
 		Type       string        `yaml:"type"`       // "dcgm" or "fake"
 		Devices    []uint        `yaml:"devices"`    // GPU device IDs to monitor
 		UpdateFreq time.Duration `yaml:"updateFreq"` // Update frequency for GPU metrics
+
+		// DCGM-specific settings
+		DCGMMode    string `yaml:"dcgmMode"`    // "embedded" or "standalone" (default: "embedded")
+		DCGMAddress string `yaml:"dcgmAddress"` // Address for standalone mode (e.g., "dcgm-exporter:5555" or unix socket path)
 	}
 
 	// Experimental contains experimental features (no stability guarantees)
@@ -255,6 +259,8 @@ const (
 	ExperimentalPlatformGPUTypeFlag       = "experimental.platform.gpu.type"
 	ExperimentalPlatformGPUDevicesFlag    = "experimental.platform.gpu.devices"
 	ExperimentalPlatformGPUUpdateFreqFlag = "experimental.platform.gpu.update-freq"
+	ExperimentalPlatformGPUDCGMModeFlag   = "experimental.platform.gpu.dcgm-mode"
+	ExperimentalPlatformGPUDCGMAddrFlag   = "experimental.platform.gpu.dcgm-address"
 
 // WARN:  dev settings shouldn't be exposed as flags as flags are intended for end users
 )
@@ -416,6 +422,8 @@ func RegisterFlags(app *kingpin.Application) ConfigUpdaterFn {
 	gpuType := app.Flag(ExperimentalPlatformGPUTypeFlag, "GPU power meter type (dcgm or fake)").Default("dcgm").String()
 	gpuDevices := app.Flag(ExperimentalPlatformGPUDevicesFlag, "GPU device IDs to monitor (comma-separated)").String()
 	gpuUpdateFreq := app.Flag(ExperimentalPlatformGPUUpdateFreqFlag, "GPU metrics update frequency").Default("1s").Duration()
+	gpuDCGMMode := app.Flag(ExperimentalPlatformGPUDCGMModeFlag, "DCGM connection mode (embedded or standalone)").Default("embedded").String()
+	gpuDCGMAddr := app.Flag(ExperimentalPlatformGPUDCGMAddrFlag, "DCGM address for standalone mode (e.g., dcgm-exporter:5555)").String()
 
 	return func(cfg *Config) error {
 		// Logging settings
@@ -483,7 +491,7 @@ func RegisterFlags(app *kingpin.Application) ConfigUpdaterFn {
 		if err := applyRedfishConfig(cfg, flagsSet, redfishEnabled, redfishNodeName, redfishConfig); err != nil {
 			return err
 		}
-		if err := applyGPUConfig(cfg, flagsSet, gpuEnabled, gpuType, gpuDevices, gpuUpdateFreq); err != nil {
+		if err := applyGPUConfig(cfg, flagsSet, gpuEnabled, gpuType, gpuDevices, gpuUpdateFreq, gpuDCGMMode, gpuDCGMAddr); err != nil {
 			return err
 		}
 
@@ -588,7 +596,7 @@ func resolveNodeName(redfishNodeName, kubeNodeName string) (string, error) {
 }
 
 // applyGPUConfig applies GPU configuration flags
-func applyGPUConfig(cfg *Config, flagsSet map[string]bool, enabled *bool, gpuType *string, gpuDevices *string, updateFreq *time.Duration) error {
+func applyGPUConfig(cfg *Config, flagsSet map[string]bool, enabled *bool, gpuType *string, gpuDevices *string, updateFreq *time.Duration, dcgmMode *string, dcgmAddr *string) error {
 	// Early exit if no GPU flags are set and config file does not have experimental section
 	if !hasGPUFlags(flagsSet) && cfg.Experimental == nil {
 		return nil
@@ -635,6 +643,14 @@ func applyGPUConfig(cfg *Config, flagsSet map[string]bool, enabled *bool, gpuTyp
 		gpu.UpdateFreq = *updateFreq
 	}
 
+	if flagsSet[ExperimentalPlatformGPUDCGMModeFlag] {
+		gpu.DCGMMode = *dcgmMode
+	}
+
+	if flagsSet[ExperimentalPlatformGPUDCGMAddrFlag] {
+		gpu.DCGMAddress = *dcgmAddr
+	}
+
 	return nil
 }
 
@@ -643,16 +659,20 @@ func hasGPUFlags(flagsSet map[string]bool) bool {
 	return flagsSet[ExperimentalPlatformGPUEnabledFlag] ||
 		flagsSet[ExperimentalPlatformGPUTypeFlag] ||
 		flagsSet[ExperimentalPlatformGPUDevicesFlag] ||
-		flagsSet[ExperimentalPlatformGPUUpdateFreqFlag]
+		flagsSet[ExperimentalPlatformGPUUpdateFreqFlag] ||
+		flagsSet[ExperimentalPlatformGPUDCGMModeFlag] ||
+		flagsSet[ExperimentalPlatformGPUDCGMAddrFlag]
 }
 
 // defaultGPUConfig returns default GPU configuration
 func defaultGPUConfig() GPU {
 	return GPU{
-		Enabled:    ptr.To(false),
-		Type:       "dcgm",
-		Devices:    []uint{0}, // Default to GPU 0
-		UpdateFreq: 1 * time.Second,
+		Enabled:     ptr.To(false),
+		Type:        "dcgm",
+		Devices:     []uint{0}, // Default to GPU 0
+		UpdateFreq:  1 * time.Second,
+		DCGMMode:    "embedded",
+		DCGMAddress: "", // Empty means use default (localhost:5555 for standalone)
 	}
 }
 
@@ -864,6 +884,19 @@ func (c *Config) validateExperimentalConfig(validationSkipped map[SkipValidation
 			// Validate device IDs (should have at least one)
 			if len(c.Experimental.Platform.GPU.Devices) == 0 {
 				errs = append(errs, "at least one GPU device ID must be specified")
+			}
+
+			// Validate DCGM mode if type is dcgm
+			if c.Experimental.Platform.GPU.Type == "dcgm" {
+				mode := c.Experimental.Platform.GPU.DCGMMode
+				if mode != "" && mode != "embedded" && mode != "standalone" {
+					errs = append(errs, fmt.Sprintf("invalid DCGM mode %q: must be 'embedded' or 'standalone'", mode))
+				}
+
+				// Standalone mode requires an address
+				if mode == "standalone" && c.Experimental.Platform.GPU.DCGMAddress == "" {
+					errs = append(errs, "DCGM address is required when using standalone mode")
+				}
 			}
 		}
 	}

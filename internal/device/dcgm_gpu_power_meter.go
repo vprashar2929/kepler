@@ -96,6 +96,14 @@ type DCGMGPUPowerMeterOpts struct {
 	MaxKeepAge time.Duration
 	MaxSamples int
 	GPUDevices []uint
+
+	// DCGMMode specifies how to connect to DCGM: "embedded" or "standalone"
+	// Embedded mode starts a local DCGM engine (requires local GPU)
+	// Standalone mode connects to an external DCGM host engine
+	DCGMMode DCGMMode
+	// DCGMAddress is the address of the DCGM host engine for standalone mode
+	// Format: "hostname:port" (e.g., "dcgm-exporter:5555")
+	DCGMAddress string
 }
 
 // NewDCGMGPUPowerMeter creates a new DCGM-based GPU power meter
@@ -116,11 +124,30 @@ func NewDCGMGPUPowerMeter(opts DCGMGPUPowerMeterOpts) (*DCGMGPUPowerMeter, error
 		// Default to GPU 0
 		opts.GPUDevices = []uint{0}
 	}
+	if opts.DCGMMode == "" {
+		opts.DCGMMode = DCGMModeEmbedded
+	}
 
-	// Initialize DCGM
-	cleanup, err := dcgmLib.Init()
+	// Initialize DCGM based on mode
+	var cleanup func()
+	var err error
+
+	switch opts.DCGMMode {
+	case DCGMModeStandalone:
+		if opts.DCGMAddress == "" {
+			return nil, fmt.Errorf("DCGM address is required for standalone mode")
+		}
+		opts.Logger.Info("Connecting to DCGM in standalone mode", "address", opts.DCGMAddress)
+		cleanup, err = dcgmLib.InitStandalone(opts.DCGMAddress)
+	case DCGMModeEmbedded:
+		fallthrough
+	default:
+		opts.Logger.Info("Initializing DCGM in embedded mode")
+		cleanup, err = dcgmLib.Init()
+	}
+
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize DCGM: %w", err)
+		return nil, fmt.Errorf("failed to initialize DCGM (mode=%s): %w", opts.DCGMMode, err)
 	}
 
 	// If initialization fails later, ensure cleanup

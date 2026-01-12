@@ -5,6 +5,30 @@ include:
       - ./override.yaml
 
 services:
+ # Fake GPU exporter that simulates DCGM metrics
+ # NOTE: This exposes:
+ #   - Port 9400: HTTP/Prometheus metrics endpoint
+ #   - Port 5555: DCGM host engine for go-dcgm library connections
+  dcgm-exporter:
+    build:
+      context: /home/f42/.cursor/worktrees/dcgm-fake-gpu-exporter__SSH__192.168.0.110_/pgu
+      dockerfile: docker/Dockerfile.from-image
+      args:
+        BASE_IMAGE: ghcr.io/saiakhil2012/dcgm-fake-gpu-exporter:latest
+    image: dcgm-fake-gpu-exporter:local
+    ports:
+      - 29400:9400   # Prometheus metrics
+      - 25555:5555   # DCGM host engine
+    volumes:
+      - /tmp/dcgm-metrics:/var/run/dcgm
+    environment:
+      - NUM_FAKE_GPUS=4
+      - ENABLE_UDS=true
+      - EXPORTER_PORT=9400
+      - DCGM_HOSTENGINE_LISTEN_ADDR=ALL
+    restart: unless-stopped
+    networks:
+      - dcgm-exporter
   ### 📦 kepler created from the current repo (local development)
   kepler-dev:
     build:
@@ -41,15 +65,25 @@ services:
         target: /host/kube
         read_only: true
 
+      # Mount DCGM UDS socket for GPU metrics (shared with dcgm-exporter)
+      - type: bind
+        source: /tmp/dcgm-metrics
+        target: /var/run/dcgm
+        read_only: true
+
     command:
       - --config.file=/etc/kepler/config.yaml
 
     depends_on:
-      - sushy-static
+      sushy-static:
+        condition: service_started
+      dcgm-exporter:
+        condition: service_started
 
     networks:
       - kepler-dev
       - sushy-network
+      - dcgm-exporter  # 🔥 Connect to dcgm-exporter network for GPU metrics
       # - kind  # NOTE: uncomment to use kind
 
   scaphandre:
@@ -125,6 +159,7 @@ services:
 
 networks:
   kepler-dev:
+  dcgm-exporter:
   scaph-network:
   node-exporter-network:
   sushy-network:
