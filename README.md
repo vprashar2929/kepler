@@ -101,7 +101,7 @@ Choose your preferred method:
 make build && sudo ./bin/kepler
 
 # ✨ Docker Compose (with Prometheus & Grafana)
-cd compose/dev && docker-compose up -d
+cd compose/dev && docker compose up -d
 
 # 🐳 Kubernetes with Kustomize
 kubectl kustomize manifests/k8s | \
